@@ -1,4 +1,4 @@
-> Раздел ТЗ horeca-shop, версия 1.2. Оглавление, история изменений и карта «спринт → разделы» — [TZ-horeca-shop.md](../../TZ-horeca-shop.md).
+> Раздел ТЗ horeca-shop. Версия, оглавление, история изменений и карта «спринт → разделы» — [TZ-horeca-shop.md](../../TZ-horeca-shop.md).
 
 # 5. Модель данных
 
@@ -7,7 +7,7 @@ MariaDB 11.8 / MySQL 8.4, `utf8mb4_unicode_ci`, InnoDB. Типы указаны 
 ## 5.1 Пользователи и компании
 
 **users**
-`id` · `name` string(150) · `email` string(150) unique · `phone` string(20) nullable index · `password` string · `role` enum(customer,manager,admin) default customer · `company_id` bigint nullable FK companies nullOnDelete · `is_active` bool default true · `email_verified_at` timestamp nullable · `last_login_at` timestamp nullable · поля встроенной 2FA Filament (секрет и коды восстановления; имена колонок — по документации Filament 5 при установке) · `remember_token` · timestamps
+`id` · `name` string(150) · `email` string(150) unique · `phone` string(20) nullable index · `password` string · `role` enum(customer,manager,admin) default customer · `company_id` bigint nullable FK companies nullOnDelete · `is_active` bool default true · `email_verified_at` timestamp nullable · `last_login_at` timestamp nullable · `app_authentication_secret` text nullable · `app_authentication_recovery_codes` text nullable (встроенная 2FA Filament 5; значения шифруются) · `remember_token` · timestamps
 
 **companies**
 `id` · `legal_name` string(255) · `brand_name` string(255) nullable (вывеска заведения) · `inn` string(12) index · `kpp` string(9) nullable · `ogrn` string(15) nullable · `legal_address` string(500) nullable · `delivery_address` string(500) nullable · `city` string(150) nullable · `bank_name` string(255) nullable · `bik` string(9) nullable · `account` string(20) nullable · `corr_account` string(20) nullable · `contact_person` string(150) · `phone` string(20) · `email` string(150) · `segment` enum(restaurant,cafe,bar,hotel,canteen,bakery,production,retail_chain,other) · `status` enum(pending,approved,rejected,blocked) default pending · `price_tier_id` bigint nullable FK price_tiers nullOnDelete · `manager_comment` text nullable · `approved_at` timestamp nullable · `approved_by` bigint nullable FK users nullOnDelete · timestamps
@@ -66,7 +66,7 @@ MariaDB 11.8 / MySQL 8.4, `utf8mb4_unicode_ci`, InnoDB. Типы указаны 
 timestamps + softDeletes
 Индексы: unique(`supplier_id`,`external_id`), `supplier_code`, `sku`, unique `slug`, (`is_visible`,`availability_rank`), `category_id`, `brand_id`, `retail_price`.
 
-**Изображения** — medialibrary, коллекция `images` у `Product`. Конверсии в WebP: `thumb` 160×160, `card` 600×600, `full` 1200×1200 (вписывание без обрезки). Пользовательские свойства медиа: `source` (supplier|manual), `source_url`, `source_hash`, `sort`.
+**Изображения** — medialibrary, коллекция `images` у `Product`. Конверсии в WebP: `thumb` 160×160, `card` 600×600, `full` 1200×1200 (вписывание без обрезки и без увеличения; внешние оптимизаторы изображений не запускаются). Пользовательские свойства медиа: `source` (supplier|manual), `source_url`, `source_hash`, `sort`.
 
 **warehouses**
 `id` · `supplier_id` FK cascade · `name` string(150) · `slug` string(160) · `city` string(150) nullable · `delivery_days_min` smallint nullable · `delivery_days_max` smallint nullable (срок до Симферополя; заполняет менеджер) · `is_visible` bool default true · `sort` smallint default 0 · timestamps · unique(`supplier_id`,`name`)
@@ -87,7 +87,7 @@ timestamps + softDeletes
 **related_products**
 `product_id` FK cascade · `related_id` FK products cascade · `sort` smallint default 0 · PK(`product_id`,`related_id`)
 
-**collections** — подборки «Соберём кухню под задачу»
+**collections** — подборки «Соберём кухню под задачу» (модель `ProductCollection`, чтобы не путать с коллекциями Laravel)
 `id` · `name` string(150) · `slug` string(160) unique · `description` text nullable · `icon` string(64) nullable · `is_active` bool default false · `sort` smallint default 0 · timestamps
 
 **collection_product**
@@ -146,7 +146,7 @@ timestamps
 
 **redirects** — `id` · `from_path` string(500) unique · `to_path` string(500) · `status_code` smallint default 301 · `hits` int unsigned default 0 · timestamps
 
-**settings** — `id` · `key` string(100) unique · `value` json · timestamps
+**settings** — `id` · `key` string(100) unique · `value` json nullable (null — значение ещё не задано) · timestamps
 
 | Ключ | Значение по умолчанию | Смысл |
 |---|---|---|
