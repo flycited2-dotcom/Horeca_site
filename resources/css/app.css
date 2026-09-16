@@ -1,0 +1,91 @@
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/golos-text/wght.css';
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+
+/*
+ * Design tokens, TZ §9. Contrast on white is noted where it limits usage.
+ * Fonts load per unicode-range, so only the Cyrillic and Latin files are downloaded.
+ */
+@theme {
+    --color-steel-50: #f4f6f7;   /* page background */
+    --color-steel-100: #e7ebee;  /* section background, field fill */
+    --color-steel-200: #d3d9de;  /* card borders, dividers */
+    --color-steel-400: #8a959e;  /* field borders, icons, disabled — not for text (3.1:1) */
+    --color-steel-600: #5b6670;  /* secondary text (5.9:1) */
+    --color-graphite: #15191d;   /* primary text, header, footer, "on order" badge */
+    --color-flame: #0b5fff;      /* the only accent: buttons, links, active filters, focus (5.1:1) */
+    --color-flame-700: #0847c4;  /* hover and active */
+    --color-stock: #1f8a5f;      /* "in stock" dot and fill */
+    --color-stock-text: #177a52; /* "in stock" text (5.3:1) */
+    --color-incoming: #b45309;   /* "incoming" (5.0:1) */
+    --color-danger: #b42318;     /* form errors (6.6:1) */
+    --color-surface: #ffffff;    /* cards */
+
+    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-heading: 'Golos Text Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+    --text-xs: 0.8125rem;        /* 13px */
+    --text-xs--line-height: 1.5;
+    --text-sm: 0.875rem;         /* 14px */
+    --text-sm--line-height: 1.5;
+    --text-base: 1rem;           /* 16px */
+    --text-base--line-height: 1.5;
+    --text-lg: 1.125rem;         /* 18px */
+    --text-lg--line-height: 1.5;
+    --text-xl: 1.375rem;         /* 22px */
+    --text-xl--line-height: 1.15;
+    --text-2xl: 1.75rem;         /* 28px */
+    --text-2xl--line-height: 1.15;
+    --text-3xl: 2.25rem;         /* 36px */
+    --text-3xl--line-height: 1.15;
+    --text-4xl: 3rem;            /* 48px */
+    --text-4xl--line-height: 1.15;
+
+    --radius-control: 6px;       /* buttons, inputs */
+    --radius-card: 4px;          /* cards */
+
+    --shadow-raised: 0 4px 16px rgb(21 25 29 / 0.1); /* hover and dropdowns only */
+
+    --container-page: 82.5rem;   /* 1320px */
+    --container-prose: 72ch;
+}
+
+@layer base {
+    html {
+        color-scheme: light;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        line-height: 1.5;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--font-heading);
+        line-height: 1.15;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-flame);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
