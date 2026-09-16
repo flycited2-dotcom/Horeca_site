@@ -1,5 +1,11 @@
 * text=auto eol=lf
 
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
 *.png binary
 *.jpg binary
 *.jpeg binary
@@ -10,3 +16,7 @@
 *.xlsx binary
 *.woff binary
 *.woff2 binary
+
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore
