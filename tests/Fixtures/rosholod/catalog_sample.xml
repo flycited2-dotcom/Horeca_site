@@ -1,0 +1,1554 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE yml_catalog SYSTEM "shops.dtd">
+<yml_catalog date="16.09.26 05.00">
+	<shop>
+		<name>Росхолод</name>
+		<company>Росхолод</company>
+		<url>rosholod.org</url>
+		<phone>88002003130</phone>
+		<platform>8.3.27.1606</platform>
+		<version>2.5.22.134</version>
+		<currencies>
+			<currency id="RUB"
+					rate="1"/>
+		</currencies>
+		<categories>
+			<category id="de490ef9-31b8-11f1-a2be-00155d0a5704">Аксессуары для оборудования</category>
+			<category id="360dd975-9995-11ed-9d80-00155d0a5700">Бытовое оборудование</category>
+			<category id="007ba895-7f80-11ed-9d4a-00155d0a5704">Вентиляционное оборудование</category>
+			<category id="5cd5070d-2943-11ef-a019-00155d0a5704">Весовое оборудование</category>
+			<category id="673c8e27-3e11-11f1-a2ce-00155d0a5704">Ингредиенты</category>
+			<category id="59cfedde-8aa9-11ed-9d5b-00155d0a5700">Кофемолки и кофемашины</category>
+			<category id="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Линия раздачи</category>
+			<category id="bca05803-7f7d-11ed-9d4a-00155d0a5704">Нейтральное оборудование</category>
+			<category id="efe3d883-f835-11f0-a275-00155d0a5704">Оборудование для водоподготовки</category>
+			<category id="9a769dbf-7f7d-11ed-9d4a-00155d0a5704">Оборудование для дезинфекции и стерилизации</category>
+			<category id="1a025f65-7f7d-11ed-9d4a-00155d0a5704">Посудомоечное оборудование</category>
+			<category id="e22d9b1e-7f7c-11ed-9d4a-00155d0a5704">Прачечное оборудование</category>
+			<category id="5a1f22fc-dc49-11ee-9fb1-00155d0a5704">Прочее (неликвид + комплектующие)</category>
+			<category id="c1b9d0bb-7f7c-11ed-9d4a-00155d0a5704">Стеллажное оборудование</category>
+			<category id="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Тепловое и технологическое оборудование</category>
+			<category id="af2eca95-8aa9-11ed-9d5b-00155d0a5700">Торговые стеллажи</category>
+			<category id="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Фаст-фуд</category>
+			<category id="b96fde13-7f74-11ed-9d4a-00155d0a5704">Холодильное оборудование</category>
+			<category id="cc8b4253-3da8-11f1-a2cd-00155d0a5704">Чистящие и моющие средства</category>
+			<category id="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Электромеханическое оборудование</category>
+			<category id="2c8678f8-a208-11ed-9d97-00155d0a5704">Компрессора и компоненты</category>
+			<category id="3d6d10f4-9b0a-11ed-9d84-00155d0a5700">материалы</category>
+			<category id="a256b37e-793a-11ed-9d40-00155d0a5704">Товар</category>
+			<category id="03a471d1-7f12-11ed-9d49-00155d0a5704">Услуга</category>
+			<category id="af0bfe42-a93c-11ed-9dac-00155d0a5704">Услуги</category>
+			<category id="43b7b602-50a0-11ef-a04f-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Автоматическое сито</category>
+			<category id="24991891-8a91-11ed-9d5b-00155d0a5700"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Аппарат для мойки овощей</category>
+			<category id="06746526-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Блендер</category>
+			<category id="13a12e4a-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Бликсер</category>
+			<category id="b2c1b8f3-8a91-11ed-9d5b-00155d0a5700"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Вакуумный упаковщик</category>
+			<category id="2426911b-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Взбивальная машина</category>
+			<category id="37578934-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Гамогенезатор</category>
+			<category id="f7912722-2c09-11f1-a2b7-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Диски</category>
+			<category id="95579ba3-8a91-11ed-9d5b-00155d0a5700"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Запайщик</category>
+			<category id="50e5f3a2-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Картофелеочистительная машина</category>
+			<category id="5b05b84b-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Котлетные автоматы</category>
+			<category id="6c8b5a89-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Куттер</category>
+			<category id="7c80c59c-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Кухонный процессор</category>
+			<category id="0326dfd5-8a92-11ed-9d5b-00155d0a5700"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Лапшерезка</category>
+			<category id="89ad7b1e-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Массажер для мяса</category>
+			<category id="9b5a343e-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Микромельницы молотковые</category>
+			<category id="a3cb407e-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Миксер планетарный</category>
+			<category id="bc37bbe1-22cc-11f1-a2ab-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Миксер ручной</category>
+			<category id="b44aa222-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Мукопросеиватель</category>
+			<category id="bb958133-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Мясорубка</category>
+			<category id="9550ea23-8a8e-11ed-9d5b-00155d0a5700"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Мясорыхлитель</category>
+			<category id="cf7c66a7-8a90-11ed-9d5b-00155d0a5700"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Насадки и навесные механизмы</category>
+			<category id="877eb121-504c-11f1-a2e5-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Оборудование для производства пасты</category>
+			<category id="d10c13f7-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Овощерезательно-протирочная машина</category>
+			<category id="e23ffbe5-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Пилы для мяса</category>
+			<category id="60ca6323-9ad0-11f0-a20c-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Пресс для пиццы</category>
+			<category id="ebdbce5c-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Рыбочистки</category>
+			<category id="fcf3f2ec-7f73-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Слайсер</category>
+			<category id="03304bea-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Соковыжималка</category>
+			<category id="16ae4b8d-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Тендерайзер</category>
+			<category id="230d8300-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Тестоделитель</category>
+			<category id="395661d2-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Тестозакаточная машина</category>
+			<category id="4a2aa3d1-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Тестомесильная машина</category>
+			<category id="3f85003b-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Тестоокруглитель</category>
+			<category id="5913b9d0-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Тестораскаточная машина</category>
+			<category id="67a1df6e-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Укупорочный автомат</category>
+			<category id="746f9212-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Универсальная кухонная машина</category>
+			<category id="5ae9c6fa-8a91-11ed-9d5b-00155d0a5700"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Установка для снятия оперения</category>
+			<category id="8ababeee-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Фаршемешальная машина</category>
+			<category id="9acee80b-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Хлеборезательная машина</category>
+			<category id="a19c8669-7f74-11ed-9d4a-00155d0a5704"
+					parentId="f9f4f42b-7f72-11ed-9d4a-00155d0a5704">Шприц колбасный</category>
+			<category id="e775b0ac-f783-11f0-a274-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">кхн</category>
+			<category id="c5df4f37-143c-11f0-a163-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Сокоохладители</category>
+			<category id="f2148d21-1a29-11ee-9ea1-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">АККР</category>
+			<category id="0ac5f0ef-1666-11ee-9e9c-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Би-блоки</category>
+			<category id="c684b5f0-7f74-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Бонета</category>
+			<category id="47243080-199a-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Витрина кондитерская</category>
+			<category id="fd7ab9aa-199b-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Витрина морозильная</category>
+			<category id="3cf1f866-199d-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Витрина настольная</category>
+			<category id="6f92da67-199e-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Витрина рыбная</category>
+			<category id="97bfc533-199f-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Витрина среднетемпературная</category>
+			<category id="60a61fff-19a0-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Витрина универсальная</category>
+			<category id="cf982c71-7f74-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Витрина холодильная</category>
+			<category id="d7e1cd1e-7f74-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Горка</category>
+			<category id="153142c0-8a83-11ed-9d5b-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Дверь для холодильной камеры</category>
+			<category id="7c90a10b-8a83-11ed-9d5b-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Завеса полосовая</category>
+			<category id="fae4285c-7f74-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Камера со стеклянным фронтом</category>
+			<category id="1630369c-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Камера холодильная</category>
+			<category id="1e3dd0e7-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Камера шоковой заморозки</category>
+			<category id="2cfd51c6-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Кассовый бокс</category>
+			<category id="370cfa29-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Кегератор</category>
+			<category id="434d5d9a-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Компрессорно-конденсаторный блок</category>
+			<category id="52030174-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Ларь морозильный</category>
+			<category id="5f03109b-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Ларь среднетемпературный</category>
+			<category id="8137ccf0-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Ларь-бонета</category>
+			<category id="9974d3ef-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Льдогенераторы</category>
+			<category id="70980adc-8a82-11ed-9d5b-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Микромаркет</category>
+			<category id="437a493e-8a82-11ed-9d5b-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Минибар</category>
+			<category id="a6c0c783-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Моноблок(холодильная машина)</category>
+			<category id="c342f450-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Морозильный шкаф</category>
+			<category id="d6c533db-c430-11ee-9f91-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Охладитель для молока</category>
+			<category id="0ac2bba4-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Пивоохладители</category>
+			<category id="21381ce1-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Прилавок нейтральный1</category>
+			<category id="57ae8da0-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Прилавок холодильный</category>
+			<category id="4ffcf234-8a83-11ed-9d5b-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Продуктомат</category>
+			<category id="691bafd6-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Расширительный пояс для холодильной камеры</category>
+			<category id="74d81770-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Салат бары</category>
+			<category id="3f02d647-143d-11f0-a163-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Сокоохладитель</category>
+			<category id="854c362c-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Сплит-система(холодильная машина)</category>
+			<category id="3ba582e5-19a1-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Стеклянные фронты</category>
+			<category id="2f58b3fc-19a3-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Стол для пиццы</category>
+			<category id="8c8f5036-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Стол холодильный</category>
+			<category id="9539e863-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Суперструктура</category>
+			<category id="af27fe4b-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Теплообменное оборудование</category>
+			<category id="af9a0457-8a83-11ed-9d5b-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Термоконтейнер</category>
+			<category id="b412624a-7f75-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Фризеры для мягкого мороженного</category>
+			<category id="bc840cfc-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Холодильный шкаф</category>
+			<category id="cd1ad186-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Холодильный шкаф комбинированный</category>
+			<category id="5fa8d23e-19a4-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф Bakery</category>
+			<category id="61119024-19a5-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф винный</category>
+			<category id="2c1bcee1-19a6-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф для икры и пресервов </category>
+			<category id="56a7446c-19a9-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф для хлебопекарных производств</category>
+			<category id="eae5f388-19a6-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф лабораторный</category>
+			<category id="c27535f6-19a7-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф специализированный</category>
+			<category id="0bf8cf86-19aa-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф универсальный</category>
+			<category id="9dd90fcd-19a8-11ee-9ea0-00155d0a5700"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф фармацевтический</category>
+			<category id="dd7c7d1a-7f76-11ed-9d4a-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Шкаф шоковой заморозки</category>
+			<category id="bd9bf6aa-bc09-11ed-9dde-00155d0a5704"
+					parentId="b96fde13-7f74-11ed-9d4a-00155d0a5704">Элементы строитльных панелей</category>
+			<category id="14bd5513-d19d-11ef-a10d-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для бургеров</category>
+			<category id="29f9a85a-37fa-11f1-a2c6-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для варки кукурузы</category>
+			<category id="70c27053-d1a7-11ef-a10d-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для корн догов</category>
+			<category id="fe2b630c-7f76-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для попкорна</category>
+			<category id="07e5493f-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для сахарной ваты</category>
+			<category id="1784e1f1-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для хот догов</category>
+			<category id="22f2a587-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для шаурмы газовый</category>
+			<category id="6c82112f-8aa4-11ed-9d5b-00155d0a5700"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для шаурмы на углях</category>
+			<category id="3835108b-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для шаурмы электрический</category>
+			<category id="b0d2c24b-c455-11ef-a0fc-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Аппарат для шоколада</category>
+			<category id="4b61def0-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Блинный аппарат газовый</category>
+			<category id="5acbd939-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Блинный аппарат электрический</category>
+			<category id="647166ba-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Вафельница</category>
+			<category id="6c9edf0c-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль газовый</category>
+			<category id="745b719f-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль для кур газовый</category>
+			<category id="8a51b5e3-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль для кур электрический</category>
+			<category id="e5b0c172-d183-11ef-a10d-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль для хот догов </category>
+			<category id="b71dcd64-6279-11ee-9f04-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль контактный</category>
+			<category id="13cf7508-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль лавовый газовый</category>
+			<category id="ae9f686d-8fd3-11f0-a1fe-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль роликовый</category>
+			<category id="98d4164f-c4e7-11ef-a0fd-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль-барбекю</category>
+			<category id="1d99c729-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Гриль-саламандра</category>
+			<category id="c4dea162-c450-11ef-a0fc-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Лампа инфракрасная для обогрева</category>
+			<category id="2f554556-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Лапшерезка НЕ ВЫБИРАТЬ</category>
+			<category id="547b05c3-48bd-11ef-a044-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Макароноварки</category>
+			<category id="40efd12a-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Пончиковый аппарат</category>
+			<category id="98e633dc-7f77-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Пресс для гамбургеров</category>
+			<category id="82db553c-5844-11ee-9ef8-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Пресс для гамбургеров (не выбирать)</category>
+			<category id="49224c4b-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Рисоварка</category>
+			<category id="5af99662-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Станция для подогрева картофеля фри</category>
+			<category id="78c18849-c960-11ed-9e0b-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Супница</category>
+			<category id="a42c9ab4-c957-11ed-9e0b-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Тостер</category>
+			<category id="644a043c-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Фритюрница газовая</category>
+			<category id="8051e6d6-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Фритюрница электрическая</category>
+			<category id="88470e74-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Чебуречница</category>
+			<category id="8f6e3951-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Электроварка</category>
+			<category id="9c1ac8df-7f78-11ed-9d4a-00155d0a5704"
+					parentId="f2e9cd11-7f76-11ed-9d4a-00155d0a5704">Яйцеварка</category>
+			<category id="cf7e34cf-7f78-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Вакуумный упаковщик НЕ ВЫБИРАТЬ</category>
+			<category id="d99e7a43-7f78-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Витрина тепловая</category>
+			<category id="e14d7474-7f78-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Водонагреватель</category>
+			<category id="e8889eea-7f78-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Газоварка</category>
+			<category id="962a8a4f-8a89-11ed-9d5b-00155d0a5700"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Дымогенератор</category>
+			<category id="eeed193e-7f78-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Жарочная поверхность газовая</category>
+			<category id="fb9651c4-7f78-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Жарочная поверхность электрическая</category>
+			<category id="04d4ebb8-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Искрогаситель</category>
+			<category id="1318c09c-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Кипятильник электрический наливной</category>
+			<category id="1fc1ac37-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Кипятильник электрический проточный</category>
+			<category id="261b51f0-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Коптильня</category>
+			<category id="332dd518-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Котел пищеварочный</category>
+			<category id="d33e4439-26bf-11ee-9eb1-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Котел пищеварочный газовый</category>
+			<category id="bdf19344-26d7-11ee-9eb1-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Котел пищеварочный электрический</category>
+			<category id="d0f10562-8a8c-11ed-9d5b-00155d0a5700"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Лиофильная сушильная камера</category>
+			<category id="39ef15e2-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Мангалы</category>
+			<category id="609695cb-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Мармит газовый(тепловая линия)</category>
+			<category id="56de36b5-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Мармит(тепловая линия)</category>
+			<category id="5fc0f069-ce05-11ed-9e1d-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Микроволновые печи</category>
+			<category id="77da405e-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Пароконвектомат</category>
+			<category id="8037d266-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Печь для казана</category>
+			<category id="868efb6e-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Печь для пиццы</category>
+			<category id="9412c5a9-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Печь для пиццы конвейерная</category>
+			<category id="451c64b1-26e0-11ee-9eb1-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Печь для пиццы подовая</category>
+			<category id="a17fdd72-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Печь конвекционная</category>
+			<category id="a9096dcf-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Печь-мангал</category>
+			<category id="b5d1f137-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Плита газовая</category>
+			<category id="bc93d01e-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Плита индукционная</category>
+			<category id="cac1153a-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Плита электрическая</category>
+			<category id="d4c23340-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Поверхность рабочая</category>
+			<category id="3d1695b1-8a8d-11ed-9d5b-00155d0a5700"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Подовая печь</category>
+			<category id="df889c4c-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Полка тепловая</category>
+			<category id="ec21504a-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Сковорода газовая</category>
+			<category id="f94b4731-7f79-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Сковорода электрическая</category>
+			<category id="04169cef-7f7a-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Стол тепловой</category>
+			<category id="08b957bc-ce77-11ef-a109-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Сушильная машина пищевая</category>
+			<category id="8c084a05-8a8d-11ed-9d5b-00155d0a5700"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Ферментаторы</category>
+			<category id="5f832cc6-8a8d-11ed-9d5b-00155d0a5700"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Центрифуга для яиц</category>
+			<category id="fa157c1a-c42f-11ee-9f91-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Шкаф духовой бытовой</category>
+			<category id="14c9dc69-7f7a-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Шкаф жарочный газовый</category>
+			<category id="1c3921dc-7f7a-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Шкаф жарочный электрический</category>
+			<category id="2b8da1ba-7f7a-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Шкаф пекарский газовый</category>
+			<category id="38318d57-7f7a-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Шкаф пекарский электрический</category>
+			<category id="415f725b-7f7a-11ed-9d4a-00155d0a5704"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Шкаф расстоечный</category>
+			<category id="f5233975-8a8c-11ed-9d5b-00155d0a5700"
+					parentId="b425c0d9-7f78-11ed-9d4a-00155d0a5704">Шкаф сушильный</category>
+			<category id="8f621ac2-1cc5-11ef-a006-00155d0a5704"
+					parentId="c1b9d0bb-7f7c-11ed-9d4a-00155d0a5704">Стеллажное оборудование</category>
+			<category id="ec4f82aa-7f7c-11ed-9d4a-00155d0a5704"
+					parentId="e22d9b1e-7f7c-11ed-9d4a-00155d0a5704">Стирально-сушильные машины коммерческие</category>
+			<category id="f9d54f83-7f7c-11ed-9d4a-00155d0a5704"
+					parentId="e22d9b1e-7f7c-11ed-9d4a-00155d0a5704">Стиральные машины коммерческие</category>
+			<category id="02d243b9-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="e22d9b1e-7f7c-11ed-9d4a-00155d0a5704">Сушильные машины коммерческие</category>
+			<category id="43e32323-9fb5-11f1-a34f-00155d0a5704"
+					parentId="1a025f65-7f7d-11ed-9d4a-00155d0a5704">посудомойки</category>
+			<category id="480617d6-8aa6-11ed-9d5b-00155d0a5700"
+					parentId="1a025f65-7f7d-11ed-9d4a-00155d0a5704">Водоумягчитель</category>
+			<category id="20986b9a-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="1a025f65-7f7d-11ed-9d4a-00155d0a5704">Котломоечная машина</category>
+			<category id="393dc46a-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="1a025f65-7f7d-11ed-9d4a-00155d0a5704">Купольная посудомоечная машина</category>
+			<category id="5ec9aa76-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="1a025f65-7f7d-11ed-9d4a-00155d0a5704">Стаканомоечная машина</category>
+			<category id="757c1779-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="1a025f65-7f7d-11ed-9d4a-00155d0a5704">Туннельная(конвейерная) посудомоечная машина</category>
+			<category id="83d93c08-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="1a025f65-7f7d-11ed-9d4a-00155d0a5704">Фронтальная посудомоечная машина</category>
+			<category id="09b04a30-8aa7-11ed-9d5b-00155d0a5700"
+					parentId="9a769dbf-7f7d-11ed-9d4a-00155d0a5704">Облучатель</category>
+			<category id="6722f655-8aa7-11ed-9d5b-00155d0a5700"
+					parentId="9a769dbf-7f7d-11ed-9d4a-00155d0a5704">Оборудование для дезинфекции</category>
+			<category id="9dd61536-98aa-11ee-9f50-00155d0a5704"
+					parentId="9a769dbf-7f7d-11ed-9d4a-00155d0a5704">Рециркуляторы маркируемые</category>
+			<category id="a7e87aa6-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="9a769dbf-7f7d-11ed-9d4a-00155d0a5704">Стерилизатор для ножей</category>
+			<category id="39a00e4a-8aa7-11ed-9d5b-00155d0a5700"
+					parentId="9a769dbf-7f7d-11ed-9d4a-00155d0a5704">Уничтожитель насекомых</category>
+			<category id="c45126ca-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Бак мусорный</category>
+			<category id="d3413f6b-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Барная станция</category>
+			<category id="d95836e1-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Бункеры для льдогенераторов</category>
+			<category id="e7d62db0-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Ванна котломоечная</category>
+			<category id="ede69555-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Ванна моечная</category>
+			<category id="f6581c5f-7f7d-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Велопарковка</category>
+			<category id="03eb8dcd-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Витрина нейтральная</category>
+			<category id="0b9f4426-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Вставки</category>
+			<category id="d5a9a78d-8a99-11ed-9d5b-00155d0a5700"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Гастроёмкость</category>
+			<category id="13d7ba7a-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Колода для рубки мяса</category>
+			<category id="66ed6f7e-31b7-11f1-a2be-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Крышка для гастроёмкости</category>
+			<category id="2496ee48-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Ларь для хранения овощей</category>
+			<category id="312574d0-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Модуль нейтральный</category>
+			<category id="96201f98-8a9a-11ed-9d5b-00155d0a5700"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">НЕ Выбирать</category>
+			<category id="37f50df2-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Подвес для туш</category>
+			<category id="42722795-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Подиум под фреш</category>
+			<category id="50e4b427-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Подставка кухонная</category>
+			<category id="65cd2843-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Подтоварник</category>
+			<category id="6d940f6b-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Полка кухонная</category>
+			<category id="0f90e031-2564-11ee-9eae-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Полка настенная закрытая</category>
+			<category id="6fc0d3bc-2564-11ee-9eae-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Полка настенная открытая</category>
+			<category id="9c7b3161-2564-11ee-9eae-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Полка настольная</category>
+			<category id="74eb4a0d-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Противни</category>
+			<category id="82734e0f-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Рукомойник</category>
+			<category id="a0aa5a5a-2565-11ee-9eae-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Рукомойник цельнотянутый</category>
+			<category id="8c5744e8-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Станции для сбора отходов, урны</category>
+			<category id="999e54e6-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стеллаж для сушки тарелок</category>
+			<category id="a5e0f743-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стеллаж кухонный</category>
+			<category id="adeebb0f-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стойка для пакетов</category>
+			<category id="cc84b475-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол для кофе-машин</category>
+			<category id="0aa53024-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол для мойки овощей</category>
+			<category id="d34d3388-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол для посудомоечных машин</category>
+			<category id="e321b3d9-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол для сбора отходов</category>
+			<category id="11e99c0d-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол кондитерский</category>
+			<category id="1fdb1990-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол овощной</category>
+			<category id="eac92133-7f7e-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол производственный</category>
+			<category id="29c23f0f-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол разделочный</category>
+			<category id="012d2318-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Стол-тумба</category>
+			<category id="382ff43c-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Тележка грузовая</category>
+			<category id="3e422881-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Тележка кухонная</category>
+			<category id="4b74a4a2-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Тележка сервировочная</category>
+			<category id="5b14e8d5-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Тележка-шпилька</category>
+			<category id="6ed8e053-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Транспортер для грязной посуды</category>
+			<category id="75918f82-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Урна-пепельница</category>
+			<category id="835ad25f-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="bca05803-7f7d-11ed-9d4a-00155d0a5704">Шкаф нейтральный</category>
+			<category id="19ce2eed-9e69-11ee-9f58-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Полки,козырьки, защитные стекла</category>
+			<category id="a44d0e8b-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Диспенсер</category>
+			<category id="b374f8d1-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Кассовая кабина</category>
+			<category id="bcac62b9-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Мармит</category>
+			<category id="df349537-3116-11ee-9ec0-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Мармит вторых блюд</category>
+			<category id="7f735cbc-3109-11ee-9ec0-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Мармит первых блюд</category>
+			<category id="c2a98e16-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Мини-линия раздачи</category>
+			<category id="e013fef9-3108-11ee-9ec0-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">НЕ ВЫБИРАТЬ Прилавок для столовых приборов </category>
+			<category id="89ea0a4c-3117-11ee-9ec0-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Прилавок для горячих напитков</category>
+			<category id="52901b21-3126-11ee-9ec0-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Прилавок для подогрева тарелок</category>
+			<category id="d24dd59e-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Прилавок для столовых приборов</category>
+			<category id="d84adab6-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Прилавок нейтральный</category>
+			<category id="e36beaf2-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Прилавок угловой</category>
+			<category id="ef9913a6-7f7f-11ed-9d4a-00155d0a5704"
+					parentId="9c75a899-7f7f-11ed-9d4a-00155d0a5704">Прилавок-витрина</category>
+			<category id="083884ad-7f80-11ed-9d4a-00155d0a5704"
+					parentId="007ba895-7f80-11ed-9d4a-00155d0a5704">Зонт вентиляционный</category>
+			<category id="8c79a5a6-4dda-11f0-a1a6-00155d0a5704"
+					parentId="59cfedde-8aa9-11ed-9d5b-00155d0a5700">Кофеварка</category>
+			<category id="6783a5e3-8aa9-11ed-9d5b-00155d0a5700"
+					parentId="59cfedde-8aa9-11ed-9d5b-00155d0a5700">Кофемашина</category>
+			<category id="870ca36f-8aa9-11ed-9d5b-00155d0a5700"
+					parentId="59cfedde-8aa9-11ed-9d5b-00155d0a5700">Кофемолка</category>
+			<category id="506df8fb-4ddc-11f0-a1a6-00155d0a5704"
+					parentId="59cfedde-8aa9-11ed-9d5b-00155d0a5700">Термосы</category>
+			<category id="b5a7653d-49c3-11ef-a045-00155d0a5704"
+					parentId="af2eca95-8aa9-11ed-9d5b-00155d0a5700">Стеклопакет (фронт)</category>
+			<category id="af2eca99-8aa9-11ed-9d5b-00155d0a5700"
+					parentId="af2eca95-8aa9-11ed-9d5b-00155d0a5700">Торговый стеллаж</category>
+			<category id="5b629422-f22d-11ef-a139-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Морозильные камеры и лари</category>
+			<category id="768699d3-f22d-11ef-a139-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Морозильные камеры и лари</category>
+			<category id="28668892-42dd-11f1-a2d4-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Аэрогриль</category>
+			<category id="d4b366f1-e54d-11f0-a25e-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Блендер бытовой</category>
+			<category id="c6bb4133-c437-11ee-9f91-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Варочная панель</category>
+			<category id="b7284734-e54d-11f0-a25e-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Водонагреватель бытовой</category>
+			<category id="f2b4d102-e085-11f0-a257-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Вытяжка</category>
+			<category id="d20adefa-e085-11f0-a257-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Духовой шкаф</category>
+			<category id="9dc80892-f22d-11ef-a139-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Морозильные камеры и лари</category>
+			<category id="5529f751-9995-11ed-9d80-00155d0a5700"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Печь микроволновая</category>
+			<category id="4985b118-cb56-11f0-a247-00155d0a5700"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Посудомоечная машина бытовая</category>
+			<category id="ac505449-0642-11f0-a154-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Пылесос</category>
+			<category id="cc7ccc0b-e54d-11f0-a25e-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Стайлер</category>
+			<category id="0f9fbfa4-f2d5-11ef-a139-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Стиральная машина бытовая</category>
+			<category id="1f6e5ba7-4dac-11f0-a1a6-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Стирально-сушильная машина бытовая</category>
+			<category id="a56e8d6c-4dab-11f0-a1a6-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Сушильная машина бытовая</category>
+			<category id="bffbe122-0642-11f0-a154-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Телевизор</category>
+			<category id="34bc76d1-c435-11ee-9f91-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Тостер бытовой</category>
+			<category id="7018f93e-18f4-11f0-a167-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Утюг</category>
+			<category id="d6a23187-370f-11f0-a187-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Фен</category>
+			<category id="491bcefb-f2d7-11ef-a139-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Холодильник</category>
+			<category id="d6e06e1f-f22f-11ef-a139-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Холодильник для косметики</category>
+			<category id="66c4b4c7-c433-11ee-9f91-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Чайник</category>
+			<category id="e3e26bde-e085-11f0-a257-00155d0a5704"
+					parentId="360dd975-9995-11ed-9d80-00155d0a5700">Электрогриль</category>
+			<category id="90fb78ae-8e66-11ed-9d61-00155d0a5704"
+					parentId="5a1f22fc-dc49-11ee-9fb1-00155d0a5704">Комплектующие</category>
+			<category id="2529dd23-b075-11ef-a0e1-00155d0a5704"
+					parentId="5a1f22fc-dc49-11ee-9fb1-00155d0a5704">не основной ассортимент</category>
+			<category id="c98cca6b-a55c-11ed-9d9f-00155d0a5704"
+					parentId="5a1f22fc-dc49-11ee-9fb1-00155d0a5704">неликвид</category>
+			<category id="822f9bfc-2943-11ef-a019-00155d0a5704"
+					parentId="5cd5070d-2943-11ef-a019-00155d0a5704">Весы</category>
+			<category id="53f870f7-f836-11f0-a275-00155d0a5704"
+					parentId="efe3d883-f835-11f0-a275-00155d0a5704">Водоподготовка</category>
+			<category id="fae6211e-31b8-11f1-a2be-00155d0a5704"
+					parentId="de490ef9-31b8-11f1-a2be-00155d0a5704">Аксессуары</category>
+			<category id="9c71a2ff-54e1-11f1-a2eb-00155d0a5704"
+					parentId="de490ef9-31b8-11f1-a2be-00155d0a5704">Насадки для паста-машин</category>
+			<category id="5618bc34-3da9-11f1-a2cd-00155d0a5704"
+					parentId="cc8b4253-3da8-11f1-a2cd-00155d0a5704">Химия для кофейного оборудования</category>
+			<category id="e7913673-3da8-11f1-a2cd-00155d0a5704"
+					parentId="cc8b4253-3da8-11f1-a2cd-00155d0a5704">Химия для печей и пароконвектоматов</category>
+			<category id="474d5397-3da9-11f1-a2cd-00155d0a5704"
+					parentId="cc8b4253-3da8-11f1-a2cd-00155d0a5704">Химия для посудомоечных машин</category>
+			<category id="bf793b12-3e12-11f1-a2ce-00155d0a5704"
+					parentId="673c8e27-3e11-11f1-a2ce-00155d0a5704">Смеси для Бельгийских вафель</category>
+			<category id="b35b3820-3e12-11f1-a2ce-00155d0a5704"
+					parentId="673c8e27-3e11-11f1-a2ce-00155d0a5704">Смеси для Гонконгских вафель</category>
+			<category id="7bd5d4f7-3e11-11f1-a2ce-00155d0a5704"
+					parentId="673c8e27-3e11-11f1-a2ce-00155d0a5704">Смеси для мороженного и молочных коктейлей</category>
+		</categories>
+		<offers>
+			<ДетальнаяЗапись>
+				<Модель>Abat Decalc (5л)-жидкое кислотное концен-ое сред. для декальцинации бойлера для ПКА</Модель>
+				<НаименованиеПолное>Abat Decalc (5л)-жидкое кислотное концентрированное средство для декальцинации бойлера для ПКА</НаименованиеПолное>
+				<Артикул>12000137117</Артикул>
+				<Код>ЦБ-Ц0017339</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Жидкое кислотное средство Decalc предназначено для очистки нагревательных элементов и внутренних поверхностей бойлеров.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>2 948</Цена>
+				<categoryId>Химия для печей и пароконвектоматов</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>f1592632-5228-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat DR (5л)-жидкое кислотное концентрированное ополаскивающее средство для посудомоечных машин</Модель>
+				<НаименованиеПолное>Abat DR (5л)-жидкое кислотное концентрированное ополаскивающее средство для посудомоечных машин</НаименованиеПолное>
+				<Артикул>12000137119</Артикул>
+				<Код>ЦБ-Ц0017362</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Кислотное ополаскивающее средство DR предназначено для ополаскивания посуды в посудомоечных машинах различного типа.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>3 050</Цена>
+				<categoryId>Химия для посудомоечных машин</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>459796fb-523a-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat DW (5л)-жидкое щелочное концентрированное моющее средство для посудомоечных машин</Модель>
+				<НаименованиеПолное>Abat DW (5л)-жидкое щелочное концентрированное моющее средство для посудомоечных машин</НаименованиеПолное>
+				<Артикул>12000137118</Артикул>
+				<Код>ЦБ-Ц0017357</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Концентрированное жидкое щелочное моющее средство DW предназначено для мытья различных видов посуды в посудомоечных машинах.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>2 745</Цена>
+				<categoryId>Химия для посудомоечных машин</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>ff15b24c-5237-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat PW (5л)-жидкое щелочное концентрированное моющее средство для ПКА</Модель>
+				<НаименованиеПолное>Abat PW (5л)-жидкое щелочное концентрированное моющее средство для ПКА</НаименованиеПолное>
+				<Артикул>12000137052</Артикул>
+				<Код>ЦБ-Ц0017334</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Концентрированное жидкое щелочное моющее средство PW предназначено для очистки поверхности камеры пароконвектомата.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>3 152</Цена>
+				<categoryId>Химия для печей и пароконвектоматов</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>da7b7173-5227-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat PW&amp;R tabs (100 шт) - таблетированное моющее средство 2 в 1 с ополаскивающим эффектом для ПКА и </Модель>
+				<НаименованиеПолное>Abat PW&amp;R tabs (100 шт) - таблетированное моющее средство 2 в 1 с ополаскивающим эффектом для ПКА и КЭП</НаименованиеПолное>
+				<Артикул>12000082249</Артикул>
+				<Код>ЦБ-Ц0041936</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Моющие таблетки 2 в 1 Abat PW&amp;R tabs (100 шт) с ополаскивающим эффектом предназначены для очистки поверхности камеры пароконвектоматов и конвекционных печей, оснащенных функцией автоматической мойки таблетками.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>7 829</Цена>
+				<categoryId>Химия для печей и пароконвектоматов</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>bf496a0f-e643-11ec-9c6d-00155d0a5700</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>АКО-90/1КП-С-00 1/2 гладкая - 1/2 рифленая</Модель>
+				<НаименованиеПолное>Аппарат контактной обработки АКО-90/1КП-С-00 1/2 гладкая - 1/2 рифленая</НаименованиеПолное>
+				<Артикул>21000801808</Артикул>
+				<Код>00000000721</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Аппарат контактной обработки АКО-90/1КП-С-00 (жарочная поверхность) предназначен для приготовления стейка, рыбы, блинов, омлета и т.п. путем непосредственного контакта греющей поверхности с пищей.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>102 633</Цена>
+				<categoryId>Жарочная поверхность электрическая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>16da05e0-31f8-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ВМП-7-1 краш.</Модель>
+				<НаименованиеПолное>Котломойка ВМП-7-1 краш.</НаименованиеПолное>
+				<Артикул>21000801677</Артикул>
+				<Код>00000000647</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Сварная ванна ВМП-7-1 предназначена для мытья ручным способом котлов, крупногабаритной посуды и инвентаря на предприятиях общественного питания. Каркас крашенный</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>37 684</Цена>
+				<categoryId>Ванна котломоечная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>8332e4f6-3138-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ВМП-9-1 нерж.</Модель>
+				<НаименованиеПолное>Котломойка ВМП-9-1 нерж.</НаименованиеПолное>
+				<Артикул>21000802818</Артикул>
+				<Код>00000000650</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Сварная ванна ВМП-9-1 предназначена для мытья ручным способом котлов, крупногабаритной посуды и инвентаря на предприятиях общественного питания. Каркас нержавеющий.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>56 461</Цена>
+				<categoryId>Ванна котломоечная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>8332e4fc-3138-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ГАКО-80/2Н-Ч-02</Модель>
+				<НаименованиеПолное>Газовый аппарат контактной обработки ГАКО-80/2Н-Ч-02 </НаименованиеПолное>
+				<Артикул>21000002717</Артикул>
+				<Код>ЦБ-Ц0030629</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Газовый аппарат контактной обработки предназначен для приготовления пищи путем непосредственного контакта греющей чугунной поверхности с продуктом</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>142 592</Цена>
+				<categoryId>Жарочная поверхность газовая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>ed336c84-e875-11eb-9b22-00155d0a5700</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ГВК-90/2П</Модель>
+				<НаименованиеПолное>Газоварка ГВК-90/2П нерж. </НаименованиеПолное>
+				<Артикул>21000802032</Артикул>
+				<Код>00-Ц0001885</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Газоварка кухонная ГВК-90/2П предназначена для варки корзине риса, макарон, овощей, корнеплодов, яиц, вареников, пельменей и для кипячения воды на предприятиях общественного питания.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>190 804</Цена>
+				<categoryId>Газоварка</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>d81da5f1-84dc-11e8-baf6-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat GW (5 л) - жидкое щелочное концентрированное моющее средство для стаканомоечных машин</Модель>
+				<НаименованиеПолное> Abat GW (5 л) - жидкое щелочное концентрированное моющее средство для стаканомоечных машин</НаименованиеПолное>
+				<Артикул>12000032460</Артикул>
+				<Код>23-00002081</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Жидкое щелочное концентрированное моющее средство для стаканомоечных машин Abat GW предназначено для бережной обработки и регулярной очистки хрупкой посуды.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>3 050</Цена>
+				<categoryId>Химия для посудомоечных машин</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>08f2a206-a783-11ed-9da7-00155d0a5700</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat PR (5л)-жидкое кислотное концентрированное ополаскивающее средство для ПКА</Модель>
+				<НаименованиеПолное>Abat PR (5л)-жидкое кислотное концентрированное ополаскивающее средство для ПКА</НаименованиеПолное>
+				<Артикул>12000137053</Артикул>
+				<Код>ЦБ-Ц0017335</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Жидкое кислотное ополаскивающее средство PR предназначено для ополаскивания поверхности камеры пароконвектомата.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>2 745</Цена>
+				<categoryId>Химия для печей и пароконвектоматов</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>3041740d-5228-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat PW&amp;R (5л)-жидкое щелочное концентрированное моющее средство с ополаскивающим эффектом для ПКА</Модель>
+				<НаименованиеПолное>Abat PW&amp;R (5л)-жидкое щелочное концентрированное моющее средство с ополаскивающим эффектом для ПКА</НаименованиеПолное>
+				<Артикул>12000137054</Артикул>
+				<Код>ЦБ-Ц0017337</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Жидкое концентрированное моющее средство с ополаскивающим эффектом для конвекционной печи и пароконвектомата.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>3 101</Цена>
+				<categoryId>Химия для печей и пароконвектоматов</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>7798ff75-5228-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ЗВЭ-900-2-П</Модель>
+				<НаименованиеПолное>Зонт вентиляционный ЗВЭ-900-2-П</НаименованиеПолное>
+				<Артикул>21000180839</Артикул>
+				<Код>00000000497</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Зонт вентиляционный ЗВЭ-900-2П используется для очистки воздуха от аэрозолей жира, масла, водяного пара и устанавливается в системе вытяжной вентиляции на объектах общественного питания.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>67 460</Цена>
+				<categoryId>Зонт вентиляционный</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>a0f2245d-2f94-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ЗПВ-900-1,5-П</Модель>
+				<НаименованиеПолное>Зонт приточно-вытяжной ЗПВ-900-1,5-П</НаименованиеПолное>
+				<Артикул>21000007877</Артикул>
+				<Код>00000000499</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Зонт приточно-вытяжной ЗВП-900-1,5П используется для очистки воздуха от аэрозолей жира, масла, водяного пара и устанавливается в системе вытяжной вентиляции на объектах общественного питания.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>59 464</Цена>
+				<categoryId>Зонт вентиляционный</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>a0f22461-2f94-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Briskly 5 (RAL 7024)</Модель>
+				<НаименованиеПолное>Холодильный шкаф Briskly Smart 5 (RAL 7024)</НаименованиеПолное>
+				<Артикул/>
+				<Код>ЦБ-Ц0037967</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Холодильный шкаф Briskly 5 (RAL 7024) подойдет для экспозиции, хранения и продажи продуктов питания и напитков. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянной распашной дверью выполнен из крашеного металла, обрамление стеклянной двери — из алюминиевого профиля.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>105 025</Цена>
+				<categoryId>Холодильный шкаф</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>039fa4e4-8589-11ec-9bea-00155d0a5704</ID>
+				<ТорговаяМарка>Briskly</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>HCE380RFC</Модель>
+				<НаименованиеПолное>HCE380RFC Морозильный ларь Haier</НаименованиеПолное>
+				<Артикул>B30JSHE00RU</Артикул>
+				<Код>23-00007998</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Морозильный ларь HAIER HCE380RFC - современный и удобный морозильный ларь, созданный для качественного длительного хранения продуктов. Обладает компактными размерами, полезный объём — 381 литра(ов). Часть продуктов удобно разместить в подвесной съёмной корзине, 2 шт. в комплекте. Надёжный компрессор с низким энергопотреблением — класс энергоэффективности А+ — обеспечивает бесперебойную работу ларя. Электронное управление — простое и понятное: легко настраивайте нужную температуру или активируйте</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>52 457</Цена>
+				<categoryId>Ларь морозильный</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>80699889-5165-11ee-9eed-00155d0a5704</ID>
+				<ТорговаяМарка>HAIER</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>HCE430RFC</Модель>
+				<НаименованиеПолное>HCE430RFC Морозильный ларь Haier</НаименованиеПолное>
+				<Артикул>B30JTDE00RU</Артикул>
+				<Код>23-00007999</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Морозильный ларь HAIER HCE430RFC - современный и удобный морозильный ларь, созданный для качественного длительного хранения продуктов. Обладает компактными размерами, полезный объём — 424 литра(ов). Часть продуктов удобно разместить в подвесной съёмной корзине, 2 шт. в комплекте. Надёжный компрессор с низким энергопотреблением — класс энергоэффективности А+ — обеспечивает бесперебойную работу ларя. Электронное управление — простое и понятное: легко настраивайте нужную температуру или активируйте</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>57 411</Цена>
+				<categoryId>Ларь морозильный</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>bcd938aa-5165-11ee-9eed-00155d0a5704</ID>
+				<ТорговаяМарка>HAIER</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>АКО-30Н</Модель>
+				<НаименованиеПолное>Аппарат контактной обработки АКО-30Н нерж. (440х310х245 мм, гриль контактный)</НаименованиеПолное>
+				<Артикул>21000001696</Артикул>
+				<Код>00000011859</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Аппарат контактной обработки (гриль электрический контактный) АКО-30Н предназначен для приготовления мяса, рыбы, яиц, сыра, овощей и др., а также для подогревания бутербродов и горячих сэндвичей разного размера и толщины путем непосредственного контакта греющих поверхностей с продуктами.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>40 953</Цена>
+				<categoryId>Жарочная поверхность электрическая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>a68d9742-adc0-11e3-8f08-001e67102ec0</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>АКО-40/1Н-С-00 1/2 гладкая - 1/2 рифленая поверхность</Модель>
+				<НаименованиеПолное>Аппарат контактной обработки АКО-40/1Н-С-00 1/2 гладкая - 1/2 рифленая поверхность</НаименованиеПолное>
+				<Артикул>21000001739</Артикул>
+				<Код>ЦБ-Ц0018224</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-С-00 предназначен для непосредственной жарки мясных, рыбных и овощных блюд.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>67 404</Цена>
+				<categoryId>Жарочная поверхность электрическая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>2769ac35-6e6d-11ea-bd52-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>АКО-40/1Н-С-01 гладкая стальная поверхность</Модель>
+				<НаименованиеПолное>Аппарат контактной обработки АКО-40/1Н-С-01 гладкая стальная поверхность</НаименованиеПолное>
+				<Артикул>21000001740</Артикул>
+				<Код>ЦБ-Ц0018226</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-С-01 предназначен для непосредственной жарки мясных, рыбных и овощных блюд. Рабочая поверхность - сталь Все регуляторы и контрольные лампы находятся на передней панели. Терморегулятор позволяет поддерживать температуру поверхности от +30 С до +270 °С. Поверхность для обжарки имеет желоб для стекающей жидкости и снабжена по периметру бортиком, позволяющим предотвратить разбрызгивание жира. Может быть установлен на модуль нижний МН-02 7</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>67 404</Цена>
+				<categoryId>Жарочная поверхность электрическая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>14bb95a3-6e6e-11ea-bd52-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>АКО-40/1Н-С-02 рифленая стальная поверхность</Модель>
+				<НаименованиеПолное>Аппарат контактной обработки АКО-40/1Н-С-02 рифленая стальная поверхность</НаименованиеПолное>
+				<Артикул>21000001741</Артикул>
+				<Код>ЦБ-Ц0018227</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-С-02 предназначен для непосредственной жарки мясных, рыбных и овощных блюд.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>67 404</Цена>
+				<categoryId>Жарочная поверхность электрическая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>42a114b4-6e6e-11ea-bd52-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>АКО-40/1Н-Ч-00 1/2 гладкая - 1/2 рифленая (АКО-40Н 1/2 гладкая - 1/2 рифленая)</Модель>
+				<НаименованиеПолное>Аппарат контактной обработки АКО-40/1Н-Ч-00 1/2 гладкая - 1/2 рифленая</НаименованиеПолное>
+				<Артикул>21000000541</Артикул>
+				<Код>00000000502</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-Ч-00 предназначен для непосредственной жарки мясных, рыбных и овощных блюд.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>69 400</Цена>
+				<categoryId>Жарочная поверхность электрическая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>1fad552c-306c-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat DW / AntiCaramel (5л)-жидкое концентрированное моющее средство для удаления сахарных пригаров д</Модель>
+				<НаименованиеПолное>Abat DW / AntiCaramel (5л)-жидкое концентрированное моющее средство для удаления сахарных пригаров д</НаименованиеПолное>
+				<Артикул>12000137121</Артикул>
+				<Код>ЦБ-Ц0017360</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Жидкое моющее средство Abat DW/AntiCaramel (5 л) предназначено для мытья стеклянной, фарфоровой посуды, а также посуды из нержавеющей стали.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>2 948</Цена>
+				<categoryId>Химия для посудомоечных машин</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>e7158f90-5239-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat DW AL (5л)-жидкое щелочное концентрированное моющее средство для автоматической мойки алюминиев</Модель>
+				<НаименованиеПолное>Abat DW AL (5л)-жидкое щелочное концентрированное моющее средство для автоматической мойки алюминиевой посуды для посудомоечных машин</НаименованиеПолное>
+				<Артикул>12000137120</Артикул>
+				<Код>ЦБ-Ц0017358</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Концентрированное жидкое щелочное моющее средство DW / AL предназначено для мытья различных видов посуды в посудомоечных машинах.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>3 457</Цена>
+				<categoryId>Химия для посудомоечных машин</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>e4fb8f28-5238-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Abat GR (5 л) - жидкое кислотное концентрированное ополаскивающее средство для стаканомоечных машин</Модель>
+				<НаименованиеПолное>Abat GR (5 л) - жидкое кислотное концентрированное ополаскивающее средство для стаканомоечных машин</НаименованиеПолное>
+				<Артикул>12000032461</Артикул>
+				<Код>23-00002082</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Жидкое кислотное концентрированное ополаскивающее средство для стаканомоечных машин Abat GW предназначено для бережной обработки и регулярной очистки хрупкой посуды.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>2 643</Цена>
+				<categoryId>Химия для посудомоечных машин</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>34411cec-a783-11ed-9da7-00155d0a5700</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>БН-2-70-90</Модель>
+				<НаименованиеПолное>Бункер-накопитель БН-2-70-90</НаименованиеПолное>
+				<Артикул>71000006915</Артикул>
+				<Код>23-00009313</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Бункер-накопитель БН-2-70-90 для льдогенераторов чешуйчатого льда предназначен для кратковременного хранения чешуйчатого льда и его транспортировки к местам применения.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>254 175</Цена>
+				<categoryId>Бункеры для льдогенераторов</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>50c2f2ce-77ef-11ee-9f21-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ВХН-70-01 модель 2018 года</Модель>
+				<НаименованиеПолное>Витрина холодильная настольная ВХН-70-01 модель 2018 года, 1120х860х700 мм, +5…+15 С, динамика, V = 0,27 м3, демонстрационная площадь 0,92 м2, естественная оттайка, нерж. перфорир. полка 1043х372х60 м</НаименованиеПолное>
+				<Артикул>21000807730</Артикул>
+				<Код>23-00005239</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Витрина холодильная настольная типа ВХН-70-01 предназначена для демонстрации и поддержания в охлажденном состоянии различных продуктов, холодных закусок и третьих блюд.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>126 365</Цена>
+				<categoryId>Витрина холодильная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>bd12eff8-003e-11ee-9e78-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>КИП-17Н-3,5ВОК</Модель>
+				<НаименованиеПолное>Плита индукционная одноконфорочная КИП-17Н-3,5ВОК, настольная, 400х750х470(490) мм, 9 ур. мощности, +60…+240 С, 3,5 кВт, 230 В, 1 индукционный модуль, 1 конфорка ВОК, стеклокерамика (возможна установк</НаименованиеПолное>
+				<Артикул>71000006912</Артикул>
+				<Код>23-00034115</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Одноконфорочная индукционная плита КИП-17Н-3,5ВОК предназначена для приготовления первых, вторых и третьих блюд в специальной наплитной посуде. </ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>101 565</Цена>
+				<categoryId>Плита индукционная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>bb2684e1-3d7f-11f1-a2cd-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>КИП-17Н-5,0ВОК</Модель>
+				<НаименованиеПолное>Плита индукционная одноконфорочная КИП-17Н-5,0ВОК, настольная, 450х750х470(490) мм, 9 ур. мощности, +60…+240 С, 5,0 кВт, 230 В, 1 индукционный модуль, 1 конфорка ВОК, стеклокерамика (возможна установк</НаименованиеПолное>
+				<Артикул>71000006893</Артикул>
+				<Код>23-00004612</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Индукционная плита Abat КИП-17Н-5,0ВОК предназначена для приготовления различных блюд в специальной наплитной посуде со сферическим дном на предприятиях общественного питания и торговли. Модель оснащена быстросъемным моющимся жироулавливающим фильтром из нержавеющей стали, сетевым кабелем с заземляющим контактом и регулируемыми по высоте ножками. Лицевая и боковые панели, столешница, воздуховод выполнены из высококачественной нержавеющей стали, рабочая поверхность - из стеклокерамики.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>107 669</Цена>
+				<categoryId>Плита индукционная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>3d470d74-ef37-11ed-9e5e-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>КИП-19Н-3,5ВОК</Модель>
+				<НаименованиеПолное>Плита индукционная одноконфорочная КИП-19Н-3,5ВОК, настольная, 400х900х441(461) мм, 9 ур. мощности, +60…+240 С, 3,5 кВт, 230 В, 1 индукционный модуль, 1 конфорка ВОК, стеклокерамика (возможна установк</НаименованиеПолное>
+				<Артикул>71000006924</Артикул>
+				<Код>23-00024455</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Одноконфорочная индукционная плита КИП-19Н-3,5ВОК предназначена для приготовления первых, вторых и третьих блюд в специальной наплитной посуде со сферическим дном. Используемая посуда должна обладать магнитными свойствами (к ней должен притягиваться магнит). Может использоваться посуда из нержавеющей стали или алюминия с ферромагнитным дном, чугунная посуда.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>104 212</Цена>
+				<categoryId>Плита индукционная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>d351accc-4603-11f0-a19a-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ПКХ4-РИ</Модель>
+				<НаименованиеПолное>Печь электрическая конвекционная ПКХ4-РИ</НаименованиеПолное>
+				<Артикул/>
+				<Код>23-00035368</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание/>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>0</Цена>
+				<categoryId>Печь конвекционная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>02bdfcae-582a-11f1-a2ef-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Briskly 11</Модель>
+				<НаименованиеПолное>Холодильный шкаф Briskly Smart 11</НаименованиеПолное>
+				<Артикул/>
+				<Код>ЦБ-Ц0037924</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Холодильный шкаф Briskly 11 подойдет для экспозиции, хранения и продажи продуктов питания и напитков. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянными распашными дверьми выполнен из крашеного металла, обрамление стеклянных дверей — из алюминиевого профиля.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>176 194</Цена>
+				<categoryId>Холодильный шкаф</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>f7c553a8-84b6-11ec-9be9-00155d0a5704</ID>
+				<ТорговаяМарка>Briskly</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Briskly 11 (RAL 7024)</Модель>
+				<НаименованиеПолное>Холодильный шкаф Briskly Smart 11 (RAL 7024)</НаименованиеПолное>
+				<Артикул/>
+				<Код>ЦБ-Ц0041631</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Холодильный шкаф Briskly 11 (RAL 7024) подойдет для экспозиции, хранения и продажи продуктов питания и напитков. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянными распашными дверьми выполнен из крашеного металла, обрамление стеклянных дверей — из алюминиевого профиля.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>176 194</Цена>
+				<categoryId>Холодильный шкаф</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>707b8ac0-dbea-11ec-9c5d-00155d0a5704</ID>
+				<ТорговаяМарка>Briskly</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>BD-446</Модель>
+				<НаименованиеПолное>Ларь морозильный BD-446</НаименованиеПолное>
+				<Артикул>BD-446</Артикул>
+				<Код>00000027266</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Морозильный ларь Aucma BD-446 используется на предприятиях общественного питания и торговли для заморозки и длительного хранения продуктов и полуфабрикатов. Модель оснащена корзиной из стальной проволоки с порошковым покрытием и 2 откидными литыми крышками с нескользящими ручками и замками. Корпус выполнен из рельефного алюминия, внутренний короб - из алюминия, крышка - из пластмассы, покрытой порошковой краской CRS (холоднокатаная сталь), шарниры - из металла с пластиковым покрытием, теплоизоля</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>48 605,8</Цена>
+				<categoryId>Ларь морозильный</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>e35ff9c2-d888-11e6-93df-001e67102ec0</ID>
+				<ТорговаяМарка>Aucma</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Besthead FLEX 3/8“ Головная часть фильтра (812420)</Модель>
+				<НаименованиеПолное>Besthead FLEX 3/8“ Головная часть фильтра</НаименованиеПолное>
+				<Артикул>812420</Артикул>
+				<Код>23-00022429</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Головная часть картриджа BWT besthead FLEX используется в составе фильтр-систем Bestmax, Bestmax PREMIUM, Bestprotect, Bestmin PREMIUM, Bestdrink PREMIUM, Besttaste, Bestcare, Bestclear, Bestclear EXTRA и подходит для всех картриджей BWT. Модель изготовлена из экологически безопасного пластика.
+Особенности:
+Установленный байпас
+Блокировка для безопасной настройки байпаса
+Простая визуализация настройки байпаса
+Сертифицированный встроенный обратный клапан на входе и выходе потока
+Встроенный сливно</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>12 161,53</Цена>
+				<categoryId>Комплектующие</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>fc3c15ea-0f93-11f0-a160-00155d0a5704</ID>
+				<ТорговаяМарка>BWT</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Besthead FLEX duplex M 3/8" Головная часть фильтра сдвоенная</Модель>
+				<НаименованиеПолное>Besthead FLEX duplex M 3/8" Головная часть фильтра сдвоенная</НаименованиеПолное>
+				<Артикул>812418</Артикул>
+				<Код>23-00022455</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Головная часть фильтра BWT Besthead FLEX duplex M 3/8" сдвоенная используется в составе фильтр-систем Bestmax, Bestmax PREMIUM, Bestprotect, Bestmin PREMIUM, Bestdrink PREMIUM, Besttaste, Bestcare, Bestclear, Bestclear EXTRA и подходит для всех картриджей BWT. Модель изготовлена из экологически безопасного пластика.
+Комплект поставки:
+Головная часть фильтра BWT Besthead FLEX duplex M 3/8" сдвоенная.
+Особенности^
+Установленный байпа;
+Блокировка для безопасной настройки байпаса;
+Простая визуализац</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>20 334,73</Цена>
+				<categoryId>Водоподготовка</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>8e45297c-0fab-11f0-a160-00155d0a5704</ID>
+				<ТорговаяМарка>BWT</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Besthead PA-8mm Головная часть фильтра</Модель>
+				<НаименованиеПолное>Besthead PA-8mm Головная часть фильтра</НаименованиеПолное>
+				<Артикул>812413</Артикул>
+				<Код>23-00022430</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Головная часть картриджа BWT besthead PA используется в составе фильтр-систем Bestmax, Bestmax PREMIUM, Bestprotect, Bestmin PREMIUM, Bestdrink PREMIUM, Besttaste, Bestcare, Bestclear, Bestclear EXTRA и подходит для всех картриджей BWT.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>10 993,93</Цена>
+				<categoryId>Водоподготовка</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>71ff5595-0f94-11f0-a160-00155d0a5704</ID>
+				<ТорговаяМарка>BWT</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>BD-560</Модель>
+				<НаименованиеПолное>Ларь морозильный  BD-560</НаименованиеПолное>
+				<Артикул>BD-560</Артикул>
+				<Код>00000027267</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Морозильный ларь Aucma BD-560 используется на предприятиях общественного питания и торговли для заморозки и длительного хранения продуктов и полуфабрикатов. Модель оснащена корзиной из стальной проволоки с порошковым покрытием и 2 откидными литыми крышками с нескользящими ручками и замками. Корпус выполнен из рельефного алюминия, внутренний короб - из алюминия, крышка - из пластмассы, покрытой порошковой краской CRS (холоднокатаная сталь), шарниры - из металла с пластиковым покрытием, теплоизоля</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>0</Цена>
+				<categoryId>Ларь морозильный</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>f24edbb9-d888-11e6-93df-001e67102ec0</ID>
+				<ТорговаяМарка>Aucma</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Briskly 5 Premium</Модель>
+				<НаименованиеПолное>Холодильный шкаф c безрамочной дверью Briskly Smart 5 Premium</НаименованиеПолное>
+				<Артикул/>
+				<Код>23-00009888</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Холодильный шкаф с безрамочной стеклянной распашной дверью</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>0</Цена>
+				<categoryId>Холодильный шкаф</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>113edcf7-8f83-11ee-9f3e-00155d0a5704</ID>
+				<ТорговаяМарка>Briskly</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Briskly 5 Wine Premium (деревянные полки) (RAL 7024)</Модель>
+				<НаименованиеПолное>Винный шкаф Briskly 5 Wine Premium (деревянные полки) (RAL 7024)</НаименованиеПолное>
+				<Артикул/>
+				<Код>ЦБ-Ц0037934</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Холодильный шкаф Briskly 5 Wine (деревянные полки) подойдет для экспозиции, хранения и продажи вина. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянной распашной дверью выполнен из крашеного металла, обрамление стеклянной двери — из алюминиевого профиля.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>0</Цена>
+				<categoryId>Холодильный шкаф</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>57459e36-84b7-11ec-9be9-00155d0a5704</ID>
+				<ТорговаяМарка>Briskly</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Briskly 5 Zero</Модель>
+				<НаименованиеПолное>Шкаф Briskly Smart 5 Zero</НаименованиеПолное>
+				<Артикул/>
+				<Код>ЦБ-Ц0037937</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Холодильный шкаф со стеклянной распашной дверью выполнен из крашеного металла, обрамление стеклянной двери — из алюминиевого профиля.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>0</Цена>
+				<categoryId>Холодильный шкаф</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>8decc97b-84b7-11ec-9be9-00155d0a5704</ID>
+				<ТорговаяМарка>Briskly</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ПЭК-800 с дверцей, для установки в 2 яруса</Модель>
+				<НаименованиеПолное>Печь электрическая для пиццы ПЭК-800 с дверцей, конвейерная, без основания - для установки в 2 яруса</НаименованиеПолное>
+				<Артикул>21000001776</Артикул>
+				<Код>ЦБ-Ц0026144</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Конвейерная печь для пиццы
+Печь электрическая конвейерная ПЭК-800 с дверцей (модуль для установки в 2 яруса) предназначена для приготовления пиццы, выпечки и фастфуда, требующих высокой температуры приготовления, на предприятиях общественного питания.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>794 289</Цена>
+				<categoryId>Печь для пиццы</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>92c86f5f-96a3-11eb-9af0-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>СХС-70Н-01 столешн. 202 без борт.(дверь-дверь)</Модель>
+				<НаименованиеПолное>Стол холод. среднетемпер. с нижним располож. агрегата СХС-70Н-01 столешн. 202 без борт.(дверь-дверь)</НаименованиеПолное>
+				<Артикул>25110021100</Артикул>
+				<Код>23-00004647</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Стол холодильный среднетемпературный с нижним расположением агрегата предназначен для кратковременного хранения пищевых продуктов на предприятиях общественного питания и торговли.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>127 092</Цена>
+				<categoryId>Стол холодильный</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>8de2a2fe-efe4-11ed-9e5f-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ГФК-40.2Н</Модель>
+				<НаименованиеПолное>Газовая фритюрница кухонная ГФК-40.2Н, 2 ванны по 10,5 л, 2 корзины 295х120х105 мм, 700 серия, 401х839х583 мм,  +110…+190 С, пьезорозжиг, газ-контроль, 2 горелки, 11 кВт, настольная, вся нерж.</НаименованиеПолное>
+				<Артикул>21000001965</Артикул>
+				<Код>ЦБ-Ц0011922</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Газовая фритюрница кухонная типа ГФК предназначена для жарки во фритюре картофеля, рыбы и других кулинарных и кондитерских изделий. Используется на предприятиях общественного питания самостоятельно или в составе технологических линий.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>187 998</Цена>
+				<categoryId>Фритюрница газовая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>2c824994-bcf8-11e9-bc62-ac1f6b2ca8fa</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>КИП-27Н-3,5</Модель>
+				<НаименованиеПолное>Плита индукционная 2-ух конфорочная КИП-27Н-3,5, настольная, 400х750х470 мм, 9 ур. мощности, +60…+240 С, 7 кВт, 230 В, 2 независимых индуктора, стеклокерамика 6 мм (возможна установка на модуль нижний</НаименованиеПолное>
+				<Артикул>71000019569</Артикул>
+				<Код>ЦБ-Ц0023715</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Индукционная плита
+Двухконфорочная индукционная плита КИП-27Н-3,5 предназначена для приготовления первых, вторых и третьих блюд в специальной наплитной посуде.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>84 213</Цена>
+				<categoryId>Плита индукционная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>aa4b4dee-32fb-11eb-9a6a-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>АКО-90/1П-С-02</Модель>
+				<НаименованиеПолное>Аппарат контактной обработки АКО-90/1П-С-02, рифленая стальная поверхность 834х703 мм, 900 серия, 844х900х950 мм, 12 кВт, 400В, подставка с полкой, вся нерж.</НаименованиеПолное>
+				<Артикул>21000002766</Артикул>
+				<Код>ЦБ-Ц0018171</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Аппарат контактной обработки АКО-90/1П-С-02 (жарочная поверхность) предназначен для приготовления стейка, рыбы, блинов, омлета и т.п. путем непосредственного контакта греющей поверхности с пищей.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>111 501</Цена>
+				<categoryId>Жарочная поверхность электрическая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>3946cebf-6d0a-11ea-bd50-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ВМП-6-1-5 РН</Модель>
+				<НаименованиеПолное>Ванна 1-о секц. ВМП-6-1-5 РН нерж. разб.</НаименованиеПолное>
+				<Артикул>21000806374</Артикул>
+				<Код>00000000638</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Цельнотянутая ванна ВМП-6-1-5 РН предназначена для мойки посуды на предприятии общественного питания.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>31 874</Цена>
+				<categoryId>Ванна моечная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>7cbad17a-3126-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ВМП-6-2-5 РН</Модель>
+				<НаименованиеПолное>Ванна 2-х секц. ВМП-6-2-5 РН нерж. разб.</НаименованиеПолное>
+				<Артикул>21000806373</Артикул>
+				<Код>00000000639</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Цельнотянутая ванна ВМП-6-2-5 РН предназначена для мойки посуды на предприятии общественного питания.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>55 919</Цена>
+				<categoryId>Ванна моечная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>8332e4e6-3138-11e1-9d46-001e67102ec1</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель> GN1/3х150мм с перфорацией</Модель>
+				<НаименованиеПолное>ROSSO Гастроёмкость GN1/3х150мм с перфорацией</НаименованиеПолное>
+				<Артикул>813-6P</Артикул>
+				<Код>23-00020471</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание> GN1/3х150 перфорированная, нерж.сталь.  Размер перфораций 6 мм.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>0</Цена>
+				<categoryId>Гастроёмкость</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>79cb85d5-d984-11ef-a119-00155d0a5704</ID>
+				<ТорговаяМарка>Rosso (Китай)</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>1-секционная тепловая тележка HPW-1</Модель>
+				<НаименованиеПолное>1-секционная тепловая тележка HPW-1</НаименованиеПолное>
+				<Артикул>HPW-1</Артикул>
+				<Код>23-00019970</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Тепловая тележка HPW-1 предназначена для  поддержания тарелок в горячем состоянии на предприятиях общественного питания и торговли.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>29 892</Цена>
+				<categoryId>Витрина тепловая</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>79d0ed27-c38c-11ef-a0fb-00155d0a5700</ID>
+				<ТорговаяМарка>Rosso (Китай)</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>Sinc WP 3/6 нерж не выбирать</Модель>
+				<НаименованиеПолное>Ванна Sinc WP 3/6 нерж</НаименованиеПолное>
+				<Артикул>НВ00151</Артикул>
+				<Код>23-00029566</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание/>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>0</Цена>
+				<categoryId>Ванна моечная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>e3e64936-d023-11f0-a24b-00155d0a5704</ID>
+				<ТорговаяМарка>HESSEN</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>SINC ВРП  3/5 нерж</Модель>
+				<НаименованиеПолное>Ванна SINC ВРП 3/5 нерж</НаименованиеПолное>
+				<Артикул>НВ00148</Артикул>
+				<Код>23-00029563</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание/>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>32 812,65</Цена>
+				<categoryId>Ванна моечная</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>f5435548-d022-11f0-a24b-00155d0a5704</ID>
+				<ТорговаяМарка>HESSEN</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ПКА 10-1/1ВМ2</Модель>
+				<НаименованиеПолное> Пароконвектомат ПКА 10-1/1ВМ2</НаименованиеПолное>
+				<Артикул>11000019265</Артикул>
+				<Код>00000019757</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Пароконвектомат инжекционного типа предназначен для приготовления различных блюд методом обработки паром и горячим воздухом по отдельности или комбинированно.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>342 526</Цена>
+				<categoryId>Пароконвектомат</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>41bdd205-a94e-11e5-845e-001e67102ec0</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ПКА 10-1/1ВМ2-01</Модель>
+				<НаименованиеПолное>Пароконвектомат ПКА 10-1/1ВМ2-01</НаименованиеПолное>
+				<Артикул>11000019106</Артикул>
+				<Код>ЦБ-Ц0010101</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Пароконвектомат инжекционного типа предназначен для приготовления различных блюд методом обработки паром и горячим воздухом по отдельности или комбинированно.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>383 995</Цена>
+				<categoryId>Пароконвектомат</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>5a74b02c-8e8c-11e9-bc1f-ac1f6b2ca8fb</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+			<ДетальнаяЗапись>
+				<Модель>ПКА 10-1/1ВП2</Модель>
+				<НаименованиеПолное>Пароконвектомат ПКА 10-1/1ВП2 (инжекционный, 10xGN1/1, 120 установленных + память на 360 доп. программ приготовления, автоматическая мойка, вся нерж, без г/емкостей, 3х-канальный щуп, ЖК экран, сенсор</НаименованиеПолное>
+				<Артикул>11000010402</Артикул>
+				<Код>ЦБ-Ц0021368</Код>
+				<ДополнительноеОписаниеНоменклатурыОписание>Инжекционный пароконвектомат
+Программируемый инжекционный пароконвектомат ПКА 10-1/1ВП2 - современное решение для вашей кухни, исключающее многие традиционные этапы из процесса приготовления и позволяющее готовить большое количество высококачественных блюд за короткий промежуток времени со значительной экономией средств.</ДополнительноеОписаниеНоменклатурыОписание>
+				<СТ_АдресСсылкиURL/>
+				<Производитель/>
+				<ПроизводительКод/>
+				<Цена>531 124</Цена>
+				<categoryId>Пароконвектомат</categoryId>
+				<Валюта>RUB</Валюта>
+				<ЕдиницаИзмерения/>
+				<ID>8509f448-e51b-11ea-9a2e-00155d0a5704</ID>
+				<ТорговаяМарка>Abat</ТорговаяМарка>
+			</ДетальнаяЗапись>
+</offers>
+	</shop>
+</yml_catalog>

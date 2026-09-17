@@ -1,0 +1,1322 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE yml_catalog SYSTEM "shops.dtd">
+<yml_catalog xmlns="https://www.1cteh.ru/xml/rosholod/ext_catalog_stock_yandex"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		date="16.09.26 10.00">
+	<shop>
+		<name>Росхолод</name>
+		<company>Росхолод</company>
+		<url>rosholod.org</url>
+		<phone>8-800-200-31-30</phone>
+		<platform>8.3.27.1606</platform>
+		<version>2.5.22.134</version>
+		<currencies>
+			<currency id="RUB"
+					rate="1"/>
+		</currencies>
+		<offers>
+			<item xsi:type="item">
+				<name>Abat Decalc (5л)-жидкое кислотное концен-ое сред. для декальцинации бойлера для ПКА</name>
+				<fullname>Abat Decalc (5л)-жидкое кислотное концентрированное средство для декальцинации бойлера для ПКА</fullname>
+				<articule>12000137117</articule>
+				<iditem>ЦБ-Ц0017339</iditem>
+				<exttext>Жидкое кислотное средство Decalc предназначено для очистки нагревательных элементов и внутренних поверхностей бойлеров.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>2948</priceinruble>
+				<price>2948</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>f1592632-5228-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Санкт-Петербург</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Abat DR (5л)-жидкое кислотное концентрированное ополаскивающее средство для посудомоечных машин</name>
+				<fullname>Abat DR (5л)-жидкое кислотное концентрированное ополаскивающее средство для посудомоечных машин</fullname>
+				<articule>12000137119</articule>
+				<iditem>ЦБ-Ц0017362</iditem>
+				<exttext>Кислотное ополаскивающее средство DR предназначено для ополаскивания посуды в посудомоечных машинах различного типа.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>3050</priceinruble>
+				<price>3050</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>459796fb-523a-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Abat DW (5л)-жидкое щелочное концентрированное моющее средство для посудомоечных машин</name>
+				<fullname>Abat DW (5л)-жидкое щелочное концентрированное моющее средство для посудомоечных машин</fullname>
+				<articule>12000137118</articule>
+				<iditem>ЦБ-Ц0017357</iditem>
+				<exttext>Концентрированное жидкое щелочное моющее средство DW предназначено для мытья различных видов посуды в посудомоечных машинах.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>2745</priceinruble>
+				<price>2745</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>ff15b24c-5237-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Abat PW (5л)-жидкое щелочное концентрированное моющее средство для ПКА</name>
+				<fullname>Abat PW (5л)-жидкое щелочное концентрированное моющее средство для ПКА</fullname>
+				<articule>12000137052</articule>
+				<iditem>ЦБ-Ц0017334</iditem>
+				<exttext>Концентрированное жидкое щелочное моющее средство PW предназначено для очистки поверхности камеры пароконвектомата.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>3152</priceinruble>
+				<price>3152</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>da7b7173-5227-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Abat PW&amp;R tabs (100 шт) - таблетированное моющее средство 2 в 1 с ополаскивающим эффектом для ПКА и </name>
+				<fullname>Abat PW&amp;R tabs (100 шт) - таблетированное моющее средство 2 в 1 с ополаскивающим эффектом для ПКА и КЭП</fullname>
+				<articule>12000082249</articule>
+				<iditem>ЦБ-Ц0041936</iditem>
+				<exttext>Моющие таблетки 2 в 1 Abat PW&amp;R tabs (100 шт) с ополаскивающим эффектом предназначены для очистки поверхности камеры пароконвектоматов и конвекционных печей, оснащенных функцией автоматической мойки таблетками.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>7829</priceinruble>
+				<price>7829</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>bf496a0f-e643-11ec-9c6d-00155d0a5700</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>АКО-90/1КП-С-00 1/2 гладкая - 1/2 рифленая</name>
+				<fullname>Аппарат контактной обработки АКО-90/1КП-С-00 1/2 гладкая - 1/2 рифленая</fullname>
+				<articule>21000801808</articule>
+				<iditem>00000000721</iditem>
+				<exttext>Аппарат контактной обработки АКО-90/1КП-С-00 (жарочная поверхность) предназначен для приготовления стейка, рыбы, блинов, омлета и т.п. путем непосредственного контакта греющей поверхности с пищей.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>102633</priceinruble>
+				<price>102633</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>16da05e0-31f8-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ВМП-7-1 краш.</name>
+				<fullname>Котломойка ВМП-7-1 краш.</fullname>
+				<articule>21000801677</articule>
+				<iditem>00000000647</iditem>
+				<exttext>Сварная ванна ВМП-7-1 предназначена для мытья ручным способом котлов, крупногабаритной посуды и инвентаря на предприятиях общественного питания. Каркас крашенный</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>37684</priceinruble>
+				<price>37684</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>8332e4f6-3138-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ВМП-9-1 нерж.</name>
+				<fullname>Котломойка ВМП-9-1 нерж.</fullname>
+				<articule>21000802818</articule>
+				<iditem>00000000650</iditem>
+				<exttext>Сварная ванна ВМП-9-1 предназначена для мытья ручным способом котлов, крупногабаритной посуды и инвентаря на предприятиях общественного питания. Каркас нержавеющий.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>56461</priceinruble>
+				<price>56461</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>8332e4fc-3138-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ГАКО-80/2Н-Ч-02</name>
+				<fullname>Газовый аппарат контактной обработки ГАКО-80/2Н-Ч-02 </fullname>
+				<articule>21000002717</articule>
+				<iditem>ЦБ-Ц0030629</iditem>
+				<exttext>Газовый аппарат контактной обработки предназначен для приготовления пищи путем непосредственного контакта греющей чугунной поверхности с продуктом</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>142592</priceinruble>
+				<price>142592</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>ed336c84-e875-11eb-9b22-00155d0a5700</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ГВК-90/2П</name>
+				<fullname>Газоварка ГВК-90/2П нерж. </fullname>
+				<articule>21000802032</articule>
+				<iditem>00-Ц0001885</iditem>
+				<exttext>Газоварка кухонная ГВК-90/2П предназначена для варки корзине риса, макарон, овощей, корнеплодов, яиц, вареников, пельменей и для кипячения воды на предприятиях общественного питания.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>190804</priceinruble>
+				<price>190804</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>d81da5f1-84dc-11e8-baf6-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Abat GW (5 л) - жидкое щелочное концентрированное моющее средство для стаканомоечных машин</name>
+				<fullname> Abat GW (5 л) - жидкое щелочное концентрированное моющее средство для стаканомоечных машин</fullname>
+				<articule>12000032460</articule>
+				<iditem>23-00002081</iditem>
+				<exttext>Жидкое щелочное концентрированное моющее средство для стаканомоечных машин Abat GW предназначено для бережной обработки и регулярной очистки хрупкой посуды.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>3050</priceinruble>
+				<price>3050</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>08f2a206-a783-11ed-9da7-00155d0a5700</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Abat PR (5л)-жидкое кислотное концентрированное ополаскивающее средство для ПКА</name>
+				<fullname>Abat PR (5л)-жидкое кислотное концентрированное ополаскивающее средство для ПКА</fullname>
+				<articule>12000137053</articule>
+				<iditem>ЦБ-Ц0017335</iditem>
+				<exttext>Жидкое кислотное ополаскивающее средство PR предназначено для ополаскивания поверхности камеры пароконвектомата.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>2745</priceinruble>
+				<price>2745</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>3041740d-5228-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Abat PW&amp;R (5л)-жидкое щелочное концентрированное моющее средство с ополаскивающим эффектом для ПКА</name>
+				<fullname>Abat PW&amp;R (5л)-жидкое щелочное концентрированное моющее средство с ополаскивающим эффектом для ПКА</fullname>
+				<articule>12000137054</articule>
+				<iditem>ЦБ-Ц0017337</iditem>
+				<exttext>Жидкое концентрированное моющее средство с ополаскивающим эффектом для конвекционной печи и пароконвектомата.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>3101</priceinruble>
+				<price>3101</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>7798ff75-5228-11ea-bd2e-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ЗВЭ-900-2-П</name>
+				<fullname>Зонт вентиляционный ЗВЭ-900-2-П</fullname>
+				<articule>21000180839</articule>
+				<iditem>00000000497</iditem>
+				<exttext>Зонт вентиляционный ЗВЭ-900-2П используется для очистки воздуха от аэрозолей жира, масла, водяного пара и устанавливается в системе вытяжной вентиляции на объектах общественного питания.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>67460</priceinruble>
+				<price>67460</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>a0f2245d-2f94-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ЗПВ-900-1,5-П</name>
+				<fullname>Зонт приточно-вытяжной ЗПВ-900-1,5-П</fullname>
+				<articule>21000007877</articule>
+				<iditem>00000000499</iditem>
+				<exttext>Зонт приточно-вытяжной ЗВП-900-1,5П используется для очистки воздуха от аэрозолей жира, масла, водяного пара и устанавливается в системе вытяжной вентиляции на объектах общественного питания.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>59464</priceinruble>
+				<price>59464</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>a0f22461-2f94-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Briskly 5 (RAL 7024)</name>
+				<fullname>Холодильный шкаф Briskly Smart 5 (RAL 7024)</fullname>
+				<articule/>
+				<iditem>ЦБ-Ц0037967</iditem>
+				<exttext>Холодильный шкаф Briskly 5 (RAL 7024) подойдет для экспозиции, хранения и продажи продуктов питания и напитков. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянной распашной дверью выполнен из крашеного металла, обрамление стеклянной двери — из алюминиевого профиля.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>105025</priceinruble>
+				<price>105025</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>039fa4e4-8589-11ec-9bea-00155d0a5704</ID>
+				<trademark>Briskly</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Владивосток</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ростов-на Дону</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Симферополь</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Санкт-Петербург</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>HCE380RFC</name>
+				<fullname>HCE380RFC Морозильный ларь Haier</fullname>
+				<articule>B30JSHE00RU</articule>
+				<iditem>23-00007998</iditem>
+				<exttext>Морозильный ларь HAIER HCE380RFC - современный и удобный морозильный ларь, созданный для качественного длительного хранения продуктов. Обладает компактными размерами, полезный объём — 381 литра(ов). Часть продуктов удобно разместить в подвесной съёмной корзине, 2 шт. в комплекте. Надёжный компрессор с низким энергопотреблением — класс энергоэффективности А+ — обеспечивает бесперебойную работу ларя. Электронное управление — простое и понятное: легко настраивайте нужную температуру или активируйте</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>52457</priceinruble>
+				<price>52457</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>80699889-5165-11ee-9eed-00155d0a5704</ID>
+				<trademark>HAIER</trademark>
+				<stocks>
+					<stock>
+						<namestock>Тимашевск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Москва (ЦФО)</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ростов-на Дону</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Краснодар</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Симферополь</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Челябинск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Екатеринбург</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Нижний Новгород</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Владивосток</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>HCE430RFC</name>
+				<fullname>HCE430RFC Морозильный ларь Haier</fullname>
+				<articule>B30JTDE00RU</articule>
+				<iditem>23-00007999</iditem>
+				<exttext>Морозильный ларь HAIER HCE430RFC - современный и удобный морозильный ларь, созданный для качественного длительного хранения продуктов. Обладает компактными размерами, полезный объём — 424 литра(ов). Часть продуктов удобно разместить в подвесной съёмной корзине, 2 шт. в комплекте. Надёжный компрессор с низким энергопотреблением — класс энергоэффективности А+ — обеспечивает бесперебойную работу ларя. Электронное управление — простое и понятное: легко настраивайте нужную температуру или активируйте</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>57411</priceinruble>
+				<price>57411</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>bcd938aa-5165-11ee-9eed-00155d0a5704</ID>
+				<trademark>HAIER</trademark>
+				<stocks>
+					<stock>
+						<namestock>Челябинск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Омск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Москва (ЦФО)</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ростов-на Дону</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Краснодар</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Симферополь</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Нижний Новгород</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Владивосток</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ставрополь</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Пермь</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>АКО-30Н</name>
+				<fullname>Аппарат контактной обработки АКО-30Н нерж. (440х310х245 мм, гриль контактный)</fullname>
+				<articule>21000001696</articule>
+				<iditem>00000011859</iditem>
+				<exttext>Аппарат контактной обработки (гриль электрический контактный) АКО-30Н предназначен для приготовления мяса, рыбы, яиц, сыра, овощей и др., а также для подогревания бутербродов и горячих сэндвичей разного размера и толщины путем непосредственного контакта греющих поверхностей с продуктами.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>40953</priceinruble>
+				<price>40953</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>a68d9742-adc0-11e3-8f08-001e67102ec0</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>АКО-40/1Н-С-00 1/2 гладкая - 1/2 рифленая поверхность</name>
+				<fullname>Аппарат контактной обработки АКО-40/1Н-С-00 1/2 гладкая - 1/2 рифленая поверхность</fullname>
+				<articule>21000001739</articule>
+				<iditem>ЦБ-Ц0018224</iditem>
+				<exttext>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-С-00 предназначен для непосредственной жарки мясных, рыбных и овощных блюд.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>67404</priceinruble>
+				<price>67404</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>2769ac35-6e6d-11ea-bd52-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>АКО-40/1Н-С-01 гладкая стальная поверхность</name>
+				<fullname>Аппарат контактной обработки АКО-40/1Н-С-01 гладкая стальная поверхность</fullname>
+				<articule>21000001740</articule>
+				<iditem>ЦБ-Ц0018226</iditem>
+				<exttext>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-С-01 предназначен для непосредственной жарки мясных, рыбных и овощных блюд. Рабочая поверхность - сталь Все регуляторы и контрольные лампы находятся на передней панели. Терморегулятор позволяет поддерживать температуру поверхности от +30 С до +270 °С. Поверхность для обжарки имеет желоб для стекающей жидкости и снабжена по периметру бортиком, позволяющим предотвратить разбрызгивание жира. Может быть установлен на модуль нижний МН-02 7</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>67404</priceinruble>
+				<price>67404</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>14bb95a3-6e6e-11ea-bd52-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>АКО-40/1Н-С-02 рифленая стальная поверхность</name>
+				<fullname>Аппарат контактной обработки АКО-40/1Н-С-02 рифленая стальная поверхность</fullname>
+				<articule>21000001741</articule>
+				<iditem>ЦБ-Ц0018227</iditem>
+				<exttext>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-С-02 предназначен для непосредственной жарки мясных, рыбных и овощных блюд.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>67404</priceinruble>
+				<price>67404</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>42a114b4-6e6e-11ea-bd52-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>АКО-40/1Н-Ч-00 1/2 гладкая - 1/2 рифленая (АКО-40Н 1/2 гладкая - 1/2 рифленая)</name>
+				<fullname>Аппарат контактной обработки АКО-40/1Н-Ч-00 1/2 гладкая - 1/2 рифленая</fullname>
+				<articule>21000000541</articule>
+				<iditem>00000000502</iditem>
+				<exttext>Аппарат контактной обработки (жарочная поверхность) АКО-40/1Н-Ч-00 предназначен для непосредственной жарки мясных, рыбных и овощных блюд.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>69400</priceinruble>
+				<price>69400</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>1fad552c-306c-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Briskly 11</name>
+				<fullname>Холодильный шкаф Briskly Smart 11</fullname>
+				<articule/>
+				<iditem>ЦБ-Ц0037924</iditem>
+				<exttext>Холодильный шкаф Briskly 11 подойдет для экспозиции, хранения и продажи продуктов питания и напитков. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянными распашными дверьми выполнен из крашеного металла, обрамление стеклянных дверей — из алюминиевого профиля.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>176194</priceinruble>
+				<price>176194</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>f7c553a8-84b6-11ec-9be9-00155d0a5704</ID>
+				<trademark>Briskly</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ростов-на Дону</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Briskly 11 (RAL 7024)</name>
+				<fullname>Холодильный шкаф Briskly Smart 11 (RAL 7024)</fullname>
+				<articule/>
+				<iditem>ЦБ-Ц0041631</iditem>
+				<exttext>Холодильный шкаф Briskly 11 (RAL 7024) подойдет для экспозиции, хранения и продажи продуктов питания и напитков. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянными распашными дверьми выполнен из крашеного металла, обрамление стеклянных дверей — из алюминиевого профиля.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>176194</priceinruble>
+				<price>176194</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>707b8ac0-dbea-11ec-9c5d-00155d0a5704</ID>
+				<trademark>Briskly</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ростов-на Дону</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Санкт-Петербург</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>BD-446</name>
+				<fullname>Ларь морозильный BD-446</fullname>
+				<articule>BD-446</articule>
+				<iditem>00000027266</iditem>
+				<exttext>Морозильный ларь Aucma BD-446 используется на предприятиях общественного питания и торговли для заморозки и длительного хранения продуктов и полуфабрикатов. Модель оснащена корзиной из стальной проволоки с порошковым покрытием и 2 откидными литыми крышками с нескользящими ручками и замками. Корпус выполнен из рельефного алюминия, внутренний короб - из алюминия, крышка - из пластмассы, покрытой порошковой краской CRS (холоднокатаная сталь), шарниры - из металла с пластиковым покрытием, теплоизоля</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>48605.8</priceinruble>
+				<price>48605.8</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>e35ff9c2-d888-11e6-93df-001e67102ec0</ID>
+				<trademark>Aucma</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Besthead FLEX 3/8“ Головная часть фильтра (812420)</name>
+				<fullname>Besthead FLEX 3/8“ Головная часть фильтра</fullname>
+				<articule>812420</articule>
+				<iditem>23-00022429</iditem>
+				<exttext>Головная часть картриджа BWT besthead FLEX используется в составе фильтр-систем Bestmax, Bestmax PREMIUM, Bestprotect, Bestmin PREMIUM, Bestdrink PREMIUM, Besttaste, Bestcare, Bestclear, Bestclear EXTRA и подходит для всех картриджей BWT. Модель изготовлена из экологически безопасного пластика.
+Особенности:
+Установленный байпас
+Блокировка для безопасной настройки байпаса
+Простая визуализация настройки байпаса
+Сертифицированный встроенный обратный клапан на входе и выходе потока
+Встроенный сливно</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>12161.53</priceinruble>
+				<price>12161.53</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>fc3c15ea-0f93-11f0-a160-00155d0a5704</ID>
+				<trademark>BWT</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Besthead FLEX duplex M 3/8" Головная часть фильтра сдвоенная</name>
+				<fullname>Besthead FLEX duplex M 3/8" Головная часть фильтра сдвоенная</fullname>
+				<articule>812418</articule>
+				<iditem>23-00022455</iditem>
+				<exttext>Головная часть фильтра BWT Besthead FLEX duplex M 3/8" сдвоенная используется в составе фильтр-систем Bestmax, Bestmax PREMIUM, Bestprotect, Bestmin PREMIUM, Bestdrink PREMIUM, Besttaste, Bestcare, Bestclear, Bestclear EXTRA и подходит для всех картриджей BWT. Модель изготовлена из экологически безопасного пластика.
+Комплект поставки:
+Головная часть фильтра BWT Besthead FLEX duplex M 3/8" сдвоенная.
+Особенности^
+Установленный байпа;
+Блокировка для безопасной настройки байпаса;
+Простая визуализац</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>20334.73</priceinruble>
+				<price>20334.73</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>8e45297c-0fab-11f0-a160-00155d0a5704</ID>
+				<trademark>BWT</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Besthead PA-8mm Головная часть фильтра</name>
+				<fullname>Besthead PA-8mm Головная часть фильтра</fullname>
+				<articule>812413</articule>
+				<iditem>23-00022430</iditem>
+				<exttext>Головная часть картриджа BWT besthead PA используется в составе фильтр-систем Bestmax, Bestmax PREMIUM, Bestprotect, Bestmin PREMIUM, Bestdrink PREMIUM, Besttaste, Bestcare, Bestclear, Bestclear EXTRA и подходит для всех картриджей BWT.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>10993.93</priceinruble>
+				<price>10993.93</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>71ff5595-0f94-11f0-a160-00155d0a5704</ID>
+				<trademark>BWT</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>BD-560</name>
+				<fullname>Ларь морозильный  BD-560</fullname>
+				<articule>BD-560</articule>
+				<iditem>00000027267</iditem>
+				<exttext>Морозильный ларь Aucma BD-560 используется на предприятиях общественного питания и торговли для заморозки и длительного хранения продуктов и полуфабрикатов. Модель оснащена корзиной из стальной проволоки с порошковым покрытием и 2 откидными литыми крышками с нескользящими ручками и замками. Корпус выполнен из рельефного алюминия, внутренний короб - из алюминия, крышка - из пластмассы, покрытой порошковой краской CRS (холоднокатаная сталь), шарниры - из металла с пластиковым покрытием, теплоизоля</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>0</priceinruble>
+				<price>0</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>f24edbb9-d888-11e6-93df-001e67102ec0</ID>
+				<trademark>Aucma</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Briskly 5 Wine Premium (деревянные полки) (RAL 7024)</name>
+				<fullname>Винный шкаф Briskly 5 Wine Premium (деревянные полки) (RAL 7024)</fullname>
+				<articule/>
+				<iditem>ЦБ-Ц0037934</iditem>
+				<exttext>Холодильный шкаф Briskly 5 Wine (деревянные полки) подойдет для экспозиции, хранения и продажи вина. Его устанавливают внутрь магазинов, кафе, ресторанов. Холодильник со стеклянной распашной дверью выполнен из крашеного металла, обрамление стеклянной двери — из алюминиевого профиля.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>0</priceinruble>
+				<price>0</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>57459e36-84b7-11ec-9be9-00155d0a5704</ID>
+				<trademark>Briskly</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Briskly 5 Zero</name>
+				<fullname>Шкаф Briskly Smart 5 Zero</fullname>
+				<articule/>
+				<iditem>ЦБ-Ц0037937</iditem>
+				<exttext>Холодильный шкаф со стеклянной распашной дверью выполнен из крашеного металла, обрамление стеклянной двери — из алюминиевого профиля.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>0</priceinruble>
+				<price>0</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>8decc97b-84b7-11ec-9be9-00155d0a5704</ID>
+				<trademark>Briskly</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ПЭК-800 с дверцей, для установки в 2 яруса</name>
+				<fullname>Печь электрическая для пиццы ПЭК-800 с дверцей, конвейерная, без основания - для установки в 2 яруса</fullname>
+				<articule>21000001776</articule>
+				<iditem>ЦБ-Ц0026144</iditem>
+				<exttext>Конвейерная печь для пиццы
+Печь электрическая конвейерная ПЭК-800 с дверцей (модуль для установки в 2 яруса) предназначена для приготовления пиццы, выпечки и фастфуда, требующих высокой температуры приготовления, на предприятиях общественного питания.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>794289</priceinruble>
+				<price>794289</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>92c86f5f-96a3-11eb-9af0-00155d0a5704</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ГФК-40.2Н</name>
+				<fullname>Газовая фритюрница кухонная ГФК-40.2Н, 2 ванны по 10,5 л, 2 корзины 295х120х105 мм, 700 серия, 401х839х583 мм,  +110…+190 С, пьезорозжиг, газ-контроль, 2 горелки, 11 кВт, настольная, вся нерж.</fullname>
+				<articule>21000001965</articule>
+				<iditem>ЦБ-Ц0011922</iditem>
+				<exttext>Газовая фритюрница кухонная типа ГФК предназначена для жарки во фритюре картофеля, рыбы и других кулинарных и кондитерских изделий. Используется на предприятиях общественного питания самостоятельно или в составе технологических линий.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>187998</priceinruble>
+				<price>187998</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>2c824994-bcf8-11e9-bc62-ac1f6b2ca8fa</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>КИП-27Н-3,5</name>
+				<fullname>Плита индукционная 2-ух конфорочная КИП-27Н-3,5, настольная, 400х750х470 мм, 9 ур. мощности, +60…+240 С, 7 кВт, 230 В, 2 независимых индуктора, стеклокерамика 6 мм (возможна установка на модуль нижний</fullname>
+				<articule>71000019569</articule>
+				<iditem>ЦБ-Ц0023715</iditem>
+				<exttext>Индукционная плита
+Двухконфорочная индукционная плита КИП-27Н-3,5 предназначена для приготовления первых, вторых и третьих блюд в специальной наплитной посуде.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>84213</priceinruble>
+				<price>84213</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>aa4b4dee-32fb-11eb-9a6a-00155d0a5704</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Москва (ЦФО)</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Санкт-Петербург</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>АКО-90/1П-С-02</name>
+				<fullname>Аппарат контактной обработки АКО-90/1П-С-02, рифленая стальная поверхность 834х703 мм, 900 серия, 844х900х950 мм, 12 кВт, 400В, подставка с полкой, вся нерж.</fullname>
+				<articule>21000002766</articule>
+				<iditem>ЦБ-Ц0018171</iditem>
+				<exttext>Аппарат контактной обработки АКО-90/1П-С-02 (жарочная поверхность) предназначен для приготовления стейка, рыбы, блинов, омлета и т.п. путем непосредственного контакта греющей поверхности с пищей.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>111501</priceinruble>
+				<price>111501</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>3946cebf-6d0a-11ea-bd50-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ВМП-6-1-5 РН</name>
+				<fullname>Ванна 1-о секц. ВМП-6-1-5 РН нерж. разб.</fullname>
+				<articule>21000806374</articule>
+				<iditem>00000000638</iditem>
+				<exttext>Цельнотянутая ванна ВМП-6-1-5 РН предназначена для мойки посуды на предприятии общественного питания.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>31874</priceinruble>
+				<price>31874</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>7cbad17a-3126-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>много</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ВМП-6-2-5 РН</name>
+				<fullname>Ванна 2-х секц. ВМП-6-2-5 РН нерж. разб.</fullname>
+				<articule>21000806373</articule>
+				<iditem>00000000639</iditem>
+				<exttext>Цельнотянутая ванна ВМП-6-2-5 РН предназначена для мойки посуды на предприятии общественного питания.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>55919</priceinruble>
+				<price>55919</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>8332e4e6-3138-11e1-9d46-001e67102ec1</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name> GN1/3х150мм с перфорацией</name>
+				<fullname>ROSSO Гастроёмкость GN1/3х150мм с перфорацией</fullname>
+				<articule>813-6P</articule>
+				<iditem>23-00020471</iditem>
+				<exttext> GN1/3х150 перфорированная, нерж.сталь.  Размер перфораций 6 мм.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>0</priceinruble>
+				<price>0</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>79cb85d5-d984-11ef-a119-00155d0a5704</ID>
+				<trademark>Rosso (Китай)</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ПКА 10-1/1ВМ2</name>
+				<fullname> Пароконвектомат ПКА 10-1/1ВМ2</fullname>
+				<articule>11000019265</articule>
+				<iditem>00000019757</iditem>
+				<exttext>Пароконвектомат инжекционного типа предназначен для приготовления различных блюд методом обработки паром и горячим воздухом по отдельности или комбинированно.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>342526</priceinruble>
+				<price>342526</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>41bdd205-a94e-11e5-845e-001e67102ec0</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Нижний Новгород</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Пермь</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Москва (ЦФО)</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Челябинск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ярославль</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Хабаровск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ПКА 10-1/1ВМ2-01</name>
+				<fullname>Пароконвектомат ПКА 10-1/1ВМ2-01</fullname>
+				<articule>11000019106</articule>
+				<iditem>ЦБ-Ц0010101</iditem>
+				<exttext>Пароконвектомат инжекционного типа предназначен для приготовления различных блюд методом обработки паром и горячим воздухом по отдельности или комбинированно.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>383995</priceinruble>
+				<price>383995</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>5a74b02c-8e8c-11e9-bc1f-ac1f6b2ca8fb</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Новосибирск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Москва (ЦФО)</namestock>
+						<balance>несколько</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Челябинск</namestock>
+						<balance>в наличии</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+					<stock>
+						<namestock>Ярославль</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>ПКА 10-1/1ВП2</name>
+				<fullname>Пароконвектомат ПКА 10-1/1ВП2 (инжекционный, 10xGN1/1, 120 установленных + память на 360 доп. программ приготовления, автоматическая мойка, вся нерж, без г/емкостей, 3х-канальный щуп, ЖК экран, сенсор</fullname>
+				<articule>11000010402</articule>
+				<iditem>ЦБ-Ц0021368</iditem>
+				<exttext>Инжекционный пароконвектомат
+Программируемый инжекционный пароконвектомат ПКА 10-1/1ВП2 - современное решение для вашей кухни, исключающее многие традиционные этапы из процесса приготовления и позволяющее готовить большое количество высококачественных блюд за короткий промежуток времени со значительной экономией средств.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>531124</priceinruble>
+				<price>531124</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>8509f448-e51b-11ea-9a2e-00155d0a5704</ID>
+				<trademark>Abat</trademark>
+				<stocks>
+					<stock>
+						<namestock>Волжск</namestock>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>Gamma-2 OC 90 (угол внеш.) БА ББ</name>
+				<fullname>Gamma-2 OC 90 (угол внеш.) БА ББ</fullname>
+				<articule/>
+				<iditem>ЦБ-Ц0033802</iditem>
+				<exttext/>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>0</priceinruble>
+				<price>0</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>521465f7-1b87-11ec-9b63-00155d0a5700</ID>
+				<trademark>Криспи</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>MB-211SU</name>
+				<fullname>Машина холодильная моноблочная MB-211SU</fullname>
+				<articule>1117012d</articule>
+				<iditem>ЦБ-Ц0033836</iditem>
+				<exttext/>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>156355</priceinruble>
+				<price>156355</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>2734c522-1c56-11ec-9b64-00155d0a5700</ID>
+				<trademark>Полаир</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+			<item xsi:type="item">
+				<name>FC20-08 VM 1,0-1 STANDARD FLORA (фронт X7) (индивидуальное исполнение)</name>
+				<fullname>Витрина холодильная FC20-08 VM 1,0-1 STANDARD FLORA (фронт X7) (индивидуальное исполнение)</fullname>
+				<articule>П0000006790.2757</articule>
+				<iditem>ЦБ-Ц0033846</iditem>
+				<exttext>Холодильные витрины FC20-08 (CUBЕ) позволяют эффективно использовать торговое пространство благодаря компактным внешним размерам и эргономичному кубическому дизайну.
+Ночная шторка фронтальной части (для моделей VM) и стеклопакеты с энергосберегающими стеклами в боковых панелях обеспечивают до 30% энергосбережения.</exttext>
+				<URL/>
+				<manufacture/>
+				<manufactureid>00000000-0000-0000-0000-000000000000</manufactureid>
+				<priceinruble>0</priceinruble>
+				<price>0</price>
+				<currencyitem>RUB</currencyitem>
+				<unit/>
+				<ID>3d71fb04-1c63-11ec-9b64-00155d0a5700</ID>
+				<trademark>Полюс</trademark>
+				<stocks>
+					<stock>
+						<namestock/>
+						<balance>0</balance>
+						<unitstock>шт</unitstock>
+					</stock>
+				</stocks>
+			</item>
+</offers>
+	</shop>
+</yml_catalog>

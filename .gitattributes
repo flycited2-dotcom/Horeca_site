@@ -6,6 +6,9 @@
 *.md diff=markdown
 *.php diff=php
 
+# Supplier feed fixtures are windows-1251 and must keep their exact bytes.
+tests/Fixtures/** -text
+
 *.png binary
 *.jpg binary
 *.jpeg binary
