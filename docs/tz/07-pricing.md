@@ -15,7 +15,10 @@
        purchase_price известна   → цена не ниже purchase_price × (1 + pricing.min_margin_percent/100)
 Оптовая цена — клиенты одобренной компании
    ↑ product_prices (точечная цена для группы) имеет приоритет, но с тем же нижним пределом
+   ↓ оптовая цена никогда не выше розничной
 ```
+
+Пока `pricing.min_margin_percent` не задан, нижний предел при известной закупке — сама `purchase_price`.
 
 **`PriceResolver::for(Product $product, ?User $user): ?Price`** — `null` означает «цена по запросу».
 1. `retail_price = null` → `null`.
