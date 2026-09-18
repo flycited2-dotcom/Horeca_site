@@ -1,8 +1,20 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Console\Commands\DispatchDueImportsCommand;
+use App\Console\Commands\SendImportDigestCommand;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+/*
+ * Расписание (ТЗ §6.4, §13). Время московское: APP_TIMEZONE=Europe/Moscow.
+ *
+ * Профили импорта запускаются по своему cron-выражению из import_profiles.schedule,
+ * поэтому планировщик каждую минуту спрашивает, кому пора.
+ */
+
+Schedule::command(DispatchDueImportsCommand::class)
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->runInBackground();
+
+Schedule::command(SendImportDigestCommand::class)
+    ->dailyAt('20:00');
