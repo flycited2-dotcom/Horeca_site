@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * last_etag and last_modified are written only by the import runner.
@@ -43,5 +44,15 @@ class ImportProfile extends Model
     public function runs(): HasMany
     {
         return $this->hasMany(ImportRun::class);
+    }
+
+    /**
+     * The most recent run, whatever its outcome.
+     *
+     * @return HasOne<ImportRun, $this>
+     */
+    public function latestRun(): HasOne
+    {
+        return $this->hasOne(ImportRun::class)->latestOfMany('id');
     }
 }
