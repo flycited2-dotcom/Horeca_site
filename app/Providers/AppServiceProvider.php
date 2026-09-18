@@ -4,6 +4,13 @@ namespace App\Providers;
 
 use App\Events\ImportFailed;
 use App\Listeners\NotifyAboutFailedImport;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Warehouse;
+use App\Observers\CatalogCacheObserver;
+use App\Observers\SlugRedirectObserver;
+use App\Services\Catalog\CategoryTree;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->scoped(CategoryTree::class);
     }
 
     /**
@@ -23,5 +30,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Event::listen(ImportFailed::class, NotifyAboutFailedImport::class);
+
+        Product::observe(SlugRedirectObserver::class);
+        Category::observe([SlugRedirectObserver::class, CatalogCacheObserver::class]);
+        Brand::observe([SlugRedirectObserver::class, CatalogCacheObserver::class]);
+        Warehouse::observe(CatalogCacheObserver::class);
     }
 }
