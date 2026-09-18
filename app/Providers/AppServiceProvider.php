@@ -11,6 +11,8 @@ use App\Models\Warehouse;
 use App\Observers\CatalogCacheObserver;
 use App\Observers\SlugRedirectObserver;
 use App\Services\Catalog\CategoryTree;
+use App\Services\Search\DatabaseSearchEngine;
+use App\Services\Search\SearchEngineInterface;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->scoped(CategoryTree::class);
+        $this->app->bind(SearchEngineInterface::class, DatabaseSearchEngine::class);
     }
 
     /**

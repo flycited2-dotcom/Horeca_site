@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Services\Search\SearchTextBuilder;
 use App\Support\Money;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -42,6 +43,27 @@ class ProductFactory extends Factory
             'availability' => Availability::OnOrder,
             'is_visible' => true,
         ];
+    }
+
+    /**
+     * The search line is built the way the import builds it, so a factory product can be found.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Product $product): void {
+            if ($product->search_text !== null) {
+                return;
+            }
+
+            $product->search_text = app(SearchTextBuilder::class)->build(
+                $product->name,
+                $product->model,
+                $product->sku,
+                $product->supplier_code,
+                $product->brand?->name,
+            );
+            $product->saveQuietly();
+        });
     }
 
     public function withAvailability(Availability $availability): static

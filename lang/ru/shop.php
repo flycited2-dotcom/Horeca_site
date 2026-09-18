@@ -14,4 +14,14 @@ return [
         'products_count' => ':count товар|:count товара|:count товаров',
     ],
 
+    'catalog' => [
+        'sort' => [
+            'popular' => 'По популярности',
+            'price_asc' => 'Сначала дешевле',
+            'price_desc' => 'Сначала дороже',
+            'new' => 'Новинки',
+            'name' => 'По названию',
+        ],
+    ],
+
 ];

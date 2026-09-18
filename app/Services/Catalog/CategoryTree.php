@@ -15,7 +15,7 @@ final class CategoryTree
     public const string SEPARATOR = ' › ';
 
     /**
-     * @var array<int, array{name: string, parent: int|null}>|null
+     * @var array<int, array{name: string, parent: int|null, active: bool}>|null
      */
     private ?array $nodes = null;
 
@@ -58,24 +58,46 @@ final class CategoryTree
      */
     public function branch(int $id): array
     {
+        return $this->walk($id, false);
+    }
+
+    /**
+     * What a storefront category page shows: the category and its switched-on descendants.
+     * A switched-off category hides its whole subtree, including itself.
+     *
+     * @return list<int>
+     */
+    public function activeBranch(int $id): array
+    {
+        return ($this->nodes()[$id]['active'] ?? false) ? $this->walk($id, true) : [];
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function walk(int $id, bool $activeOnly): array
+    {
+        $nodes = $this->nodes();
         $children = [];
 
-        foreach ($this->nodes() as $nodeId => $node) {
-            if ($node['parent'] !== null) {
+        foreach ($nodes as $nodeId => $node) {
+            if ($node['parent'] !== null && (! $activeOnly || $node['active'])) {
                 $children[$node['parent']][] = $nodeId;
             }
         }
 
         $branch = [];
+        $seen = [];
         $queue = [$id];
 
         while ($queue !== []) {
             $current = array_shift($queue);
 
-            if (in_array($current, $branch, true)) {
+            if (isset($seen[$current])) {
                 continue;
             }
 
+            $seen[$current] = true;
             $branch[] = $current;
             array_push($queue, ...($children[$current] ?? []));
         }
@@ -100,14 +122,14 @@ final class CategoryTree
     }
 
     /**
-     * @return array<int, array{name: string, parent: int|null}>
+     * @return array<int, array{name: string, parent: int|null, active: bool}>
      */
     private function nodes(): array
     {
         return $this->nodes ??= Category::query()
-            ->get(['id', 'parent_id', 'name'])
+            ->get(['id', 'parent_id', 'name', 'is_active'])
             ->mapWithKeys(fn (Category $category): array => [
-                $category->id => ['name' => $category->name, 'parent' => $category->parent_id],
+                $category->id => ['name' => $category->name, 'parent' => $category->parent_id, 'active' => $category->is_active],
             ])
             ->all();
     }
