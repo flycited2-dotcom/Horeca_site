@@ -33,12 +33,4 @@ final readonly class FeedCapabilities
     {
         return in_array($field, $this->ownedProductFields, true);
     }
-
-    /**
-     * The entity whose record count is checked against thresholds.
-     */
-    public function primaryEntity(): ImportEntity
-    {
-        return $this->provides(ImportEntity::Product) ? ImportEntity::Product : ImportEntity::Stock;
-    }
 }

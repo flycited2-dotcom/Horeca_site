@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
-    'import_profile_id', 'user_id', 'trigger', 'status', 'is_dry_run', 'file_path', 'source_version',
+    'import_profile_id', 'user_id', 'trigger', 'status', 'is_dry_run', 'file_path', 'file_hash', 'source_version',
     'rows_total', 'created', 'updated', 'unchanged', 'discontinued', 'errors',
     'log', 'log_file', 'error_message', 'started_at', 'finished_at',
 ])]

@@ -45,7 +45,9 @@ final class Cp1251XmlReader
         $expanded = 0;
 
         try {
-            $moved = $reader->read();
+            // Warnings of a broken file are turned into our own error below: a manager
+            // must see why the feed was refused, not a PHP notice.
+            $moved = @$reader->read();
 
             while ($moved) {
                 if ($reader->nodeType === XMLReader::ELEMENT && in_array($reader->localName, $localNames, true)) {
@@ -53,20 +55,22 @@ final class Cp1251XmlReader
                         $document = new DOMDocument;
                     }
 
-                    $node = $reader->expand($document);
+                    $node = @$reader->expand($document);
 
                     if (! $node instanceof DOMElement) {
                         $this->throwParseError();
+
+                        throw new FeedReadException(__('import.errors.unreadable_element'));
                     }
 
                     yield $node;
 
-                    $moved = $reader->next();
+                    $moved = @$reader->next();
 
                     continue;
                 }
 
-                $moved = $reader->read();
+                $moved = @$reader->read();
             }
 
             $this->throwParseError();
