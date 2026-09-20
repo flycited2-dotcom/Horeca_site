@@ -30,7 +30,7 @@ MariaDB 11.8 LTS (до 04.06.2028) или MySQL 8.4 LTS
 Redis 7+
 Node 24 LTS (только сборка), vite ^8.3, laravel-vite-plugin ^3.2
 tailwindcss ^4.3, @tailwindcss/vite ^4.3
-@fontsource-variable/golos-text ^5.3, @fontsource-variable/inter ^5.3
+@fontsource-variable/manrope ^5.3, @fontsource-variable/jetbrains-mono ^5.3
 ```
 
 **Не используем** (были в v1.0):

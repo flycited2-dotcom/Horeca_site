@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  doc-page:not(:defined){visibility:hidden}
+  body { margin:0; font-family:Manrope,Helvetica,sans-serif; color:#15191D; }
+  a { color:#0072B0; text-decoration:none; }
+  a:hover { color:#005C8C; text-decoration:underline; }
+  table { break-inside:auto; }
+  tr { break-inside:avoid; }
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+
+<doc-page margin="0.7in">
+  <div slot="header" style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:8px;border-bottom:1px solid #D3D9DE;font:400 10px/1.4 Manrope,sans-serif;color:#5D686F">
+    <span>Магазин оборудования HoReCa · спецификация для фронтенда</span>
+    <span style="font-family:'JetBrains Mono',ui-monospace">v1.0 · 21.09.2026</span>
+  </div>
+
+  <h1 style="margin:0 0 6px;font:700 30px/1.15 Manrope,sans-serif;color:#15191D">Спецификация для разработки</h1>
+  <p style="margin:0 0 22px;font:400 13px/1.55 Manrope,sans-serif;color:#5D686F;max-width:68ch">Свод правил к макету «Карточка товара.dc.html» (13 экранов). Всё, что здесь описано, взято из макета: токены, сетка, поведение на четырёх точках перелома и правила, по которым компоненты перестраиваются. Ничего нового не вводится — при расхождении макет главнее текста.</p>
+
+  <h2 style="margin:0 0 10px;font:700 19px/1.2 Manrope,sans-serif;color:#15191D">1. Точки перелома</h2>
+  <table style="width:100%;border-collapse:collapse;font:400 12px/1.45 Manrope,sans-serif;margin:0 0 10px">
+    <thead>
+      <tr style="background:#E3E8EC">
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE;width:120px">Диапазон</th>
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE;width:110px">Контейнер</th>
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE">Что меняется</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">≥ 1280</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">1320 / поля 56</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE">Базовый макет. Листинг 4 карточки в ряд (288 + gap 24). Фильтры — левая колонка 264 px, липкая. Карточка товара: галерея 560 + описание + правая панель покупки 320, панель липкая. Кабинет: таблица заказов в шесть колонок.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">1024–1279</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">fluid / поля 32</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE">Листинг 3 в ряд. Панель покупки уходит под галерею во всю ширину и остаётся липкой снизу (высота 72). Фильтры сворачиваются в кнопку «Фильтры · N» с выезжающей панелью. В таблице заказов колонка «Состав» усекается до одной строки.</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">768–1023</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">fluid / поля 24</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE">Экран 10 в макете. Листинг 2 в ряд. Верхняя полоса теряет каталог-меню, остаются поиск, счета, корзина. Сравнение переходит в горизонтальный скролл с закреплённой колонкой параметров (180).</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">&lt; 768</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">390 / поля 12</td>
+        <td style="padding:8px 10px;border:1px solid #D3D9DE">Экран 14 в макете. Одна колонка везде. Шапка 56: бургер, логотип, корзина; поиск строкой под ней. Карточки листинга горизонтальные: заглушка 96×96 слева, текст справа. Фильтры — шторка поверх листинга с кнопкой «Показать N моделей» внизу. Карточка товара: галерея 200, разделы аккордеонами, покупка в липкой панели снизу (цена + счётчик + кнопка). Корзина: строка в две строки, итог липкий. Таблицы кабинета — карточки «ключ → значение», оба статуса рядом в две колонки.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="margin:0 0 22px;font:400 12px/1.5 Manrope,sans-serif;color:#5D686F">Перелом задаётся по контейнеру, а не по устройству. Кнопки и поля сохраняют высоту 44 px на всех диапазонах, включая десктоп: заказ часто оформляют с планшета на кухне.</p>
+
+  <h2 style="margin:0 0 10px;font:700 19px/1.2 Manrope,sans-serif;color:#15191D">2. Токены</h2>
+  <table style="width:100%;border-collapse:collapse;font:400 12px/1.45 Manrope,sans-serif;margin:0 0 10px">
+    <thead>
+      <tr style="background:#E3E8EC">
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE;width:150px">Токен</th>
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE;width:110px">Значение</th>
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE">Применение и ограничение</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">--ink</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#15191D</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Весь основной текст, 13,8:1 на slate.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">--steel-500</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#5D686F</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Подписи 12–13 px, ключи таблиц. 5,1:1 — минимальный допустимый текстовый серый.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">--steel-400</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#8A959E</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Только иконки-заглушки и разделители. 2,6:1 — текстом не использовать.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">--accent</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#0098EA</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Рамки, чипы, фокус, hover, декоративное стекло. Под белый текст не годится: 3,1:1.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">--accent-ink</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#0072B0</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Заливка основной кнопки и цвет ссылок; белый текст 5,2:1. Hover — #005C8C.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">--slate</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#E3E8EC</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Верхняя полоса, футер, панель подбора. Границы на нём — #C3CBD1.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">--bg / --line / --line-soft</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#F4F6F7 / #D3D9DE / #E7EBEE</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Полотно страницы; внешние рамки карточек и полей; внутренние разделители.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">статус: в наличии</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#166B49 / #E6F2EC</td><td style="padding:7px 10px;border:1px solid #D3D9DE">5,4:1. Рамка #BFDFD0.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">статус: ожидается</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#8F4207 / #FDF4E7</td><td style="padding:7px 10px;border:1px solid #D3D9DE">6,2:1. Рамка #E3B473. Всегда с конкретной датой.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">статус: под заказ</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">#A3350B / #FFFFFF</td><td style="padding:7px 10px;border:1px solid #D3D9DE">6,1:1. Пунктирная рамка #C2410C.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">радиусы</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">6 / 4 / 999</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Кнопки и поля 6, карточки и плашки 4, переключатели и чипы 999.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">шаг отступов</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">4 8 12 16 24 32</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Только эти значения; 56 — внешние поля секций на десктопе.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">тень / переход / фокус</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">0 4px 16px .10</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Переход .15s ease; фокус — outline 2px #0098EA, offset 2. Сдвигов при hover нет.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin:0 0 10px;font:700 19px/1.2 Manrope,sans-serif;color:#15191D">3. Типографика</h2>
+  <table style="width:100%;border-collapse:collapse;font:400 12px/1.45 Manrope,sans-serif;margin:0 0 10px">
+    <thead>
+      <tr style="background:#E3E8EC">
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE;width:170px">Роль</th>
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE;width:150px">Гарнитура / кегль</th>
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE">Где</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Заголовок страницы</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">Manrope 700 · 36/1.15</td><td style="padding:7px 10px;border:1px solid #D3D9DE">H1 экранов; &lt;768 — 28/1.15.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Цена, название категории</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">Manrope 700 · 28/1.15</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Панель покупки, итог корзины.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Название товара, H3</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">Manrope 600 · 16/1.25</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Листинг, поиск, заголовки блоков.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Основной текст</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">Manrope 400 · 14/1.5</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Описания, условия, значения таблиц. Минимум для абзаца — 14 px.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Подписи</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">Manrope 400/500 · 13/1.45</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Ключи, вторичные пояснения, цвет steel-500.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Машинные данные</td><td style="padding:7px 10px;border:1px solid #D3D9DE;font-family:'JetBrains Mono',ui-monospace">JetBrains Mono 400 · 13/1.45</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Артикулы, габариты, мощность, ИНН/КПП, номера заказов и счетов. Только машинные данные — заголовки и проза моно не набираются.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin:0 0 10px;font:700 19px/1.2 Manrope,sans-serif;color:#15191D">4. Компоненты: что реализуем</h2>
+  <table style="width:100%;border-collapse:collapse;font:400 12px/1.45 Manrope,sans-serif;margin:0 0 10px">
+    <thead>
+      <tr style="background:#E3E8EC">
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE;width:150px">Компонент</th>
+        <th style="text-align:left;padding:8px 10px;font-weight:600;border:1px solid #D3D9DE">Состояния и поведение</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Кнопка</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Четыре вида: основная (#0072B0, белый текст), вторичная (рамка #0098EA, hover-фон #E5F5FD), нейтральная (рамка #D3D9DE, hover-рамка #0072B0), недоступная (#F4F6F7 / #8A959E, aria-disabled). Высота 44 на всех диапазонах.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Карточка товара</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Заглушка 1b — пиктограмма типа оборудования (steel-400 на #F4F6F7), не пустой прямоугольник. Порядок: бренд + артикул, название, две ключевые характеристики моно, цена, статус, кнопка. Skeleton — те же блоки с анимацией om-pulse.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Счётчик</td><td style="padding:7px 10px;border:1px solid #D3D9DE">44×44 кнопки, поле 52. Значение редактируемое, при потере фокуса нормализуется; 0 удаляет строку с возможностью отмены.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Строка поиска</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Нормализация запроса: пробелы, дефисы и регистр в артикуле игнорируются. Пустая выдача предлагает исправленные варианты, а не «ничего не найдено».</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Сравнение</td><td style="padding:7px 10px;border:1px solid #D3D9DE">По умолчанию только различия; переключатель раскрывает совпадающие 20+ строк. Колонка параметров закреплена при горизонтальном скролле.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Заказ в кабинете</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Две независимые колонки статуса: оплата и отгрузка. Заказ может быть оплачен и не отгружен — одним бейджем не схлопывать.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Вход и регистрация</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Форма входа 420: почта или телефон, пароль, «Войти по SMS». Ошибка — рамка #C2410C, текст #A3350B под полем, со счётчиком попыток. Регистрация начинается с ИНН: реквизиты (наименование, КПП, ОГРН, адрес) подставляются, вручную правятся по ссылке. Три шага: организация → контактное лицо → доступ. После отправки — экран «Заявка на проверке»: каталог и сроки открыты, скрыты только цены.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Цена дилера</td><td style="padding:7px 10px;border:1px solid #D3D9DE">Три состояния: гость (базовая цена + приглашение войти), дилер (базовая зачёркнута, «Ваша цена» крупно, бейдж уровня и прогресс до следующего), без цены («Цена по запросу» + срок ответа). Процент скидки без строки «почему столько» не показывать.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Лимит отсрочки</td><td style="padding:7px 10px;border:1px solid #D3D9DE">В корзине — полоса «использовано / лимит» и остаток после этого заказа. Не хватает лимита: способ «Отсрочка» становится недоступным с указанием нехватки в рублях, появляется частичная отсрочка и «Запросить увеличение лимита». Просрочка: отсрочка приостановлена, но каталог, цены и заказы по счёту работают — блокируется способ оплаты, а не работа.</td></tr>
+      <tr><td style="padding:7px 10px;border:1px solid #D3D9DE">Загрузка / ошибка</td><td style="padding:7px 10px;border:1px solid #D3D9DE">om-pulse для скелетов, om-spin для спиннера. Ошибка всегда с действием: повторить, позвонить менеджеру, оставить заявку. Ни одно состояние не показывает пустой экран без текста.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin:0 0 10px;font:700 19px/1.2 Manrope,sans-serif;color:#15191D">5. Правила контента</h2>
+  <ul style="margin:0 0 18px;padding-left:18px;font:400 13px/1.6 Manrope,sans-serif;color:#15191D">
+    <li>Срок и наличие — конкретны: «Ожидается 28 сентября», не «скоро».</li>
+    <li>Цена без цены не прячется: «Цена по запросу» плюс что произойдёт дальше.</li>
+    <li>Нет фото — заглушка с типом оборудования.</li>
+    <li>Скидка показывается как «Ваша цена», а не как процент со звёздочкой.</li>
+    <li>Никаких рейтингов, отзывов и таймеров: данных нет, доверие строится на сроках и документах.</li>
+    <li>Суммы в счёте: НДС 20 % выделяется отдельной строкой, итог — прописью в PDF.</li>
+  </ul>
+
+  <h2 style="margin:0 0 10px;font:700 19px/1.2 Manrope,sans-serif;color:#15191D">6. Доступность</h2>
+  <ul style="margin:0 0 18px;padding-left:18px;font:400 13px/1.6 Manrope,sans-serif;color:#15191D">
+    <li>Контраст текста ≥ 4,5:1, крупных заголовков ≥ 3:1 — проверено по всем экранам.</li>
+    <li>Фокус виден всегда: outline 2px #0098EA с offset 2, скрывать нельзя.</li>
+    <li>Цель нажатия ≥ 44×44 на всех диапазонах.</li>
+    <li>Статус наличия дублируется текстом, не только цветом.</li>
+    <li>Таблицы заказов и сравнения — настоящие table с thead и scope, не div-сетки.</li>
+  </ul>
+
+  <div style="background:#F4F6F7;border:1px solid #D3D9DE;border-radius:4px;padding:14px 16px;break-inside:avoid">
+    <span style="display:block;font:600 13px/1.3 Manrope,sans-serif;color:#15191D;margin-bottom:6px">Открытые вопросы к команде</span>
+    <ul style="margin:0;padding-left:18px;font:400 12px/1.55 Manrope,sans-serif;color:#5D686F">
+      <li>Источник фотографий товаров: пока везде заглушки по типу оборудования.</li>
+      <li>Правила расчёта персональной цены дилера — нужен алгоритм со стороны бэка.</li>
+      <li>Лимит отсрочки и его блокировка при превышении: показывать ли прогноз в корзине.</li>
+      <li>Мобильная версия &lt; 768 описана правилами, но не отрисована — нужен отдельный проход, если она в первом релизе.</li>
+    </ul>
+  </div>
+</doc-page>
+</x-dc>
+</body>
+</html>
