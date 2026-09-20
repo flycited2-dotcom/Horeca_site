@@ -1,0 +1,11 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "horeca",
+            "runtimeExecutable": "C:/Users/TLT-1/devtools/php-8.4/php.exe",
+            "runtimeArgs": ["artisan", "serve", "--port=8000"],
+            "port": 8000
+        }
+    ]
+}

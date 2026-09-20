@@ -8,6 +8,7 @@ use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductStock;
 use App\Models\User;
 use App\Services\Pricing\PriceResolver;
 use App\Support\Money;
@@ -49,6 +50,100 @@ final class CatalogQuery
     }
 
     /**
+     * The "В наличии" strip of the home page (TZ §8.1), most popular first.
+     *
+     * @return Collection<int, Product>
+     */
+    public function inStockStrip(?User $user, int $limit = 8): Collection
+    {
+        return $this->sorted(
+            $this->withCardData($this->listed()->where('availability', Availability::InStock), $user),
+            CatalogSort::Popular,
+        )->limit($limit)->get();
+    }
+
+    /**
+     * The catalog page: switched-on roots with their switched-on subcategories.
+     *
+     * @return Collection<int, Category>
+     */
+    public function rootCategoriesWithChildren(): Collection
+    {
+        return Category::query()
+            ->active()
+            ->roots()
+            ->with(['children' => fn (HasMany $children) => $children->active()->orderBy('sort')->orderBy('name')])
+            ->orderBy('sort')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'icon', 'products_count']);
+    }
+
+    /**
+     * Switched-on subcategories of a category page.
+     *
+     * @return Collection<int, Category>
+     */
+    public function activeChildren(Category $category): Collection
+    {
+        return $category->children()
+            ->active()
+            ->orderBy('sort')
+            ->orderBy('name')
+            ->get(['id', 'parent_id', 'name', 'slug', 'products_count']);
+    }
+
+    /**
+     * Warehouses the customer may see, with the delivery time the manager filled in
+     * (TZ §6.5). The number of items is never shown.
+     *
+     * @return Collection<int, ProductStock>
+     */
+    public function visibleStocks(Product $product): Collection
+    {
+        return $product->stocks()
+            ->whereHas('warehouse', fn (Builder $query) => $query->where('is_visible', true))
+            ->with('warehouse')
+            ->get()
+            ->sortBy([
+                fn (ProductStock $stock): int => $stock->warehouse?->sort ?? 0,
+                fn (ProductStock $stock): string => $stock->warehouse?->name ?? '',
+            ])
+            ->values();
+    }
+
+    /**
+     * "Похожие товары" (TZ §8.3): the same category and a price within ±30%; without a
+     * price of its own, the same brand.
+     *
+     * @return Collection<int, Product>
+     */
+    public function similarProducts(Product $product, ?User $user, int $limit = 4): Collection
+    {
+        if ($product->category_id === null) {
+            return new Collection;
+        }
+
+        $similar = $this->listed()
+            ->whereKeyNot($product->id)
+            ->where('category_id', $product->category_id);
+
+        if ($product->retail_price !== null) {
+            $similar
+                ->whereNotNull('retail_price')
+                ->whereBetween('retail_price', [
+                    Money::ofKopecks(intdiv($product->retail_price->kopecks * 7, 10))->toDecimal(),
+                    Money::ofKopecks(intdiv($product->retail_price->kopecks * 13, 10))->toDecimal(),
+                ]);
+        } elseif ($product->brand_id !== null) {
+            $similar->where('brand_id', $product->brand_id);
+        }
+
+        return $this->sorted($this->withCardData($similar, $user), CatalogSort::Popular)
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
      * Products a listing or a search may show.
      *
      * @return Builder<Product>
@@ -74,6 +169,7 @@ final class CatalogQuery
         return $products
             ->with([
                 'brand:id,name,slug',
+                'category:id,name,slug,icon',
                 'media' => fn (MorphMany $query) => $query->where('collection_name', Product::IMAGES),
             ])
             ->when($tier !== null, fn (Builder $query) => $query->with([

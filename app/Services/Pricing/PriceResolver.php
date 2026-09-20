@@ -49,6 +49,24 @@ final class PriceResolver
     }
 
     /**
+     * Prices of a listing at once: product id => price. Load the tier prices with the
+     * products (CatalogQuery::withCardData), otherwise every card costs a query.
+     *
+     * @param  iterable<int, Product>  $products
+     * @return array<int, Price|null>
+     */
+    public function forMany(iterable $products, ?User $user): array
+    {
+        $prices = [];
+
+        foreach ($products as $product) {
+            $prices[$product->id] = $this->for($product, $user);
+        }
+
+        return $prices;
+    }
+
+    /**
      * The tier of a customer whose company has been approved, otherwise null.
      */
     public function tierOf(?User $user): ?PriceTier

@@ -13,6 +13,7 @@ use App\Observers\SlugRedirectObserver;
 use App\Services\Catalog\CategoryTree;
 use App\Services\Search\DatabaseSearchEngine;
 use App\Services\Search\SearchEngineInterface;
+use App\Services\Settings\Settings;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->scoped(CategoryTree::class);
+        $this->app->scoped(Settings::class);
         $this->app->bind(SearchEngineInterface::class, DatabaseSearchEngine::class);
     }
 

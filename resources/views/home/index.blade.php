@@ -1,22 +1,41 @@
 <x-layouts.app :title="__('shop.home.title')">
-    <h1 class="font-heading text-3xl font-semibold">{{ __('shop.home.heading') }}</h1>
-
-    <section class="mt-8" aria-labelledby="catalog-heading">
-        <h2 id="catalog-heading" class="font-heading text-xl font-semibold">{{ __('shop.home.catalog') }}</h2>
+    <section class="rounded-card bg-slate p-6 md:p-8">
+        <h1 class="text-2xl font-bold md:text-3xl">{{ __('shop.home.heading') }}</h1>
 
         @if ($categories->isEmpty())
-            <p class="mt-4 text-steel-600">{{ __('shop.home.catalog_empty') }}</p>
+            <p class="mt-4 text-steel-500">{{ __('shop.home.catalog_empty') }}</p>
         @else
-            <ul class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4 lg:gap-6">
+            <nav class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="{{ __('shop.home.catalog') }}">
                 @foreach ($categories as $category)
-                    <li class="rounded-card border border-steel-200 bg-surface p-4">
-                        <p class="font-heading text-lg font-semibold">{{ $category->name }}</p>
-                        <p class="mt-1 text-sm tabular-nums text-steel-600">
-                            {{ trans_choice('shop.home.products_count', $category->products_count, ['count' => number_format($category->products_count, 0, ',', "\u{00A0}")]) }}
-                        </p>
-                    </li>
+                    <a href="{{ route('category', $category) }}"
+                       class="flex items-center gap-3 rounded-card border border-slate-line bg-surface p-4 transition-shadow duration-150 ease-out hover:shadow-raised">
+                        <x-ui.equipment-icon :icon="$category->icon" class="size-8 text-steel-400" />
+
+                        <span class="min-w-0">
+                            <span class="block text-lg font-semibold">{{ $category->name }}</span>
+                            <span class="block text-sm tabular text-steel-500">
+                                {{ trans_choice('shop.home.products_count', $category->products_count, ['count' => number_format($category->products_count, 0, ',', "\u{00A0}")]) }}
+                            </span>
+                        </span>
+                    </a>
                 @endforeach
-            </ul>
+            </nav>
+
+            <div class="mt-6">
+                <x-ui.button variant="neutral" :href="route('catalog')">{{ __('shop.layout.all_categories') }}</x-ui.button>
+            </div>
         @endif
     </section>
+
+    @if ($inStock->isNotEmpty())
+        <section class="mt-10" aria-labelledby="in-stock-heading">
+            <h2 id="in-stock-heading" class="text-lg font-semibold">{{ __('shop.home.in_stock_strip') }}</h2>
+
+            <div class="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                @foreach ($inStock as $product)
+                    <x-catalog.product-card :product="$product" :price="$prices[$product->id] ?? null" />
+                @endforeach
+            </div>
+        </section>
+    @endif
 </x-layouts.app>

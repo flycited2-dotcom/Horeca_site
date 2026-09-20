@@ -9,6 +9,7 @@ use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CatalogSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Search of the storefront (TZ §8.4): the instant results under the header field and the
@@ -29,7 +30,11 @@ final class ProductSearch
 
     public function instant(string $text, ?User $user): SearchResult
     {
-        return $this->firstFound($text, function (NormalizedQuery $query) use ($user): SearchResult {
+        return $this->firstFound($text, fn (NormalizedQuery $query): SearchResult => new SearchResult(
+            new Collection,
+            new Collection,
+            $query->text,
+        ), function (NormalizedQuery $query) use ($user): SearchResult {
             $products = $this->engine
                 ->apply($this->catalog->withCardData($this->catalog->listed(), $user), $query)
                 ->limit(self::INSTANT_PRODUCTS)
@@ -41,7 +46,11 @@ final class ProductSearch
 
     public function page(string $text, CatalogFilters $filters, ?User $user, int $page = 1): SearchResult
     {
-        return $this->firstFound($text, function (NormalizedQuery $query) use ($filters, $user, $page): SearchResult {
+        return $this->firstFound($text, fn (NormalizedQuery $query): SearchResult => new SearchResult(
+            new LengthAwarePaginator([], 0, CatalogFilters::PER_PAGE, $page),
+            new Collection,
+            $query->text,
+        ), function (NormalizedQuery $query) use ($filters, $user, $page): SearchResult {
             $products = $this->engine->apply(
                 $this->catalog->filtered($this->catalog->withCardData($this->catalog->listed(), $user), $filters),
                 $query,
@@ -62,15 +71,17 @@ final class ProductSearch
 
     /**
      * Runs the search as typed and, when it finds nothing, in the other keyboard layout.
+     * A query too short to search for gives the same shape of result, only empty.
      *
+     * @param  callable(NormalizedQuery): SearchResult  $empty
      * @param  callable(NormalizedQuery): SearchResult  $search
      */
-    private function firstFound(string $text, callable $search): SearchResult
+    private function firstFound(string $text, callable $empty, callable $search): SearchResult
     {
         $query = $this->normalizer->normalize($text);
 
         if (! $query->isSearchable()) {
-            return new SearchResult(new Collection, new Collection, $query->text);
+            return $empty($query);
         }
 
         $result = $search($query);
