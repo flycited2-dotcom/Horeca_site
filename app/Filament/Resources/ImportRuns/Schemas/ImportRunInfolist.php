@@ -20,6 +20,12 @@ class ImportRunInfolist
         return $schema
             ->components([
                 Section::make(__('admin.import_run.summary'))
+                    // While the run is going the page refreshes itself (TZ §6.4).
+                    ->poll(fn (ImportRun $record): ?string => in_array(
+                        $record->status,
+                        [ImportRunStatus::Queued, ImportRunStatus::Running],
+                        true,
+                    ) ? '5s' : null)
                     ->columns(4)
                     ->schema([
                         TextEntry::make('profile.name')

@@ -16,6 +16,10 @@ final class DatabaseSearchEngine implements SearchEngineInterface
 {
     public function apply(Builder $products, NormalizedQuery $query): Builder
     {
+        if ($query->words === []) {
+            return $products->whereRaw('1 = 0');
+        }
+
         $words = array_map(self::like(...), $query->words);
         $compact = $query->looksLikeCode() ? self::like($query->compact) : null;
 

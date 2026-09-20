@@ -5,6 +5,7 @@ namespace App\Services\Supplier\Sync;
 use App\Enums\SupplierRefEntity;
 use App\Models\Brand;
 use App\Models\Supplier;
+use App\Services\Supplier\Import\SupplierText;
 use App\Support\Slugger;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +17,18 @@ final class BrandSync extends NamedRefSync
     protected function entity(): SupplierRefEntity
     {
         return SupplierRefEntity::Brand;
+    }
+
+    /**
+     * The shop may already know this brand under the same name: the manager created it or
+     * the match was lost. Then the products go to it instead of to a second "Abat".
+     */
+    protected function findLocal(Supplier $supplier, string $name): ?Model
+    {
+        return Brand::query()
+            ->whereRaw('LOWER(name) = ?', [SupplierText::key($name)])
+            ->orderBy('id')
+            ->first();
     }
 
     protected function createLocal(Supplier $supplier, string $name): Model

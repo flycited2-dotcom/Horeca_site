@@ -19,7 +19,7 @@ final class RedirectMovedAddress
             return;
         }
 
-        Redirect::query()->where('from_path', $to)->delete();
+        $this->free($to);
 
         Redirect::query()->where('to_path', $from)->update(['to_path' => $to]);
 
@@ -27,5 +27,13 @@ final class RedirectMovedAddress
             ['from_path' => $from],
             ['to_path' => $to, 'status_code' => 301],
         );
+    }
+
+    /**
+     * An address that now belongs to a page must not redirect anywhere.
+     */
+    public function free(string $path): void
+    {
+        Redirect::query()->where('from_path', $path)->delete();
     }
 }

@@ -12,12 +12,21 @@ use Illuminate\Database\Eloquent\Model;
  * Mirrors supplier entities that are identified by name only — brands and warehouses —
  * into supplier_refs and creates our records for the new ones (TZ §6.3, step 6).
  *
+ * A record with the same name that is already in the shop is linked instead of being
+ * created again: demo data, a manual entry or a lost match must not turn into a duplicate
+ * or into a unique key violation in the middle of an import.
+ *
  * Names with tails ("Rosso (Китай)") stay as they came: merging them is the manager's
  * call, made in the "Соответствия поставщика" screen.
  */
 abstract class NamedRefSync
 {
     abstract protected function entity(): SupplierRefEntity;
+
+    /**
+     * Our record with this name, if the shop already has one.
+     */
+    abstract protected function findLocal(Supplier $supplier, string $name): ?Model;
 
     /**
      * Creates our record for a supplier entity seen for the first time.
@@ -31,6 +40,8 @@ abstract class NamedRefSync
      * @return array<int, string> id => name
      */
     abstract protected function existingLocals(array $ids): array;
+
+    abstract protected function deletedMessage(string $name): string;
 
     /**
      * @param  array<string, string>  $items  matching key => supplier name
@@ -60,7 +71,7 @@ abstract class NamedRefSync
             $ref = $refs->get($key);
 
             if ($ref === null) {
-                $local = $this->createLocal($supplier, $name);
+                $local = $this->findLocal($supplier, $name) ?? $this->createLocal($supplier, $name);
 
                 SupplierRef::query()->create([
                     'supplier_id' => $supplier->id,
@@ -98,6 +109,4 @@ abstract class NamedRefSync
 
         return $resolved;
     }
-
-    abstract protected function deletedMessage(string $name): string;
 }

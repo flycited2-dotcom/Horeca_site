@@ -21,6 +21,18 @@ final class WarehouseSync extends NamedRefSync
         return SupplierRefEntity::Warehouse;
     }
 
+    /**
+     * Warehouses are unique by (supplier, name): an existing one is linked, never created
+     * a second time — that would break the whole run on a unique key.
+     */
+    protected function findLocal(Supplier $supplier, string $name): ?Model
+    {
+        return Warehouse::query()
+            ->where('supplier_id', $supplier->id)
+            ->where('name', $name)
+            ->first();
+    }
+
     protected function createLocal(Supplier $supplier, string $name): Model
     {
         return Warehouse::query()->create([

@@ -56,18 +56,23 @@ final class ImportRunner
             throw new ImportAlreadyRunningException($profile->supplier);
         }
 
-        $run = ImportRun::query()->create([
-            'import_profile_id' => $profile->id,
-            'user_id' => $userId,
-            'trigger' => $trigger,
-            'status' => ImportRunStatus::Running,
-            'is_dry_run' => $dryRun,
-            'started_at' => now(),
-        ]);
-
-        $log = new ImportLog($run->id, (int) config('import.log_limit'));
+        // Everything below is inside the lock: a failure before the run row exists would
+        // otherwise leave the supplier locked until the lock expires two hours later.
+        $run = null;
+        $log = null;
 
         try {
+            $run = ImportRun::query()->create([
+                'import_profile_id' => $profile->id,
+                'user_id' => $userId,
+                'trigger' => $trigger,
+                'status' => ImportRunStatus::Running,
+                'is_dry_run' => $dryRun,
+                'started_at' => now(),
+            ]);
+
+            $log = new ImportLog($run->id, (int) config('import.log_limit'));
+
             $this->process($profile, $run, $log, $force, $dryRun);
         } catch (FeedReadException|ImportRejectedException $exception) {
             $this->fail($run, $log, $exception->getMessage());
@@ -76,8 +81,12 @@ final class ImportRunner
 
             throw $exception;
         } finally {
-            $log->close();
-            ImportRow::query()->where('import_run_id', $run->id)->delete();
+            $log?->close();
+
+            if ($run !== null) {
+                ImportRow::query()->where('import_run_id', $run->id)->delete();
+            }
+
             $lock->release();
         }
 
@@ -190,13 +199,17 @@ final class ImportRunner
         ])->save();
     }
 
-    private function fail(ImportRun $run, ImportLog $log, string $message): void
+    private function fail(?ImportRun $run, ?ImportLog $log, string $message): void
     {
+        if ($run === null) {
+            return;
+        }
+
         $run->forceFill([
             'status' => ImportRunStatus::Failed,
             'error_message' => $message,
-            'log' => $log->messages(),
-            'log_file' => $log->relativePath(),
+            'log' => $log?->messages() ?? [],
+            'log_file' => $log?->relativePath(),
             'finished_at' => now(),
         ])->save();
 

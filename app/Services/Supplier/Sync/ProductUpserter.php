@@ -3,6 +3,7 @@
 namespace App\Services\Supplier\Sync;
 
 use App\Enums\ImportEntity;
+use App\Models\Brand;
 use App\Models\ImportRow;
 use App\Models\ImportRun;
 use App\Models\Product;
@@ -43,6 +44,13 @@ final class ProductUpserter
         'purchase_price' => 'purchase_price',
         'unit' => 'unit',
     ];
+
+    /**
+     * Names of brands the manager pinned by hand, read once per run.
+     *
+     * @var array<int, string|null>
+     */
+    private array $brandNames = [];
 
     public function __construct(
         private readonly RetailPriceCalculator $prices,
@@ -209,13 +217,30 @@ final class ProductUpserter
             $product->model,
             $product->sku,
             $product->supplier_code,
-            $brand?->name,
+            $this->brandName($product, $brand),
         );
 
         $product->source_hash = $hash;
         $product->missing_runs = 0;
         $product->last_synced_at = $syncedAt;
         $product->save();
+    }
+
+    /**
+     * The brand the product actually has: a manager may have pinned another one, and the
+     * search line must match what the customer sees.
+     */
+    private function brandName(Product $product, ?ResolvedRef $brand): ?string
+    {
+        if ($product->brand_id === null) {
+            return null;
+        }
+
+        if ($brand?->id === $product->brand_id) {
+            return $brand->name;
+        }
+
+        return $this->brandNames[$product->brand_id] ??= Brand::query()->whereKey($product->brand_id)->value('name');
     }
 
     /**
