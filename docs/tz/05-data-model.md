@@ -142,7 +142,7 @@ timestamps
 
 ## 5.5 Контент и настройки
 
-**pages** — `id` · `slug` string(160) unique · `title` string(255) · `content` longtext · `meta_title` string(255) nullable · `meta_description` string(500) nullable · `is_active` bool default false · `sort` smallint default 0 · timestamps
+**pages** — `id` · `slug` string(160) unique · `title` string(255) · `content` longtext (Markdown; HTML внутри текста при выводе вырезается) · `meta_title` string(255) nullable · `meta_description` string(500) nullable · `is_active` bool default false · `sort` smallint default 0 · timestamps
 
 Обязательные страницы: `dostavka`, `oplata`, `garantiya`, `optovikam`, `o-kompanii`, `kontakty`, `politika-konfidencialnosti`, `soglasie-na-obrabotku-personalnyh-dannyh`, `polzovatelskoe-soglashenie`.
 

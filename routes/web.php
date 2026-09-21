@@ -3,6 +3,7 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CompareController;
+use App\Http\Controllers\FallbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
@@ -25,3 +26,6 @@ Route::delete('/compare/{product}', [CompareController::class, 'destroy'])->wher
 
 // Сверка компонентов с макетами; вне локальной разработки отвечает 404.
 Route::get('/styleguide', StyleguideController::class)->name('styleguide');
+
+// Редирект, статическая страница по slug, затем 404 (ТЗ §8). Последним: отвечает только на то, что не взял ни один маршрут.
+Route::fallback(FallbackController::class);

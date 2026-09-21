@@ -146,6 +146,86 @@
     }
 }
 
+/*
+ * Тексты страниц из админки (App\View\RichText, Markdown): ритм абзацев, заголовки,
+ * списки, таблицы и ссылки — на токенах дизайн-системы, без плагина типографики.
+ */
+@utility rich-text {
+    max-width: var(--container-prose);
+    font-size: var(--text-base);
+    line-height: 1.6;
+
+    & > * + * {
+        margin-top: 12px;
+    }
+
+    & h2 {
+        margin-top: 32px;
+        font-size: var(--text-xl);
+        line-height: var(--text-xl--line-height);
+        font-weight: 700;
+    }
+
+    & h3 {
+        margin-top: 24px;
+        font-size: var(--text-lg);
+        line-height: var(--text-lg--line-height);
+        font-weight: 600;
+    }
+
+    & ul {
+        padding-left: 20px;
+        list-style: disc;
+    }
+
+    & ol {
+        padding-left: 20px;
+        list-style: decimal;
+    }
+
+    & li + li {
+        margin-top: 4px;
+    }
+
+    & a {
+        color: var(--color-accent-ink);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: color 0.15s ease;
+    }
+
+    & a:hover {
+        color: var(--color-accent-dark);
+    }
+
+    & strong {
+        font-weight: 600;
+    }
+
+    & table {
+        width: 100%;
+        border-collapse: collapse;
+        font-variant-numeric: tabular-nums;
+    }
+
+    & th,
+    & td {
+        padding: 8px 12px 8px 0;
+        border-bottom: 1px solid var(--color-line-soft);
+        text-align: left;
+        vertical-align: top;
+    }
+
+    & th {
+        border-bottom-color: var(--color-line);
+        font-weight: 600;
+    }
+
+    & > :first-child {
+        margin-top: 0;
+    }
+}
+
 /* Элемент, который без скриптов ничего не делает: поиск по брендам, «Ещё N брендов». */
 @utility requires-js {
     html:not(.js) & {
