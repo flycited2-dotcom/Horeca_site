@@ -50,6 +50,7 @@ return [
         'subcategories' => 'Разделы',
         'subcategories_more' => 'Ещё :count раздел|Ещё :count раздела|Ещё :count разделов',
         'models' => ':count модель|:count модели|:count моделей',
+        'models_heading' => 'Модели',
         'models_of' => ':found из :total модели|:found из :total моделей|:found из :total моделей',
         'in_stock_count' => ':count в наличии',
         'filters' => 'Фильтры',

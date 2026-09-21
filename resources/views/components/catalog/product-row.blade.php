@@ -42,9 +42,10 @@
             @endif
         </p>
 
-        <h3 @class(['font-semibold', 'text-md md:text-title' => $exact, 'text-base md:text-lg' => ! $exact])>
+        {{-- Точное совпадение стоит выше заголовка списка, поэтому оно само — заголовок второго уровня. --}}
+        <{{ $exact ? 'h2' : 'h3' }} @class(['font-semibold', 'text-md md:text-title' => $exact, 'text-base md:text-lg' => ! $exact])>
             <a href="{{ $url }}" class="transition-colors duration-150 ease-out hover:text-accent-ink">{{ $product->name }}</a>
-        </h3>
+        </{{ $exact ? 'h2' : 'h3' }}>
 
         @if ($codes !== [])
             <x-ui.data class="max-md:hidden">{{ implode(' · ', $codes) }}</x-ui.data>

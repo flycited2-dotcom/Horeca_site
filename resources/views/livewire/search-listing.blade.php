@@ -91,11 +91,11 @@
                     @endif
                 @else
                     <div class="flex flex-wrap items-center justify-between gap-4">
-                        <p class="text-base font-medium">
+                        <h2 class="text-base font-medium">
                             {{ $exact
                                 ? trans_choice('shop.search.similar', $slice->total, ['count' => Typography::number($slice->total)])
                                 : $results($slice->total) }}
-                        </p>
+                        </h2>
 
                         <x-catalog.sort-control :filters="$filters" :sorts="$sorts" :url-for="$urlFor" :labels="$sortLabels" class="max-lg:hidden" />
                     </div>

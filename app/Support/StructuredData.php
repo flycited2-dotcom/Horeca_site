@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Models\Product;
 use App\Services\Pricing\Price;
+use App\View\StorefrontShell;
 
 /**
  * schema.org markup of the storefront pages (TZ §8.3, §14).
@@ -40,6 +41,25 @@ final class StructuredData
         }
 
         return $data;
+    }
+
+    /**
+     * The shop as an Organization (TZ §14) on the home page: only the contacts the customer
+     * has filled in the settings.
+     *
+     * @return array<string, mixed>
+     */
+    public static function organization(StorefrontShell $shell): array
+    {
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $shell->siteName,
+            'url' => url('/'),
+            'telephone' => $shell->phone()['label'] ?? null,
+            'email' => $shell->email,
+            'address' => $shell->address,
+        ], fn (mixed $value): bool => $value !== null && $value !== '');
     }
 
     /**

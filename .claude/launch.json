@@ -6,6 +6,12 @@
             "runtimeExecutable": "C:/Users/TLT-1/devtools/php-8.4/php.exe",
             "runtimeArgs": ["artisan", "serve", "--port=8000"],
             "port": 8000
+        },
+        {
+            "name": "horeca-no-debug",
+            "runtimeExecutable": "cmd",
+            "runtimeArgs": ["/c", "set APP_DEBUG=false&& set DEBUGBAR_ENABLED=false&& set PHP_CLI_SERVER_WORKERS=4&& C:/Users/TLT-1/devtools/php-8.4/php.exe artisan serve --port=8010"],
+            "port": 8010
         }
     ]
 }

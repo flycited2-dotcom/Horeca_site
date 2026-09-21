@@ -85,3 +85,22 @@ it('shows the hits, the new products and the local warehouse only when there are
         ->assertSee('Новинки')
         ->assertSee('Готово к отгрузке: Симферополь');
 });
+
+it('marks the shop up as an organization with the contacts it has', function () {
+    Setting::query()->create(['key' => 'site.name', 'value' => 'Проф Кухня']);
+    Setting::query()->create(['key' => 'contacts.phones', 'value' => '+7 978 123-45-67']);
+
+    preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $this->get('/')->assertOk()->getContent(), $markup);
+
+    expect(json_decode($markup[1], true))->toBe([
+        '@context' => 'https://schema.org',
+        '@type' => 'Organization',
+        'name' => 'Проф Кухня',
+        'url' => url('/'),
+        'telephone' => '+7 978 123-45-67',
+    ]);
+});
+
+it('keeps the organization markup on the home page only', function () {
+    $this->get(route('catalog'))->assertOk()->assertDontSee('"@type":"Organization"', false);
+});
