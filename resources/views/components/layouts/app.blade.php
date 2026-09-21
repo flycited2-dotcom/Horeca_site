@@ -3,7 +3,8 @@
 {{--
     Каркас витрины (макет, экраны 5, 10 и 14): служебная полоса, шапка, ряд корневых
     категорий, футер. Шапка липкая начиная с планшета; на телефоне поиск — отдельной
-    строкой, разделы — лентой чипов. Данные каркаса собирает StorefrontLayoutComposer.
+    строкой, разделы — лентой чипов. Поле поиска ведёт мгновенную выдачу (InstantSearch).
+    Данные каркаса собирает StorefrontLayoutComposer.
 --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -61,8 +62,8 @@
                 {{ $shell->siteName }}
             </a>
 
-            <x-layout.search-form
-                id="site-search"
+            <livewire:instant-search
+                field-id="site-search"
                 class="col-span-2 max-md:-mx-3 max-md:mt-1.5 max-md:-mb-1.5 max-md:border-t max-md:border-line max-md:px-3 max-md:py-2.5 md:col-span-1"
             />
         </div>

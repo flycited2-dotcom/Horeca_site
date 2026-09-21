@@ -1,10 +1,11 @@
-@props(['availability', 'incomingAt' => null])
+@props(['availability', 'incomingAt' => null, 'variant' => 'badge'])
 
 {{--
     Статус наличия (ТЗ §6.5, §9, макет — экраны 2 и 8). Всегда словом, а не только цветом;
     статусы различаются ещё и формой: «В наличии» — пилюля с точкой, «Ожидается» — плашка
     с ромбом, «Под заказ» — пунктирная рамка с квадратом. «Ожидается» — с конкретной датой,
-    если поставщик её сообщил.
+    если поставщик её сообщил. Вариант text — цветное слово без плашки для плотных списков
+    (выдача под поиском, экран 5).
 --}}
 @php
     $styles = [
@@ -24,7 +25,19 @@
     }
 @endphp
 
-<span {{ $attributes->class([
-    'inline-flex items-center gap-1.5 self-start border px-2.5 py-1 text-sm leading-[1.3] font-medium',
-    $badge,
-]) }}><span aria-hidden="true" class="{{ $marker }} shrink-0"></span>{{ $label }}</span>
+@if ($variant === 'text')
+    <span {{ $attributes->class([
+        'text-sm leading-[1.3] font-medium',
+        match ($availability->value) {
+            'in_stock', 'low' => 'text-stock-text',
+            'incoming' => 'text-incoming',
+            'on_order' => 'text-on-order',
+            default => 'text-steel-500',
+        },
+    ]) }}>{{ $label }}</span>
+@else
+    <span {{ $attributes->class([
+        'inline-flex items-center gap-1.5 self-start border px-2.5 py-1 text-sm leading-[1.3] font-medium',
+        $badge,
+    ]) }}><span aria-hidden="true" class="{{ $marker }} shrink-0"></span>{{ $label }}</span>
+@endif

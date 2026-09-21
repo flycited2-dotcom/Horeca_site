@@ -27,6 +27,12 @@
         @endif
     </section>
 
+    <section class="mt-6 flex flex-col gap-3 rounded-card border border-line bg-surface p-4 md:p-6" aria-labelledby="sku-heading">
+        <h2 id="sku-heading" class="text-lg font-semibold">{{ __('shop.search.sku_heading') }}</h2>
+        <p class="text-base text-steel-500">{{ __('shop.search.sku_text') }}</p>
+        <livewire:instant-search field-id="sku-search" variant="sku" class="max-w-3xl" />
+    </section>
+
     @if ($inStock->isNotEmpty())
         <section class="mt-10" aria-labelledby="in-stock-heading">
             <h2 id="in-stock-heading" class="text-lg font-semibold">{{ __('shop.home.in_stock_strip') }}</h2>

@@ -40,7 +40,12 @@ final class ProductSearch
                 ->limit(self::INSTANT_PRODUCTS)
                 ->get();
 
-            return new SearchResult($products, $this->categories($query), $query->text);
+            // «Показать все N результатов»: counted only when the first six are not all there is.
+            $total = $products->count() < self::INSTANT_PRODUCTS
+                ? $products->count()
+                : $this->engine->apply($this->catalog->listed(), $query)->count();
+
+            return new SearchResult($products, $this->categories($query), $query->text, total: $total);
         });
     }
 
@@ -100,7 +105,7 @@ final class ProductSearch
 
         return $retry->isEmpty()
             ? $result
-            : new SearchResult($retry->products, $retry->categories, $retry->query, layoutSwitched: true);
+            : new SearchResult($retry->products, $retry->categories, $retry->query, layoutSwitched: true, total: $retry->total);
     }
 
     /**

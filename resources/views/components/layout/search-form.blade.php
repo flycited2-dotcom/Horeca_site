@@ -1,14 +1,15 @@
-@props(['id', 'variant' => 'header'])
+@props(['id', 'variant' => 'header', 'placeholder' => null, 'live' => false])
 
 {{--
     Поиск (ТЗ §8.4, макет — экран 5): обычная GET-форма на /search, работает без скриптов.
     В шапке поле и кнопка слиты в одну группу, на телефоне кнопка — квадрат с лупой;
     в футере поле и кнопка раздельно. Кегль поля 16 px: телефон не увеличивает страницу
-    при фокусе.
+    при фокусе. В режиме live поле ведёт мгновенную выдачу (App\Livewire\InstantSearch).
 --}}
 @php
     $header = $variant === 'header';
     $value = $header && request()->routeIs('search') ? (string) request()->query('q', '') : '';
+    $placeholder ??= $header ? __('shop.layout.search_placeholder') : __('shop.layout.footer.sku_placeholder');
 @endphp
 
 <form action="{{ route('search') }}" method="get" role="search" {{ $attributes->class(['flex gap-2', 'md:gap-0' => $header]) }}>
@@ -18,7 +19,14 @@
         type="search"
         name="q"
         value="{{ $value }}"
-        placeholder="{{ $header ? __('shop.layout.search_placeholder') : __('shop.layout.footer.sku_placeholder') }}"
+        placeholder="{{ $placeholder }}"
+        @if ($live)
+            autocomplete="off"
+            aria-describedby="{{ $id }}-status"
+            wire:model.live.debounce.250ms="query"
+            x-on:focus="open = true"
+            x-on:input="open = true"
+        @endif
         @class([
             'h-control min-w-0 flex-1 rounded-control border bg-surface px-3 text-lg leading-none text-ink placeholder:text-steel-500',
             'transition-colors duration-150 ease-out focus:border-accent',
