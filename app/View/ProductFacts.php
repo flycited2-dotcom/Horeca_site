@@ -65,6 +65,49 @@ final readonly class ProductFacts
         return array_values(array_filter($rows));
     }
 
+    /**
+     * The rows of the comparison table (TZ §8.5, layout — screen 13) under keys that are the
+     * same for every product, so the rows of several products line up. Rows marked install
+     * go to «Критично для монтажа»: dimensions, weight and the main characteristics.
+     *
+     * @return array<string, array{label: string, value: string, mono: bool, install: bool}>
+     */
+    public function comparable(): array
+    {
+        $product = $this->product;
+        $attributes = $product->attributeValues;
+
+        $rows = [
+            'dimensions' => $this->row(__('shop.product.dimensions'), $this->dimensions(), mono: true),
+            'weight' => $this->row(__('shop.product.weight'), $this->weight()),
+        ];
+
+        foreach ($attributes->where('is_main', true) as $attribute) {
+            $rows['attribute-'.$attribute->id] = $this->row($attribute->name, $this->attributeValue($attribute), mono: $attribute->pivot->value_number !== null);
+        }
+
+        $install = array_keys($rows);
+
+        $rows['brand'] = $this->row(__('shop.product.brand'), $product->brand?->name);
+        $rows['model'] = $this->row(__('shop.product.model'), $this->model(), mono: true);
+
+        foreach ($attributes->where('is_main', false) as $attribute) {
+            $rows['attribute-'.$attribute->id] = $this->row($attribute->name, $this->attributeValue($attribute), mono: $attribute->pivot->value_number !== null);
+        }
+
+        $rows['warranty'] = $product->warranty_months
+            ? $this->row(__('shop.product.tab_warranty'), trans_choice('shop.compare.months', $product->warranty_months, ['count' => $product->warranty_months]))
+            : null;
+
+        $result = [];
+
+        foreach (array_filter($rows) as $key => $row) {
+            $result[$key] = $row + ['install' => in_array($key, $install, true)];
+        }
+
+        return $result;
+    }
+
     public function dimensions(): ?string
     {
         $sizes = [$this->product->length_mm, $this->product->width_mm, $this->product->height_mm];

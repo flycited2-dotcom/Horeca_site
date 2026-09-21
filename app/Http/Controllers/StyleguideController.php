@@ -27,6 +27,11 @@ use Illuminate\Support\Facades\App;
  */
 class StyleguideController extends Controller
 {
+    /**
+     * The number of sample products made so far: their ids.
+     */
+    private int $samples = 0;
+
     public function __invoke(): View
     {
         abort_unless(App::isLocal(), 404);
@@ -146,7 +151,11 @@ class StyleguideController extends Controller
             : null;
 
         return (new Product)
-            ->forceFill(array_diff_key($attributes, ['brand' => true]) + ['slug' => str($attributes['name'])->slug()->value()])
+            ->forceFill(array_diff_key($attributes, ['brand' => true]) + [
+                // Forms on the card (e.g. «Сравнить») need an id; the samples are never saved.
+                'id' => ++$this->samples,
+                'slug' => str($attributes['name'])->slug()->value(),
+            ])
             ->setRelation('brand', $brand)
             ->setRelation('category', $category);
     }

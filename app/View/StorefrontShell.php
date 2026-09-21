@@ -6,7 +6,8 @@ use App\Models\Page;
 
 /**
  * What the storefront layout shows around every page (TZ §8.1, layout — screen 5):
- * contacts from the settings, root categories and the pages the manager has switched on.
+ * contacts from the settings, root categories, the pages the manager has switched on and
+ * how many models the customer compares.
  */
 final readonly class StorefrontShell
 {
@@ -29,6 +30,7 @@ final readonly class StorefrontShell
         public array $stripPages,
         public array $footerPages,
         public ?Page $privacyPage,
+        public int $compareCount = 0,
     ) {}
 
     /**

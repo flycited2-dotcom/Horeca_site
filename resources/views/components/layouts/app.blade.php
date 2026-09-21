@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null])
+@props(['title' => null, 'description' => null, 'noindex' => false])
 
 {{--
     Каркас витрины (макет, экраны 5, 10 и 14): служебная полоса, шапка, ряд корневых
@@ -15,6 +15,9 @@
     <title>{{ $title ? $title.' | '.$shell->siteName : $shell->siteName }}</title>
     @if ($description)
         <meta name="description" content="{{ $description }}">
+    @endif
+    @if ($noindex)
+        <meta name="robots" content="noindex">
     @endif
     @vite(['resources/css/app.css', 'resources/js/storefront.js'])
 </head>
@@ -55,7 +58,7 @@
     @endif
 
     <header class="stuck-shadow relative z-30 border-b border-line bg-surface md:sticky md:top-0">
-        <div class="container-page grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2.5 py-1.5 md:h-17 md:grid-cols-[auto_auto_minmax(0,1fr)] md:gap-x-6 md:py-0 lg:grid-cols-[auto_minmax(0,1fr)]">
+        <div class="container-page grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2.5 py-1.5 md:h-17 md:grid-cols-[auto_auto_minmax(0,1fr)_auto] md:gap-x-6 md:py-0 lg:grid-cols-[auto_minmax(0,1fr)_auto]">
             <x-layout.menu :shell="$shell" class="lg:hidden" />
 
             <a href="{{ route('home') }}" class="justify-self-start text-title font-bold" aria-label="{{ $shell->siteName }} — {{ __('shop.layout.home') }}">
@@ -64,8 +67,22 @@
 
             <livewire:instant-search
                 field-id="site-search"
-                class="col-span-2 max-md:-mx-3 max-md:mt-1.5 max-md:-mb-1.5 max-md:border-t max-md:border-line max-md:px-3 max-md:py-2.5 md:col-span-1"
+                class="col-span-3 max-md:-mx-3 max-md:mt-1.5 max-md:-mb-1.5 max-md:border-t max-md:border-line max-md:px-3 max-md:py-2.5 md:col-span-1"
             />
+
+            {{-- Сравнение (ТЗ §8.5): ссылка видна, пока в сравнении есть модели; счётчик обновляет скрипт витрины. --}}
+            <a
+                href="{{ route('compare') }}"
+                data-compare-link
+                @if ($shell->compareCount === 0) hidden @endif
+                class="flex h-control items-center gap-2 rounded-control border border-line px-3 text-sm font-medium transition-colors duration-150 ease-out hover:border-accent-ink max-md:col-start-3 max-md:row-start-1"
+            >
+                <svg class="size-5 text-steel-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 20V10M12 20V4M19 20v-7"/>
+                </svg>
+                <span class="max-md:sr-only">{{ __('shop.compare.header') }}</span>
+                <span data-compare-count class="min-w-5 rounded-full bg-accent-ink px-1.5 text-center text-xs leading-5 font-semibold text-white tabular">{{ $shell->compareCount }}</span>
+            </a>
         </div>
     </header>
 
@@ -102,5 +119,21 @@
         <div class="h-18 lg:hidden" aria-hidden="true"></div>
         {{ $bottomBar }}
     @endisset
+
+    {{-- Уведомления об итоге действия: с перезагрузкой — из сессии, со скриптами — из шаблона ниже. --}}
+    <div
+        data-notices
+        role="status"
+        aria-live="polite"
+        @class([
+            'pointer-events-none fixed inset-x-3 bottom-3 z-40 flex flex-col items-center gap-2 md:inset-x-auto md:right-6 md:bottom-6 md:items-end',
+            'max-lg:bottom-21' => isset($bottomBar),
+        ])
+    >
+        @if (is_array($notice = session('notice')))
+            <x-ui.notice :text="$notice['text'] ?? ''" :href="$notice['href'] ?? null" :link="$notice['link'] ?? null" />
+        @endif
+    </div>
+    <template data-notice-template><x-ui.notice /></template>
 </body>
 </html>

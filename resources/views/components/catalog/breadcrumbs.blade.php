@@ -1,6 +1,9 @@
-@props(['category' => null, 'product' => null, 'brand' => null])
+@props(['category' => null, 'product' => null, 'brand' => null, 'current' => null])
 
-{{-- Хлебные крошки с разметкой BreadcrumbList (ТЗ §8.2): каталог и разделы или бренды. --}}
+{{--
+    Хлебные крошки с разметкой BreadcrumbList (ТЗ §8.2): каталог и разделы или бренды.
+    $current — последняя крошка-текст служебной страницы: «Каталог / Пароконвектоматы / Сравнение».
+--}}
 @php
     $trail = $brand === null
         ? [['name' => __('shop.layout.catalog'), 'url' => route('catalog')]]
@@ -17,6 +20,10 @@
 
     if ($product !== null) {
         $trail[] = ['name' => $product->name, 'url' => null];
+    }
+
+    if ($current !== null) {
+        $trail[] = ['name' => $current, 'url' => null];
     }
 @endphp
 

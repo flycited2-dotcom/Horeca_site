@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CompareController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
@@ -16,6 +17,11 @@ Route::get('/product/{product:slug}', ProductController::class)->name('product')
 Route::get('/brands', [BrandController::class, 'index'])->name('brands');
 Route::get('/brands/{brand:slug}', [BrandController::class, 'show'])->name('brand');
 Route::get('/search', SearchController::class)->name('search');
+
+Route::get('/compare', [CompareController::class, 'index'])->name('compare');
+Route::delete('/compare', [CompareController::class, 'clear'])->name('compare.clear');
+Route::post('/compare/{product}', [CompareController::class, 'store'])->whereNumber('product')->name('compare.add');
+Route::delete('/compare/{product}', [CompareController::class, 'destroy'])->whereNumber('product')->name('compare.remove');
 
 // Сверка компонентов с макетами; вне локальной разработки отвечает 404.
 Route::get('/styleguide', StyleguideController::class)->name('styleguide');

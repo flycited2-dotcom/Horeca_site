@@ -9,6 +9,7 @@ use App\Models\Warehouse;
 use App\Observers\CatalogCacheObserver;
 use App\Observers\SlugRedirectObserver;
 use App\Services\Catalog\CategoryTree;
+use App\Services\Compare\CompareList;
 use App\Services\Search\DatabaseSearchEngine;
 use App\Services\Search\SearchEngineInterface;
 use App\Services\Settings\Settings;
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->scoped(CategoryTree::class);
         $this->app->scoped(Settings::class);
+        $this->app->scoped(CompareList::class);
         $this->app->bind(SearchEngineInterface::class, DatabaseSearchEngine::class);
     }
 

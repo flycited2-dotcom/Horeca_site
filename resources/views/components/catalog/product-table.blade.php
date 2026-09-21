@@ -43,10 +43,11 @@
                     </td>
                     <td class="px-4 py-3">
                         @if ($price === null)
-                            <x-ui.button variant="secondary" class="whitespace-nowrap">{{ __('shop.product.request_price') }}</x-ui.button>
+                            <x-ui.button variant="secondary" class="w-full whitespace-nowrap">{{ __('shop.product.request_price') }}</x-ui.button>
                         @else
-                            <x-ui.button class="whitespace-nowrap">{{ __('shop.product.add_to_cart_short') }}</x-ui.button>
+                            <x-ui.button class="w-full whitespace-nowrap">{{ __('shop.product.add_to_cart_short') }}</x-ui.button>
                         @endif
+                        <x-compare.toggle :product="$product" class="mt-1" />
                     </td>
                 </tr>
             @endforeach

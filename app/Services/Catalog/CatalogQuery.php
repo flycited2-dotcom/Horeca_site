@@ -324,6 +324,27 @@ final class CatalogQuery
     }
 
     /**
+     * The models of the comparison (TZ §8.5) in the order they were added, with what the
+     * table needs. A discontinued model stays with its status, like its page; a model the
+     * manager has hidden drops out.
+     *
+     * @param  list<int>  $ids
+     * @return Collection<int, Product>
+     */
+    public function comparedProducts(array $ids, ?User $user): Collection
+    {
+        if ($ids === []) {
+            return new Collection;
+        }
+
+        return $this->withCardData(Product::query()->whereKey($ids)->where('is_visible', true), $user)
+            ->with('attributeValues')
+            ->get()
+            ->sortBy(fn (Product $product): int|false => array_search($product->id, $ids, true))
+            ->values();
+    }
+
+    /**
      * Products a listing or a search may show.
      *
      * @return Builder<Product>

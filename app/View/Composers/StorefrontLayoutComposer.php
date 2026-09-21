@@ -7,6 +7,7 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CategoryTree;
+use App\Services\Compare\CompareList;
 use App\Services\Settings\Settings;
 use App\View\StorefrontShell;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ final class StorefrontLayoutComposer
         private readonly CatalogQuery $catalog,
         private readonly CategoryTree $tree,
         private readonly Request $request,
+        private readonly CompareList $compare,
     ) {}
 
     public function compose(View $view): void
@@ -58,6 +60,7 @@ final class StorefrontLayoutComposer
             stripPages: array_values(array_filter(array_map(fn (string $slug): ?Page => $pages->get($slug), self::STRIP_PAGES))),
             footerPages: array_values(array_filter(array_map(fn (string $slug): ?Page => $pages->get($slug), self::FOOTER_PAGES))),
             privacyPage: $pages->get(self::PRIVACY_PAGE),
+            compareCount: $this->compare->count($this->request->user()),
         ));
     }
 

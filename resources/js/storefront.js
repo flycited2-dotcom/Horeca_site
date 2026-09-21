@@ -113,6 +113,90 @@ for (const gallery of document.querySelectorAll('[data-gallery]')) {
     }
 }
 
+// Уведомления об итоге действия (шаблон — в каркасе): новое заменяет прежнее, закрывается
+// крестиком или само через несколько секунд.
+const notices = document.querySelector('[data-notices]');
+const noticeTemplate = document.querySelector('template[data-notice-template]');
+let noticeTimer;
+
+const showNotice = ({ text, href, link }) => {
+    if (!notices || !noticeTemplate) {
+        return;
+    }
+
+    const notice = noticeTemplate.content.firstElementChild.cloneNode(true);
+    notice.querySelector('[data-notice-text]').textContent = text;
+
+    const anchor = notice.querySelector('[data-notice-link]');
+    anchor.hidden = !href;
+
+    if (href) {
+        anchor.href = href;
+        anchor.textContent = link;
+    }
+
+    notices.replaceChildren(notice);
+    clearTimeout(noticeTimer);
+    noticeTimer = setTimeout(() => notice.remove(), 6000);
+};
+
+document.addEventListener('click', (event) => {
+    event.target.closest('[data-notice-close]')?.closest('[data-notice-item]')?.remove();
+});
+
+// Сравнение (ТЗ §8.5): формы «Сравнить» работают и без скриптов; со скриптами кнопка
+// меняется на месте — на всех карточках этого товара, — счётчик в шапке обновляется.
+// Обработчик на документе: Livewire перерисовывает листинг, формы появляются заново.
+document.addEventListener('submit', async (event) => {
+    const form = event.target;
+
+    if (!(form instanceof HTMLFormElement) || !form.hasAttribute('data-compare-form')) {
+        return;
+    }
+
+    event.preventDefault();
+
+    let result;
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { Accept: 'application/json' },
+        });
+
+        if (!response.ok) {
+            throw new Error(String(response.status));
+        }
+
+        result = await response.json();
+    } catch {
+        form.submit();
+
+        return;
+    }
+
+    const holder = form.closest('[data-compare]');
+
+    for (const toggle of document.querySelectorAll(`[data-compare="${result.product}"]`)) {
+        const [add, remove] = toggle.querySelectorAll('form[data-compare-form]');
+        add.hidden = result.compared;
+        remove.hidden = !result.compared;
+    }
+
+    // Нажатая кнопка спряталась: фокус переходит на ту, что встала на её место.
+    holder?.querySelector('form[data-compare-form]:not([hidden]) button')?.focus();
+
+    const link = document.querySelector('[data-compare-link]');
+
+    if (link) {
+        link.hidden = result.count === 0;
+        link.querySelector('[data-compare-count]').textContent = String(result.count);
+    }
+
+    showNotice(result.notice);
+});
+
 // Липкая полоса покупки ниже 1024 px: появляется, когда панель покупки ушла вверх за экран.
 const buyPanel = document.querySelector('[data-buy-panel]');
 const stickyBuy = document.querySelector('[data-sticky-buy]');

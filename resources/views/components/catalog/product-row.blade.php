@@ -75,5 +75,7 @@
         @if ($exact)
             <x-ui.button variant="neutral" :href="$url" class="w-full">{{ __('shop.search.open_product') }}</x-ui.button>
         @endif
+
+        <x-compare.toggle :product="$product" />
     </div>
 </article>

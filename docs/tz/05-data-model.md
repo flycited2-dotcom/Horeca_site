@@ -138,6 +138,8 @@ timestamps
 
 **favorites** — `id` · `user_id` bigint nullable FK cascade · `session_id` string(100) nullable · `product_id` FK cascade · timestamps · unique(`user_id`,`product_id`) · unique(`session_id`,`product_id`). Гостевое избранное объединяется при входе так же, как корзина.
 
+**compare_items** — `id` · `user_id` FK cascade · `product_id` FK cascade · timestamps · unique(`user_id`,`product_id`). Сравнение вошедшего клиента (§8.5), не больше 4 моделей; у гостя список живёт в сессии и переносится сюда при входе.
+
 ## 5.5 Контент и настройки
 
 **pages** — `id` · `slug` string(160) unique · `title` string(255) · `content` longtext · `meta_title` string(255) nullable · `meta_description` string(500) nullable · `is_active` bool default false · `sort` smallint default 0 · timestamps
