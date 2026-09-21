@@ -137,7 +137,9 @@ it('tells the staff about a failed import', function () {
 
     expect($run->status)->toBe(ImportRunStatus::Failed);
 
-    Queue::assertPushed(SendTelegramMessage::class);
+    // One alarm per failure: a listener registered twice would send everything twice.
+    Queue::assertPushed(SendTelegramMessage::class, 1);
+    Mail::assertQueued(ImportFailedMail::class, 1);
     Mail::assertQueued(ImportFailedMail::class, fn (ImportFailedMail $mail): bool => $mail->hasTo($manager->email));
 });
 

@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\ImportFailed;
-use App\Listeners\NotifyAboutFailedImport;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -15,7 +13,6 @@ use App\Services\Search\DatabaseSearchEngine;
 use App\Services\Search\SearchEngineInterface;
 use App\Services\Settings\Settings;
 use App\View\Composers\StorefrontLayoutComposer;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(ImportFailed::class, NotifyAboutFailedImport::class);
+        // Listeners of app/Listeners are found by event discovery: registering them here too would call them twice.
 
         Product::observe(SlugRedirectObserver::class);
         Category::observe([SlugRedirectObserver::class, CatalogCacheObserver::class]);
