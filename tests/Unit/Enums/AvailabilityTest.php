@@ -18,3 +18,13 @@ it('treats managers and administrators as staff', function () {
         ->and(UserRole::Manager->isStaff())->toBeTrue()
         ->and(UserRole::Admin->isStaff())->toBeTrue();
 });
+
+it('names the schema.org availability of every status', function () {
+    expect(array_map(fn (Availability $availability): string => $availability->schemaOrg(), Availability::cases()))->toBe([
+        'https://schema.org/InStock',
+        'https://schema.org/LimitedAvailability',
+        'https://schema.org/BackOrder',
+        'https://schema.org/MadeToOrder',
+        'https://schema.org/Discontinued',
+    ]);
+});

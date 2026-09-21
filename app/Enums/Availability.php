@@ -21,6 +21,20 @@ enum Availability: string implements HasLabel
     case Discontinued = 'discontinued';
 
     /**
+     * The schema.org availability of the Offer markup (TZ §6.5).
+     */
+    public function schemaOrg(): string
+    {
+        return 'https://schema.org/'.match ($this) {
+            self::InStock => 'InStock',
+            self::Low => 'LimitedAvailability',
+            self::Incoming => 'BackOrder',
+            self::OnOrder => 'MadeToOrder',
+            self::Discontinued => 'Discontinued',
+        };
+    }
+
+    /**
      * Sort weight stored in products.availability_rank: lower goes first.
      */
     public function rank(): int

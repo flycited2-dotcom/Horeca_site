@@ -2,35 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Page;
 use App\Models\Product;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Pricing\PriceResolver;
+use App\Services\Settings\Settings;
+use App\Support\StructuredData;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Карточка товара (ТЗ §8.3). Снятый с производства товар страницу сохраняет — она нужна
- * поиску и подбору аналога (ТЗ §6.5).
+ * Карточка товара (ТЗ §8.3, макет — экран 3). Снятый с производства товар страницу
+ * сохраняет — она нужна поиску и подбору аналога (ТЗ §6.5).
  */
 class ProductController extends Controller
 {
-    public function __invoke(Request $request, Product $product, CatalogQuery $catalog, PriceResolver $prices): View
+    /**
+     * Pages the «Доставка и оплата» and «Гарантия» tabs link to, when the manager has switched them on.
+     */
+    private const array INFO_PAGES = ['dostavka', 'oplata', 'garantiya'];
+
+    public function __invoke(Request $request, Product $product, CatalogQuery $catalog, PriceResolver $prices, Settings $settings): View
     {
         if (! $product->is_visible) {
             throw new NotFoundHttpException;
         }
 
-        $product->load(['brand', 'category', 'media', 'stocks.warehouse', 'attributeValues']);
+        $user = $request->user();
+        $product->load(['brand', 'category', 'media', 'attributeValues']);
 
-        $similar = $catalog->similarProducts($product, $request->user());
+        $price = $prices->for($product, $user);
+        $similar = $catalog->similarProducts($product, $user);
+        $related = $catalog->relatedProducts($product, $user);
+
+        $pages = Page::query()
+            ->where('is_active', true)
+            ->whereIn('slug', self::INFO_PAGES)
+            ->get(['slug', 'title'])
+            ->keyBy('slug');
+
+        $pickup = $settings->get('pickup.address');
 
         return view('product.show', [
             'product' => $product,
-            'price' => $prices->for($product, $request->user()),
+            'price' => $price,
             'stocks' => $catalog->visibleStocks($product),
             'similar' => $similar,
-            'similarPrices' => $prices->forMany($similar, $request->user()),
+            'related' => $related,
+            'prices' => $prices->forMany($similar->concat($related), $user),
+            'pickup' => is_string($pickup) && trim($pickup) !== '' ? trim($pickup) : null,
+            'pages' => $pages,
+            'structuredData' => StructuredData::product(
+                $product,
+                $price,
+                $product->getFirstMediaUrl(Product::IMAGES, 'full') ?: null,
+            ),
         ]);
     }
 }

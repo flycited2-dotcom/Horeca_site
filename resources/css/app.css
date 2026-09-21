@@ -131,6 +131,21 @@
     display: none;
 }
 
+/*
+ * Вкладки карточки товара: со скриптами неактивный раздел свёрнут (аккордеон на телефоне),
+ * с 768 px вместо заголовков разделов — ряд вкладок, неактивный раздел спрятан целиком.
+ */
+.js [data-panel][data-inactive] [data-panel-body] {
+    display: none;
+}
+
+@media (width >= 48rem) {
+    .js [data-panel][data-inactive],
+    .js [data-panel-heading] {
+        display: none;
+    }
+}
+
 /* Элемент, который без скриптов ничего не делает: поиск по брендам, «Ещё N брендов». */
 @utility requires-js {
     html:not(.js) & {

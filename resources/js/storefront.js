@@ -53,3 +53,72 @@ for (const nav of document.querySelectorAll('[data-priority-nav]')) {
 
     new ResizeObserver(update).observe(nav);
 }
+
+// Вкладки карточки товара (ТЗ §8.3): с 768 px — вкладки, ниже — аккордеоны. Неактивный
+// раздел помечен data-inactive, стили прячут его.
+for (const tabs of document.querySelectorAll('[data-tabs]')) {
+    const panels = [...tabs.querySelectorAll('[data-panel]')];
+    const buttons = [...tabs.querySelectorAll('[data-tab-button]')];
+
+    const show = (key) => {
+        for (const panel of panels) {
+            const active = panel.dataset.panel === key;
+            panel.toggleAttribute('data-inactive', !active);
+            panel.querySelector('[data-panel-toggle]')?.setAttribute('aria-expanded', String(active));
+        }
+
+        for (const button of buttons) {
+            button.setAttribute('aria-selected', String(button.dataset.tabButton === key));
+        }
+    };
+
+    for (const button of buttons) {
+        button.addEventListener('click', () => show(button.dataset.tabButton));
+        button.addEventListener('keydown', (event) => {
+            const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+
+            if (step === undefined) {
+                return;
+            }
+
+            const next = buttons[(buttons.indexOf(button) + step + buttons.length) % buttons.length];
+            next.focus();
+            show(next.dataset.tabButton);
+        });
+    }
+
+    for (const panel of panels) {
+        panel.querySelector('[data-panel-toggle]')?.addEventListener('click', (event) => {
+            const opening = panel.hasAttribute('data-inactive');
+            panel.toggleAttribute('data-inactive', !opening);
+            event.currentTarget.setAttribute('aria-expanded', String(opening));
+        });
+    }
+}
+
+// Галерея: миниатюра меняет главное фото на месте; без скрипта открывает фото целиком.
+for (const gallery of document.querySelectorAll('[data-gallery]')) {
+    const main = gallery.querySelector('[data-gallery-main]');
+    const image = main?.querySelector('img');
+    const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+
+    for (const thumb of thumbs) {
+        thumb.addEventListener('click', (event) => {
+            event.preventDefault();
+            image.src = thumb.dataset.full;
+            main.href = thumb.href;
+            thumbs.forEach((other) => other.toggleAttribute('aria-current', other === thumb));
+            thumb.setAttribute('aria-current', 'true');
+        });
+    }
+}
+
+// Липкая полоса покупки ниже 1024 px: появляется, когда панель покупки ушла вверх за экран.
+const buyPanel = document.querySelector('[data-buy-panel]');
+const stickyBuy = document.querySelector('[data-sticky-buy]');
+
+if (buyPanel && stickyBuy) {
+    new IntersectionObserver(([entry]) => {
+        stickyBuy.hidden = entry.isIntersecting || entry.boundingClientRect.top > 0;
+    }).observe(buyPanel);
+}

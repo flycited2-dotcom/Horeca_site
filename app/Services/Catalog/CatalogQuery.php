@@ -276,6 +276,21 @@ final class CatalogQuery
     }
 
     /**
+     * «Часто берут вместе» on a product page (TZ §8.3): the related products the manager
+     * linked, only those the storefront may show.
+     *
+     * @return Collection<int, Product>
+     */
+    public function relatedProducts(Product $product, ?User $user, int $limit = 3): Collection
+    {
+        return $this->withCardData($this->listed(), $user)
+            ->whereIn('id', $product->relatedProducts()->reorder()->select('products.id'))
+            ->orderBy('availability_rank')
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
      * Products a listing or a search may show.
      *
      * @return Builder<Product>

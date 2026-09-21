@@ -1,10 +1,13 @@
 <?php
 
+use App\Enums\AttributeType;
 use App\Enums\Availability;
 use App\Enums\WarehouseStockStatus;
+use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductStock;
+use App\Models\Setting;
 use App\Models\Warehouse;
 use App\Support\Money;
 use Illuminate\Support\Facades\DB;
@@ -94,4 +97,85 @@ it('renders the card with a fixed number of queries', function () {
     DB::disableQueryLog();
 
     expect($queries)->toBeLessThanOrEqual(20);
+});
+
+it('marks the product and its offer up for search engines', function () {
+    $this->product->update(['availability' => Availability::InStock, 'sku' => '11000019106']);
+
+    $html = $this->get('/product/shkaf-holodilnyy')->assertOk()->getContent();
+    preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $match);
+    $data = json_decode($match[1], true);
+
+    expect($data['@type'])->toBe('Product')
+        ->and($data['name'])->toBe('Шкаф холодильный ШХ-0,7')
+        ->and($data['sku'])->toBe('11000019106')
+        ->and($data['offers']['price'])->toBe('120000.00')
+        ->and($data['offers']['priceCurrency'])->toBe('RUB')
+        ->and($data['offers']['availability'])->toBe('https://schema.org/InStock');
+});
+
+it('gives no offer for the price on request', function () {
+    $this->product->update(['retail_price' => null]);
+
+    $html = $this->get('/product/shkaf-holodilnyy')->assertOk()->getContent();
+    preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $match);
+
+    expect(json_decode($match[1], true))->not->toHaveKey('offers');
+});
+
+it('lists the characteristics with the data typography and a narrow table when there are few', function () {
+    $power = Attribute::factory()->create(['name' => 'Мощность', 'unit' => 'кВт', 'type' => AttributeType::Number, 'is_main' => true]);
+    $this->product->attributeValues()->attach($power->id, ['value_number' => 18.9]);
+    $this->product->update(['length_mm' => 840, 'width_mm' => 800, 'height_mm' => 1120, 'weight_kg' => 128.5, 'model' => 'ШХ-0,7']);
+
+    $this->get('/product/shkaf-holodilnyy')
+        ->assertOk()
+        ->assertSee('Характеристики')
+        ->assertSee("840×800×1120\u{00A0}мм", false)
+        ->assertSee("128,5\u{00A0}кг", false)
+        ->assertSee("18,9\u{00A0}кВт", false)
+        ->assertSee('Проверьте перед монтажом');
+});
+
+it('leaves out the tabs and the blocks it has nothing for', function () {
+    $this->product->update(['description' => null, 'warranty_months' => null]);
+
+    $this->get('/product/shkaf-holodilnyy')
+        ->assertOk()
+        ->assertDontSee('data-panel="description"', false)
+        ->assertDontSee('data-panel="warranty"', false)
+        ->assertDontSee('Проверьте перед монтажом')
+        ->assertSee('Фото уточняется у производителя')
+        ->assertSee('Остальные параметры уточним по запросу.');
+});
+
+it('tells the warranty and the pickup address in their tabs', function () {
+    Setting::query()->create(['key' => 'pickup.address', 'value' => 'Симферополь, ул. Промышленная, 1']);
+    $this->product->update(['warranty_months' => 12]);
+
+    $this->get('/product/shkaf-holodilnyy')
+        ->assertOk()
+        ->assertSee('data-panel="warranty"', false)
+        ->assertSee('Гарантия 12 месяцев')
+        ->assertSee('Самовывоз: Симферополь, ул. Промышленная, 1');
+});
+
+it('offers the related products the storefront may show', function () {
+    $related = Product::factory()->create(['name' => 'Подставка под шкаф', 'category_id' => $this->category->id]);
+    $hidden = Product::factory()->create(['name' => 'Скрытая подставка', 'category_id' => $this->category->id, 'is_visible' => false]);
+    $this->product->relatedProducts()->attach([$related->id => ['sort' => 1], $hidden->id => ['sort' => 2]]);
+
+    $this->get('/product/shkaf-holodilnyy')
+        ->assertOk()
+        ->assertSee('Часто берут вместе')
+        ->assertSee('Подставка под шкаф')
+        ->assertDontSee('Скрытая подставка');
+});
+
+it('keeps the buy bar at hand on small screens, but not for a discontinued product', function () {
+    $this->get('/product/shkaf-holodilnyy')->assertOk()->assertSee('data-sticky-buy', false);
+
+    $this->product->update(['availability' => Availability::Discontinued]);
+
+    $this->get('/product/shkaf-holodilnyy')->assertOk()->assertDontSee('data-sticky-buy', false);
 });

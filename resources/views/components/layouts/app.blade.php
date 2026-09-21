@@ -96,5 +96,11 @@
     </main>
 
     <x-layout.footer :shell="$shell" class="mt-8" />
+
+    {{-- Липкая полоса внизу страницы (покупка на карточке товара): под ней оставлено место, чтобы она не закрывала футер. --}}
+    @isset($bottomBar)
+        <div class="h-18 lg:hidden" aria-hidden="true"></div>
+        {{ $bottomBar }}
+    @endisset
 </body>
 </html>
