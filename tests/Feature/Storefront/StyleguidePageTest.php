@@ -13,7 +13,7 @@ it('shows every component state side by side in local development', function () 
 
     $response = $this->get('/styleguide')->assertOk();
 
-    foreach (['Палитра', 'Типографика', 'Кнопки', 'Поля, счётчик, тумблер', 'Статусы наличия', 'Цены', 'Карточки листинга', 'Хлебные крошки'] as $section) {
+    foreach (['Палитра', 'Типографика', 'Кнопки', 'Поля, счётчик, тумблер', 'Статусы наличия', 'Цены', 'Карточки листинга', 'Листинг', 'Хлебные крошки'] as $section) {
         $response->assertSee($section);
     }
 
@@ -34,7 +34,10 @@ it('shows every component state side by side in local development', function () 
         ->assertSee('Телефон не распознан. Формат: +7 978 123-45-67')
         ->assertSee('Пароконвектомат ПКА 10-1/1ВП2-01')
         ->assertSee('Стол производственный СП-2/1200, нерж. AISI 430')
-        ->assertSee('Пароконвектоматы');
+        ->assertSee('Пароконвектоматы')
+        ->assertSee('Сначала в наличии')
+        ->assertSee('Показаны 121–144 из 288', false)
+        ->assertSee('Показать ещё 24');
 });
 
 it('builds the samples without reading the catalog', function () {

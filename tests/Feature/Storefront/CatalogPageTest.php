@@ -93,3 +93,40 @@ it('shows the price on request instead of an empty place', function () {
         ->assertOk()
         ->assertSee('Цена по запросу');
 });
+
+it('works as a plain form and links without scripts', function () {
+    $abat = Brand::factory()->create(['name' => 'Abat', 'slug' => 'abat']);
+    Product::factory()->create(['category_id' => $this->child->id, 'brand_id' => $abat->id]);
+
+    $this->get('/catalog/shkafy')
+        ->assertOk()
+        ->assertSee('method="get"', false)
+        ->assertSee('name="price_from"', false)
+        ->assertSee('name="in_stock"', false)
+        ->assertSee('name="brand[]"', false)
+        ->assertSee('popovertarget="catalog-filters"', false)
+        ->assertSee('href="'.e(route('category', ['category' => $this->child, 'sort' => 'price_asc'])).'"', false);
+});
+
+it('shows the list view from a link and the second page by its number', function () {
+    Product::factory()->count(30)->create(['category_id' => $this->child->id]);
+
+    $this->get('/catalog/shkafy?view=list')
+        ->assertOk()
+        ->assertSee('<table', false)
+        ->assertCookie('listing_view', 'list');
+
+    $this->get('/catalog/shkafy?page=2')
+        ->assertOk()
+        ->assertSee('Показаны 25–30 из 30');
+});
+
+it('folds a long list of subcategories after the twelfth', function () {
+    Category::factory()->count(15)->create(['parent_id' => $this->root->id, 'is_active' => true, 'products_count' => 3]);
+    Category::factory()->create(['name' => 'Пустой подраздел', 'parent_id' => $this->root->id, 'is_active' => true, 'products_count' => 0]);
+
+    $this->get('/catalog/holodilnoe')
+        ->assertOk()
+        ->assertSee('Ещё 3 раздела')
+        ->assertDontSee('Пустой подраздел');
+});

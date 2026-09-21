@@ -27,22 +27,22 @@ it('lists the products of the category and its switched-on subcategories', funct
     Product::factory()->discontinued()->create(['category_id' => $this->child->id]);
     Product::factory()->create(['category_id' => $this->child->id, 'is_visible' => false]);
 
-    $page = $this->catalog->categoryProducts($this->root, new CatalogFilters, null);
+    $page = $this->catalog->categorySlice($this->root, new CatalogFilters, null);
 
-    expect($page->pluck('id')->all())->toEqualCanonicalizing([$inRoot->id, $inChild->id]);
+    expect($page->products->pluck('id')->all())->toEqualCanonicalizing([$inRoot->id, $inChild->id]);
 });
 
 it('shows nothing for a switched-off category', function () {
     Product::factory()->create(['category_id' => $this->hidden->id]);
 
-    expect($this->catalog->categoryProducts($this->hidden, new CatalogFilters, null)->total())->toBe(0);
+    expect($this->catalog->categorySlice($this->hidden, new CatalogFilters, null)->total)->toBe(0);
 });
 
 it('puts products in stock first by default', function () {
     $onOrder = Product::factory()->create(['category_id' => $this->child->id, 'availability' => Availability::OnOrder]);
     $inStock = Product::factory()->inStock()->create(['category_id' => $this->child->id]);
 
-    expect($this->catalog->categoryProducts($this->child, new CatalogFilters, null)->pluck('id')->all())
+    expect($this->catalog->categorySlice($this->child, new CatalogFilters, null)->products->pluck('id')->all())
         ->toBe([$inStock->id, $onOrder->id]);
 });
 
@@ -53,7 +53,7 @@ it('filters by price and leaves products without a price out of the range', func
 
     $filters = CatalogFilters::fromQuery(['price_from' => '10 000', 'price_to' => '60000']);
 
-    expect($this->catalog->categoryProducts($this->child, $filters, null)->pluck('id')->all())->toBe([$mid->id])
+    expect($this->catalog->categorySlice($this->child, $filters, null)->products->pluck('id')->all())->toBe([$mid->id])
         ->and($cheap->id)->not->toBe($mid->id);
 });
 
@@ -65,7 +65,7 @@ it('filters by availability and brand', function () {
 
     $filters = CatalogFilters::fromQuery(['in_stock' => '1', 'brand' => ['abat']]);
 
-    expect($this->catalog->categoryProducts($this->child, $filters, null)->pluck('id')->all())->toBe([$wanted->id]);
+    expect($this->catalog->categorySlice($this->child, $filters, null)->products->pluck('id')->all())->toBe([$wanted->id]);
 });
 
 it('filters by a filterable characteristic', function () {
@@ -77,7 +77,7 @@ it('filters by a filterable characteristic', function () {
 
     $filters = CatalogFilters::fromQuery(['attr' => ['moshchnost-kvt' => ['min' => '5']]]);
 
-    expect($this->catalog->categoryProducts($this->child, $filters, null)->pluck('id')->all())->toBe([$strong->id]);
+    expect($this->catalog->categorySlice($this->child, $filters, null)->products->pluck('id')->all())->toBe([$strong->id]);
 });
 
 it('ignores a characteristic that is not filterable', function () {
@@ -86,7 +86,7 @@ it('ignores a characteristic that is not filterable', function () {
 
     $filters = CatalogFilters::fromQuery(['attr' => ['tsvet' => ['values' => ['красный']]]]);
 
-    expect($this->catalog->categoryProducts($this->child, $filters, null)->total())->toBe(2);
+    expect($this->catalog->categorySlice($this->child, $filters, null)->total)->toBe(2);
 });
 
 it('sorts by price with "price on request" last in both directions', function (string $sort) {
@@ -94,7 +94,7 @@ it('sorts by price with "price on request" last in both directions', function (s
     $dear = Product::factory()->create(['category_id' => $this->child->id, 'retail_price' => Money::ofRubles(900)]);
     $onRequest = Product::factory()->priceOnRequest()->create(['category_id' => $this->child->id]);
 
-    $ids = $this->catalog->categoryProducts($this->child, CatalogFilters::fromQuery(['sort' => $sort]), null)->pluck('id')->all();
+    $ids = $this->catalog->categorySlice($this->child, CatalogFilters::fromQuery(['sort' => $sort]), null)->products->pluck('id')->all();
 
     expect($ids)->toBe($sort === 'price_asc'
         ? [$cheap->id, $dear->id, $onRequest->id]
@@ -104,11 +104,53 @@ it('sorts by price with "price on request" last in both directions', function (s
 it('pages the listing by 24', function () {
     Product::factory()->count(30)->create(['category_id' => $this->child->id]);
 
-    $second = $this->catalog->categoryProducts($this->child, new CatalogFilters, null, page: 2);
+    $second = $this->catalog->categorySlice($this->child, new CatalogFilters, null, page: 2);
 
-    expect($second->total())->toBe(30)
-        ->and($second->count())->toBe(6)
-        ->and($second->perPage())->toBe(CatalogFilters::PER_PAGE);
+    expect($second->total)->toBe(30)
+        ->and($second->products)->toHaveCount(6)
+        ->and($second->perPage)->toBe(CatalogFilters::PER_PAGE)
+        ->and($second->from())->toBe(25)
+        ->and($second->hasMore())->toBeFalse();
+});
+
+it('adds the next pages to the ones on screen for «Показать ещё»', function () {
+    Product::factory()->count(60)->create(['category_id' => $this->child->id]);
+
+    $slice = $this->catalog->categorySlice($this->child, new CatalogFilters, null, page: 1, pages: 2);
+
+    expect($slice->products)->toHaveCount(48)
+        ->and($slice->firstPage)->toBe(1)
+        ->and($slice->lastPage)->toBe(2)
+        ->and($slice->to())->toBe(48)
+        ->and($slice->hasMore())->toBeTrue()
+        ->and($slice->nextCount())->toBe(12);
+});
+
+it('shows the last page for a page past the end', function () {
+    Product::factory()->count(30)->create(['category_id' => $this->child->id]);
+
+    $slice = $this->catalog->categorySlice($this->child, new CatalogFilters, null, page: 9);
+
+    expect($slice->firstPage)->toBe(2)
+        ->and($slice->products)->toHaveCount(6);
+});
+
+it('counts the products in stock and each brand under the other filters', function () {
+    $abat = Brand::factory()->create(['name' => 'Abat', 'slug' => 'abat']);
+    $rada = Brand::factory()->create(['name' => 'Rada', 'slug' => 'rada']);
+    Product::factory()->inStock()->create(['category_id' => $this->child->id, 'brand_id' => $abat->id, 'retail_price' => Money::ofRubles(1_000)]);
+    Product::factory()->create(['category_id' => $this->child->id, 'brand_id' => $abat->id, 'retail_price' => Money::ofRubles(90_000)]);
+    Product::factory()->inStock()->create(['category_id' => $this->child->id, 'brand_id' => $rada->id, 'retail_price' => Money::ofRubles(2_000)]);
+
+    $filters = CatalogFilters::fromQuery(['price_to' => '50000', 'brand' => ['abat'], 'in_stock' => '1']);
+    $scope = $this->catalog->inCategory($this->child);
+
+    $brands = $this->catalog->brandFacet($this->catalog->filtered(clone $scope, $filters->without('brand')));
+    $inStock = $this->catalog->inStockCount($this->catalog->filtered(clone $scope, $filters->without('in_stock')));
+
+    expect($brands->pluck('products_count', 'slug')->all())->toBe(['abat' => 1, 'rada' => 1])
+        ->and($inStock)->toBe(1)
+        ->and($this->catalog->countInCategory($this->child, $filters->without('brand', 'abat')))->toBe(2);
 });
 
 it('loads a page of cards with a fixed number of queries', function () {
@@ -117,8 +159,8 @@ it('loads a page of cards with a fixed number of queries', function () {
 
     DB::enableQueryLog();
 
-    $page = app(CatalogQuery::class)->categoryProducts($this->child, new CatalogFilters, null);
-    $page->each(fn (Product $product) => [$product->brand?->name, $product->getFirstMediaUrl(Product::IMAGES)]);
+    $page = app(CatalogQuery::class)->categorySlice($this->child, new CatalogFilters, null);
+    $page->products->each(fn (Product $product) => [$product->brand?->name, $product->getFirstMediaUrl(Product::IMAGES)]);
 
     $queries = count(DB::getQueryLog());
     DB::disableQueryLog();

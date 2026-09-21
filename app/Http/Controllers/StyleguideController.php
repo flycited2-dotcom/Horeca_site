@@ -6,9 +6,13 @@ use App\Enums\Availability;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Catalog\CatalogFilters;
+use App\Services\Catalog\CatalogSort;
+use App\Services\Catalog\ListingSlice;
 use App\Services\Pricing\Price;
 use App\Support\Money;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 
@@ -39,6 +43,13 @@ class StyleguideController extends Controller
             'icons' => ['refrigeration', 'thermal', 'neutral', 'dishwashing', 'electromechanical', 'ventilation', null],
             'availabilities' => Availability::cases(),
             'incomingAt' => Carbon::create(2026, 9, 28),
+            'listing' => [
+                'filters' => CatalogFilters::fromQuery(['in_stock' => '1', 'brand' => ['abat'], 'price_from' => '20000', 'price_to' => '400000']),
+                'sorts' => CatalogSort::cases(),
+                // Page 6 of 12: the links show gaps on both sides.
+                'slice' => new ListingSlice(new Collection, 288, 6, 6),
+                'urlFor' => fn (CatalogFilters $state, array $extra = []): string => route('styleguide', $state->toQuery() + $extra),
+            ],
             'prices' => [
                 'retail' => $this->retail(383_995),
                 'promo' => new Price(Money::ofRubles(21_160), Money::ofRubles(21_160), oldPrice: Money::ofRubles(24_900)),

@@ -221,6 +221,22 @@
             </div>
         </x-styleguide.panel>
 
+        <x-styleguide.panel :title="__('styleguide.listing.title')" :note="__('styleguide.listing.note')">
+            <div class="flex flex-wrap items-center gap-3">
+                <x-catalog.sort-control :filters="$listing['filters']" :sorts="$listing['sorts']" :url-for="$listing['urlFor']" />
+                <x-catalog.view-toggle view="grid" :filters="$listing['filters']" :url-for="$listing['urlFor']" />
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm text-steel-500">{{ __('shop.catalog.selected') }}</span>
+                <x-ui.chip :href="$listing['urlFor']($listing['filters']->without('in_stock'))">{{ __('shop.catalog.in_stock_only') }}</x-ui.chip>
+                <x-ui.chip :href="$listing['urlFor']($listing['filters']->without('brand', 'abat'))">Abat</x-ui.chip>
+                <x-ui.chip :href="$listing['urlFor']($listing['filters']->without('price'))">20{{ $nbsp }}000 — 400{{ $nbsp }}000{{ $nbsp }}₽</x-ui.chip>
+            </div>
+
+            <x-catalog.pagination :slice="$listing['slice']" :filters="$listing['filters']" :url-for="$listing['urlFor']" class="border-t border-line-soft pt-4" />
+        </x-styleguide.panel>
+
         <x-styleguide.panel :title="__('styleguide.breadcrumbs.title')">
             <div class="flex flex-col gap-3">
                 <span class="text-sm text-steel-500">{{ __('styleguide.breadcrumbs.category') }}</span>

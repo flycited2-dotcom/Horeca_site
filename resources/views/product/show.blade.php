@@ -3,7 +3,7 @@
 
     <div class="mt-4 flex flex-col gap-8 lg:flex-row">
         <div class="lg:w-140 lg:shrink-0">
-            <x-ui.product-image :product="$product" conversion="full" ratio="aspect-4/3" class="border border-line bg-surface" />
+            <x-ui.product-image :product="$product" conversion="full" ratio="aspect-4/3" class="rounded-card border border-line" />
         </div>
 
         <div class="min-w-0 flex-1">

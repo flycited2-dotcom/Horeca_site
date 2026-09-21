@@ -12,7 +12,6 @@ use App\Models\ProductStock;
 use App\Models\User;
 use App\Services\Pricing\PriceResolver;
 use App\Support\Money;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,6 +28,11 @@ use Illuminate\Support\Facades\Cache;
  */
 final class CatalogQuery
 {
+    /**
+     * «Показать ещё» never loads more than this many pages at once.
+     */
+    public const int MAX_PAGES = 20;
+
     public function __construct(
         private readonly CategoryTree $tree,
         private readonly PriceResolver $prices,
@@ -109,7 +113,8 @@ final class CatalogQuery
     }
 
     /**
-     * Switched-on subcategories of a category page.
+     * Switched-on subcategories with products of a category page: an empty one would lead
+     * to an empty listing.
      *
      * @return Collection<int, Category>
      */
@@ -117,6 +122,7 @@ final class CatalogQuery
     {
         return $category->children()
             ->active()
+            ->where('products_count', '>', 0)
             ->orderBy('sort')
             ->orderBy('name')
             ->get(['id', 'parent_id', 'name', 'slug', 'products_count']);
@@ -208,16 +214,43 @@ final class CatalogQuery
     }
 
     /**
-     * A category page: the category and its switched-on subcategories (TZ §8.2).
-     *
-     * @return LengthAwarePaginator<int, Product>
+     * Pages $page … $page + $pages − 1 of a category page (TZ §8.2): the category and its
+     * switched-on subcategories. «Показать ещё» adds pages to those on screen; a page past
+     * the end shows the last one. At most MAX_PAGES are loaded at once.
      */
-    public function categoryProducts(Category $category, CatalogFilters $filters, ?User $user, int $page = 1): LengthAwarePaginator
+    public function categorySlice(Category $category, CatalogFilters $filters, ?User $user, int $page = 1, int $pages = 1): ListingSlice
     {
         $products = $this->filtered($this->inCategory($category), $filters);
+        $total = (clone $products)->count();
 
-        return $this->sorted($this->withCardData($products, $user), $filters->sort)
-            ->paginate(CatalogFilters::PER_PAGE, page: max(1, $page));
+        $pageCount = max(1, (int) ceil($total / CatalogFilters::PER_PAGE));
+        $first = min(max(1, $page), $pageCount);
+        $last = min($pageCount, $first + min(max(1, $pages), self::MAX_PAGES) - 1);
+
+        $items = $total === 0 ? new Collection : $this->sorted($this->withCardData($products, $user), $filters->sort)
+            ->skip(($first - 1) * CatalogFilters::PER_PAGE)
+            ->take(($last - $first + 1) * CatalogFilters::PER_PAGE)
+            ->get();
+
+        return new ListingSlice($items, $total, $first, $last);
+    }
+
+    /**
+     * How many products the filters leave in a category: «Снять «Abat» — 34 позиции».
+     */
+    public function countInCategory(Category $category, CatalogFilters $filters): int
+    {
+        return $this->filtered($this->inCategory($category), $filters)->count();
+    }
+
+    /**
+     * Products in stock among the given ones: the number next to «Только в наличии».
+     *
+     * @param  Builder<Product>  $products
+     */
+    public function inStockCount(Builder $products): int
+    {
+        return (clone $products)->whereIn('availability', [Availability::InStock, Availability::Low])->count();
     }
 
     /**

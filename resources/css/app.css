@@ -18,6 +18,7 @@
     --color-accent-ink: #0072b0;   /* заливка основной кнопки и ссылки (белый текст 5,2:1) */
     --color-accent-dark: #005c8c;  /* hover основной кнопки */
     --color-accent-soft: #e5f5fd;  /* hover вторичной кнопки */
+    --color-accent-line: #a8def7;  /* рамка плашки «Ваша цена» на accent-soft */
     --color-slate: #e3e8ec;        /* служебная полоса, футер, панель подбора */
     --color-slate-line: #c3cbd1;   /* границы на slate */
     --color-bg: #f4f6f7;           /* полотно страницы, заглушки */
@@ -122,6 +123,22 @@
 }
 
 /*
+ * Скрипты витрины — улучшение поверх вёрстки (ТЗ §9). Каркас ставит класс js на <html>
+ * до первой отрисовки: свёрнутое со скриптами не мигает, без скриптов видно всё.
+ * Правило вне слоёв, чтобы перебить display из утилит вроде flex.
+ */
+.js [data-collapsible] {
+    display: none;
+}
+
+/* Элемент, который без скриптов ничего не делает: поиск по брендам, «Ещё N брендов». */
+@utility requires-js {
+    html:not(.js) & {
+        display: none;
+    }
+}
+
+/*
  * Контейнер страницы (ТЗ §9, макет — экран 5): до 1296 px контента, поля 12 · 24 · 32 · 56
  * на диапазонах < 768 · 768–1023 · 1024–1279 · ≥ 1280.
  */
@@ -181,6 +198,61 @@
 }
 
 /*
+ * Фильтры листинга (макет, экраны 2, 10 и 14): ниже 1280 — шторка на popover. Она
+ * открывается кнопкой «Фильтры · N» без скриптов и закрывается по Esc и нажатием мимо;
+ * на телефоне выезжает снизу, на планшете — справа. С 1280 тот же блок стоит липкой
+ * колонкой. Браузер без popover покажет фильтры обычным блоком над листингом.
+ */
+@utility filter-sheet {
+    @media (width < 80rem) {
+        &:popover-open {
+            display: flex;
+            flex-direction: column;
+            inset: auto 0 0;
+            width: 100%;
+            max-width: none;
+            max-height: 90dvh;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-top: 1px solid var(--color-line);
+            overflow: hidden;
+            color: var(--color-ink);
+            background: var(--color-surface);
+        }
+
+        &::backdrop {
+            background: rgb(21 25 29 / 0.55);
+        }
+    }
+
+    @media (48rem <= width < 80rem) {
+        &:popover-open {
+            inset: 0 0 0 auto;
+            width: 25rem;
+            height: 100dvh;
+            max-height: none;
+            border-top: 0;
+            border-left: 1px solid var(--color-line);
+        }
+    }
+
+    @media (width >= 80rem) {
+        display: block;
+        position: static;
+        inset: auto;
+        width: auto;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: visible;
+        color: inherit;
+        background: transparent;
+    }
+}
+
+/*
  * Загрузка (ТЗ §9): скелетон там, где структура результата известна,
  * спиннер — только там, где нет.
  */
@@ -205,6 +277,12 @@
     animation: om-pulse 1.4s ease-in-out infinite;
     background-color: var(--color-line-soft);
     border-radius: var(--radius-card);
+}
+
+/* Листинг пересчитывается: те же карточки мерцают, как скелетон, и не принимают нажатий. */
+@utility busy {
+    animation: om-pulse 1.4s ease-in-out infinite;
+    pointer-events: none;
 }
 
 @utility spinner {

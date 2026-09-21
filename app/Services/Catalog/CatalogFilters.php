@@ -42,6 +42,56 @@ final readonly class CatalogFilters
     }
 
     /**
+     * The same state with some filters dropped: facet counts ignore their own filter,
+     * a chip removes one. Names: price, in_stock, brand, attr; a brand slug drops one brand.
+     */
+    public function without(string $filter, ?string $brand = null): self
+    {
+        return new self(
+            priceFrom: $filter === 'price' ? null : $this->priceFrom,
+            priceTo: $filter === 'price' ? null : $this->priceTo,
+            inStockOnly: $filter === 'in_stock' ? false : $this->inStockOnly,
+            brands: match (true) {
+                $filter === 'brand' && $brand !== null => array_values(array_diff($this->brands, [$brand])),
+                $filter === 'brand' => [],
+                default => $this->brands,
+            },
+            attributes: $filter === 'attr' ? [] : $this->attributes,
+            sort: $this->sort,
+        );
+    }
+
+    public function withSort(CatalogSort $sort): self
+    {
+        return new self($this->priceFrom, $this->priceTo, $this->inStockOnly, $this->brands, $this->attributes, $sort);
+    }
+
+    /**
+     * Only the sort order is kept: "Сбросить всё".
+     */
+    public function cleared(): self
+    {
+        return new self(sort: $this->sort);
+    }
+
+    /**
+     * How many filters narrow the listing, for «Фильтры · N»: the price range counts once,
+     * every brand counts on its own.
+     */
+    public function activeCount(): int
+    {
+        return (int) ($this->priceFrom !== null || $this->priceTo !== null)
+            + (int) $this->inStockOnly
+            + count($this->brands)
+            + count($this->attributes);
+    }
+
+    public function isFiltered(): bool
+    {
+        return $this->activeCount() > 0;
+    }
+
+    /**
      * Back into a query string, without the defaults.
      *
      * @return array<string, mixed>

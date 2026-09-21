@@ -10,6 +10,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>document.documentElement.classList.add('js')</script>
     <title>{{ $title ? $title.' | '.$shell->siteName : $shell->siteName }}</title>
     @if ($description)
         <meta name="description" content="{{ $description }}">
@@ -21,6 +22,8 @@
         {{ __('shop.layout.skip_to_content') }}
     </a>
 
+    {{-- Пока заказчик не задал контакты и не включил страницы, полосе нечего показать. --}}
+    @if ($shell->phones !== [] || $shell->schedule || $shell->email || $shell->stripPages !== [])
     <div class="bg-slate">
         <div class="container-page flex h-9 items-center justify-between gap-4 text-xs md:h-10 md:gap-6 md:text-sm">
             <div class="flex min-w-0 items-center gap-5">
@@ -48,6 +51,7 @@
             @endif
         </div>
     </div>
+    @endif
 
     <header class="stuck-shadow relative z-30 border-b border-line bg-surface md:sticky md:top-0">
         <div class="container-page grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2.5 py-1.5 md:h-17 md:grid-cols-[auto_auto_minmax(0,1fr)] md:gap-x-6 md:py-0 lg:grid-cols-[auto_minmax(0,1fr)]">
