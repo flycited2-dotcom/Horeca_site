@@ -1,75 +1,95 @@
 @props(['title' => null, 'description' => null])
 
 {{--
-    Каркас витрины (макет, экран 5): служебная полоса, липкая шапка с поиском,
-    ряд корневых категорий, футер. Контейнер 1320, поля 56 на десктопе и 12 на мобильном.
+    Каркас витрины (макет, экраны 5, 10 и 14): служебная полоса, шапка, ряд корневых
+    категорий, футер. Шапка липкая начиная с планшета; на телефоне поиск — отдельной
+    строкой, разделы — лентой чипов. Данные каркаса собирает StorefrontLayoutComposer.
 --}}
-@php
-    $settings = app(\App\Services\Settings\Settings::class);
-@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ? $title.' | '.config('app.name') : config('app.name') }}</title>
+    <title>{{ $title ? $title.' | '.$shell->siteName : $shell->siteName }}</title>
     @if ($description)
         <meta name="description" content="{{ $description }}">
     @endif
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/storefront.js'])
 </head>
 <body class="flex min-h-screen flex-col">
-    <a href="#content" class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-20 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2">
+    <a href="#content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2">
         {{ __('shop.layout.skip_to_content') }}
     </a>
 
-    <div class="bg-slate text-sm text-steel-500">
-        <div class="mx-auto flex h-9 max-w-page items-center gap-4 px-3 md:h-10 md:px-6 xl:px-14">
-            @if ($phone = $settings->get('contacts.phones'))
-                <a href="tel:{{ preg_replace('/[^+\d]/', '', (string) $phone) }}" class="font-medium text-ink">{{ $phone }}</a>
-            @endif
+    <div class="bg-slate">
+        <div class="container-page flex h-9 items-center justify-between gap-4 text-xs md:h-10 md:gap-6 md:text-sm">
+            <div class="flex min-w-0 items-center gap-5">
+                @if ($phone = $shell->phone())
+                    <a href="{{ $phone['href'] }}" class="shrink-0 font-medium tabular">{{ $phone['label'] }}</a>
+                @endif
+                @if ($shell->schedule)
+                    <span class="truncate text-steel-500">{{ $shell->schedule }}</span>
+                @endif
+                @if ($shell->email)
+                    <a href="mailto:{{ $shell->email }}" class="hidden font-medium lg:inline">{{ $shell->email }}</a>
+                @endif
+            </div>
 
-            @if ($schedule = $settings->get('contacts.schedule'))
-                <span class="hidden sm:inline">{{ $schedule }}</span>
+            @if ($shell->stripPages !== [])
+                <nav aria-label="{{ __('shop.layout.company') }}" class="hidden lg:block">
+                    <ul class="flex items-center gap-5">
+                        @foreach ($shell->stripPages as $page)
+                            <li>
+                                <a href="{{ url($page->slug) }}" class="font-medium transition-colors duration-150 ease-out hover:text-accent-ink">{{ $page->title }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
             @endif
         </div>
     </div>
 
-    <header class="sticky top-0 z-10 border-b border-line bg-surface">
-        <div class="mx-auto flex max-w-page flex-col gap-3 px-3 py-3 md:flex-row md:items-center md:gap-6 md:px-6 md:py-4 xl:px-14">
-            <a href="{{ route('home') }}" class="text-xl font-bold">{{ config('app.name') }}</a>
+    <header class="stuck-shadow relative z-30 border-b border-line bg-surface md:sticky md:top-0">
+        <div class="container-page grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2.5 py-1.5 md:h-17 md:grid-cols-[auto_auto_minmax(0,1fr)] md:gap-x-6 md:py-0 lg:grid-cols-[auto_minmax(0,1fr)]">
+            <x-layout.menu :shell="$shell" class="lg:hidden" />
 
-            <form action="{{ route('search') }}" method="get" role="search" class="flex flex-1 gap-2">
-                <label for="site-search" class="sr-only">{{ __('shop.layout.search') }}</label>
-                <input
-                    id="site-search"
-                    type="search"
-                    name="q"
-                    value="{{ request()->routeIs('search') ? request()->query('q') : '' }}"
-                    placeholder="{{ __('shop.layout.search_placeholder') }}"
-                    class="h-control w-full rounded-control border border-line bg-surface px-3 text-base placeholder:text-steel-500"
-                >
-                <x-ui.button type="submit">{{ __('shop.layout.search') }}</x-ui.button>
-            </form>
-
-            <a href="{{ route('catalog') }}" class="h-control shrink-0 content-center text-md font-semibold text-accent-ink">
-                {{ __('shop.layout.catalog') }}
+            <a href="{{ route('home') }}" class="justify-self-start text-title font-bold" aria-label="{{ $shell->siteName }} — {{ __('shop.layout.home') }}">
+                {{ $shell->siteName }}
             </a>
+
+            <x-layout.search-form
+                id="site-search"
+                class="col-span-2 max-md:-mx-3 max-md:mt-1.5 max-md:-mb-1.5 max-md:border-t max-md:border-line max-md:px-3 max-md:py-2.5 md:col-span-1"
+            />
         </div>
     </header>
 
-    <main id="content" class="mx-auto w-full max-w-page flex-1 px-3 py-6 md:px-6 md:py-8 xl:px-14">
+    <x-layout.category-nav :shell="$shell" class="hidden lg:block" />
+
+    @if ($shell->categories !== [])
+        <nav aria-label="{{ __('shop.layout.sections') }}" class="border-b border-line bg-surface md:hidden">
+            <ul class="container-page flex gap-2 overflow-x-auto py-2.5 [scrollbar-width:none]">
+                @foreach ($shell->categories as $category)
+                    <li class="shrink-0">
+                        <a
+                            href="{{ route('category', $category['slug']) }}"
+                            @if ($category['id'] === $shell->currentRootId) aria-current="true" @endif
+                            @class([
+                                'tap-target inline-flex h-9 items-center rounded-control px-3 text-sm font-medium whitespace-nowrap',
+                                'bg-slate' => $category['id'] === $shell->currentRootId,
+                                'bg-line-soft' => $category['id'] !== $shell->currentRootId,
+                            ])
+                        >{{ $category['name'] }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        </nav>
+    @endif
+
+    <main id="content" class="container-page flex-1 py-6 md:py-8">
         {{ $slot }}
     </main>
 
-    <footer class="mt-8 bg-slate">
-        <div class="mx-auto max-w-page px-3 py-8 text-sm text-steel-500 md:px-6 xl:px-14">
-            @if ($requisites = $settings->get('seller.requisites'))
-                <p class="max-w-prose">{{ $requisites }}</p>
-            @endif
-
-            <p class="mt-4">{{ __('shop.layout.copyright', ['year' => now()->year, 'name' => config('app.name')]) }}</p>
-        </div>
-    </footer>
+    <x-layout.footer :shell="$shell" class="mt-8" />
 </body>
 </html>

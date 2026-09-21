@@ -13,13 +13,15 @@ it('shows active root categories marked for the home page', function () {
     Category::factory()->create(['name' => 'Не для главной', 'show_on_home' => false]);
     Category::factory()->childOf($refrigeration)->create(['name' => 'Холодильный шкаф', 'show_on_home' => true]);
 
-    $this->get('/')
-        ->assertOk()
-        ->assertSee('Холодильное оборудование')
-        ->assertSee("7\u{00A0}021 товар", false)
-        ->assertDontSee('Скрытая категория')
-        ->assertDontSee('Не для главной')
-        ->assertDontSee('Холодильный шкаф');
+    $response = $this->get('/')->assertOk()->assertDontSee('Скрытая категория');
+
+    // The layout lists every switched-on root section; the home panel only the marked ones.
+    preg_match('/<main.*?<\/main>/s', $response->getContent(), $main);
+
+    expect($main[0])
+        ->toContain('Холодильное оборудование', "7\u{00A0}021 товар")
+        ->not->toContain('Не для главной')
+        ->not->toContain('Холодильный шкаф');
 });
 
 it('explains an empty catalog instead of showing a blank page', function () {

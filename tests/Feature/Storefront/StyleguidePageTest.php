@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Availability;
+use App\Services\Catalog\CatalogQuery;
 use Illuminate\Support\Facades\DB;
 
 it('hides the styleguide outside local development', function () {
@@ -38,6 +39,9 @@ it('shows every component state side by side in local development', function () 
 
 it('builds the samples without reading the catalog', function () {
     app()->detectEnvironment(fn () => 'local');
+
+    // The layout reads the root sections from the catalog cache; only the samples are checked.
+    app(CatalogQuery::class)->navigationCategories();
 
     DB::enableQueryLog();
     $this->get('/styleguide')->assertOk();

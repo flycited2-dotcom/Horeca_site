@@ -22,6 +22,14 @@ final class Typography
     }
 
     /**
+     * A count with grouped digits: "7 021", so a number never breaks across lines.
+     */
+    public static function number(int $value): string
+    {
+        return ($value < 0 ? '−' : '').self::groupDigits((string) abs($value));
+    }
+
+    /**
      * "383995" → "383 995". Done on the digits, so no float ever touches the amount.
      */
     private static function groupDigits(string $digits): string

@@ -21,7 +21,7 @@
                 @endif
             </p>
 
-            <div class="mt-6 rounded-card border border-line bg-surface p-4 lg:sticky lg:top-24">
+            <div class="mt-6 rounded-card border border-line bg-surface p-4 lg:sticky lg:top-21">
                 <x-ui.price :price="$price" size="page" />
 
                 <div class="mt-3">

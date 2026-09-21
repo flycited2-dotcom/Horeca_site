@@ -4,7 +4,7 @@
     Фильтры листинга (макет, экран 2): липкая колонка 264 на десктопе, на мобильном —
     раскрывающийся блок. Работает обычной GET-формой, поэтому каталог фильтруется и без JS.
 --}}
-<form method="get" action="{{ $action }}" class="lg:sticky lg:top-24 lg:h-fit lg:w-66 lg:shrink-0">
+<form method="get" action="{{ $action }}" class="lg:sticky lg:top-21 lg:h-fit lg:w-66 lg:shrink-0">
     <details class="rounded-card border border-line bg-surface lg:open:border-line" open>
         <summary class="flex h-control cursor-pointer list-none items-center justify-between px-4 text-md font-semibold lg:cursor-default">
             {{ __('shop.catalog.filters') }}

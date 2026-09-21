@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Read-only catalog queries for the storefront (TZ §4: every storefront selection goes
@@ -31,7 +32,36 @@ final class CatalogQuery
     public function __construct(
         private readonly CategoryTree $tree,
         private readonly PriceResolver $prices,
+        private readonly CatalogCache $cache,
     ) {}
+
+    /**
+     * Switched-on root categories with products for the header, the menu and the footer:
+     * an empty section would lead to an empty listing. The layout shows them on every page,
+     * so they are cached until the catalog changes: the import and the manager bump the
+     * catalog cache version.
+     *
+     * @return list<array{id: int, name: string, slug: string, icon: ?string, show_on_home: bool, products_count: int}>
+     */
+    public function navigationCategories(): array
+    {
+        return Cache::remember($this->cache->key('navigation'), now()->addDay(), fn (): array => Category::query()
+            ->active()
+            ->roots()
+            ->where('products_count', '>', 0)
+            ->orderBy('sort')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'icon', 'show_on_home', 'products_count'])
+            ->map(fn (Category $category): array => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'icon' => $category->icon,
+                'show_on_home' => $category->show_on_home,
+                'products_count' => $category->products_count,
+            ])
+            ->all());
+    }
 
     /**
      * Active root categories marked for the home page.

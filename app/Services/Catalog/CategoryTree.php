@@ -52,6 +52,25 @@ final class CategoryTree
     }
 
     /**
+     * The root section a category belongs to: the header marks it as the current one.
+     */
+    public function rootOf(int $id): ?int
+    {
+        $nodes = $this->nodes();
+        $seen = [];
+
+        for ($current = $id; isset($nodes[$current]) && ! isset($seen[$current]); $current = $nodes[$current]['parent']) {
+            $seen[$current] = true;
+
+            if ($nodes[$current]['parent'] === null) {
+                return $current;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * The category itself and everything below it.
      *
      * @return list<int>

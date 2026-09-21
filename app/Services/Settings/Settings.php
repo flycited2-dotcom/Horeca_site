@@ -16,6 +16,25 @@ final class Settings
      */
     private array $values = [];
 
+    /**
+     * Reads several keys with one query, so a page that needs many settings (the storefront
+     * layout) does not ask the database for each of them.
+     */
+    public function preload(string ...$keys): void
+    {
+        $missing = array_values(array_diff($keys, array_keys($this->values)));
+
+        if ($missing === []) {
+            return;
+        }
+
+        $found = Setting::query()->whereIn('key', $missing)->pluck('value', 'key')->all();
+
+        foreach ($missing as $key) {
+            $this->values[$key] = $found[$key] ?? null;
+        }
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
         if (! array_key_exists($key, $this->values)) {

@@ -18,7 +18,7 @@
     $id ??= trim(preg_replace('/[^A-Za-z0-9_-]+/', '-', $name), '-');
     $notify = "this.dispatchEvent(new Event('change', { bubbles: true }))";
     $step = "const field = this.parentElement.querySelector('input'); field.%s(); field.dispatchEvent(new Event('change', { bubbles: true }))";
-    $button = 'flex size-control items-center justify-center text-[1.125rem] leading-none transition-colors duration-150 ease-out hover:bg-bg';
+    $button = 'flex size-control items-center justify-center text-title leading-none transition-colors duration-150 ease-out hover:bg-bg';
 @endphp
 
 <div
