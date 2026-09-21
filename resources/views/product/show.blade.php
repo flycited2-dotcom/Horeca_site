@@ -15,7 +15,9 @@
 
     <header class="mt-4 flex flex-col gap-2">
         <p class="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-base">
-            @if ($product->brand)
+            @if ($product->brand?->is_active)
+                <a href="{{ route('brand', $product->brand) }}" class="font-medium transition-colors duration-150 ease-out hover:text-accent-ink">{{ $product->brand->name }}</a>
+            @elseif ($product->brand)
                 <span class="font-medium">{{ $product->brand->name }}</span>
             @endif
             @if ($product->sku)

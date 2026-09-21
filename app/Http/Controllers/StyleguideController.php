@@ -11,6 +11,7 @@ use App\Services\Catalog\CatalogSort;
 use App\Services\Catalog\ListingSlice;
 use App\Services\Pricing\Price;
 use App\Support\Money;
+use App\Support\Typography;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
@@ -32,6 +33,13 @@ class StyleguideController extends Controller
 
         $thermal = $this->category('Тепловое оборудование', 'teplovoe-oborudovanie', 'thermal');
         $combiOvens = $this->category('Пароконвектоматы', 'parokonvektomaty', 'thermal', $thermal);
+        $filters = CatalogFilters::fromQuery(['in_stock' => '1', 'brand' => ['abat'], 'price_from' => '20000', 'price_to' => '400000']);
+        $urlFor = fn (CatalogFilters $state, array $extra = []): string => route('styleguide', $state->toQuery() + $extra);
+        $sections = new Collection([
+            $this->section(1, 'Пароконвектоматы', 'parokonvektomaty', 34),
+            $this->section(2, 'Плиты электрические', 'plity-elektricheskie', 21),
+            $this->section(3, 'Шкафы жарочные', 'shkafy-zharochnye', 12),
+        ]);
 
         return view('styleguide', [
             'cards' => $this->cards($thermal),
@@ -40,15 +48,23 @@ class StyleguideController extends Controller
                 'slug' => 'parokonvektomat-pka-10-1-1vp2-01',
             ], $combiOvens),
             'crumbCategory' => $combiOvens,
+            'crumbBrand' => (new Brand)->forceFill(['name' => 'Abat', 'slug' => 'abat']),
             'icons' => ['refrigeration', 'thermal', 'neutral', 'dishwashing', 'electromechanical', 'ventilation', null],
             'availabilities' => Availability::cases(),
             'incomingAt' => Carbon::create(2026, 9, 28),
             'listing' => [
-                'filters' => CatalogFilters::fromQuery(['in_stock' => '1', 'brand' => ['abat'], 'price_from' => '20000', 'price_to' => '400000']),
+                'filters' => $filters,
                 'sorts' => CatalogSort::cases(),
                 // Page 6 of 12: the links show gaps on both sides.
                 'slice' => new ListingSlice(new Collection, 288, 6, 6),
-                'urlFor' => fn (CatalogFilters $state, array $extra = []): string => route('styleguide', $state->toQuery() + $extra),
+                'urlFor' => $urlFor,
+                'chips' => [
+                    ['label' => __('shop.catalog.in_stock_only'), 'filter' => 'in_stock', 'brand' => null, 'url' => $urlFor($filters->without('in_stock'))],
+                    ['label' => 'Abat', 'filter' => 'brand', 'brand' => 'abat', 'url' => $urlFor($filters->without('brand', 'abat'))],
+                    ['label' => __('shop.catalog.chip_price_range', ['from' => Typography::number(20_000), 'to' => Typography::number(400_000)]), 'filter' => 'price', 'brand' => null, 'url' => $urlFor($filters->without('price'))],
+                ],
+                'sections' => $sections,
+                'section' => $sections->first(),
             ],
             'prices' => [
                 'retail' => $this->retail(383_995),
@@ -103,6 +119,14 @@ class StyleguideController extends Controller
                 'price' => new Price(Money::ofRubles(21_160), Money::ofRubles(24_900), isWholesale: true, tierName: 'Опт 1'),
             ],
         ];
+    }
+
+    /**
+     * A section of «Уточнить:» and «Разделы:» with the number of products in it.
+     */
+    private function section(int $id, string $name, string $slug, int $products): Category
+    {
+        return (new Category)->forceFill(['id' => $id, 'name' => $name, 'slug' => $slug, 'products_count' => $products]);
     }
 
     private function category(string $name, string $slug, string $icon, ?Category $parent = null): Category

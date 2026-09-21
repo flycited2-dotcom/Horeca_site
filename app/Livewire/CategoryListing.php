@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\ChoosesView;
 use App\Livewire\Concerns\FiltersListing;
 use App\Models\Category;
 use App\Services\Catalog\CatalogFilters;
@@ -9,7 +10,6 @@ use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CatalogSort;
 use App\Services\Pricing\PriceResolver;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Cookie;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -21,11 +21,8 @@ use Livewire\Component;
  */
 final class CategoryListing extends Component
 {
+    use ChoosesView;
     use FiltersListing;
-
-    public const string VIEW_COOKIE = 'listing_view';
-
-    public const array VIEWS = ['grid', 'list'];
 
     #[Locked]
     public Category $category;
@@ -41,8 +38,6 @@ final class CategoryListing extends Component
     #[Locked]
     public array $subcategories = [];
 
-    public string $view = 'grid';
-
     /**
      * @param  list<array{name: string, slug: string, products_count: int}>  $subcategories
      */
@@ -51,23 +46,7 @@ final class CategoryListing extends Component
         $this->category = $category;
         $this->title = $title;
         $this->subcategories = $subcategories;
-
-        // A link with ?view= (scripts off) switches the view and remembers it.
-        $requested = request()->query('view');
-
-        if (is_string($requested) && in_array($requested, self::VIEWS, true)) {
-            $this->rememberView($requested);
-        } else {
-            $saved = request()->cookie(self::VIEW_COOKIE);
-            $this->view = is_string($saved) && in_array($saved, self::VIEWS, true) ? $saved : 'grid';
-        }
-    }
-
-    public function setView(string $view): void
-    {
-        if (in_array($view, self::VIEWS, true)) {
-            $this->rememberView($view);
-        }
+        $this->chooseView();
     }
 
     public function render(CatalogQuery $catalog, PriceResolver $prices): View
@@ -107,11 +86,5 @@ final class CategoryListing extends Component
     protected function urlFor(CatalogFilters $state, array $extra = []): string
     {
         return route('category', ['category' => $this->category] + $state->toQuery() + $extra);
-    }
-
-    private function rememberView(string $view): void
-    {
-        $this->view = $view;
-        Cookie::queue(self::VIEW_COOKIE, $view, 60 * 24 * 365);
     }
 }

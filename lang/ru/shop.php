@@ -50,7 +50,7 @@ return [
         'subcategories' => 'Разделы',
         'subcategories_more' => 'Ещё :count раздел|Ещё :count раздела|Ещё :count разделов',
         'models' => ':count модель|:count модели|:count моделей',
-        'models_of' => ':found из :total',
+        'models_of' => ':found из :total модели|:found из :total моделей|:found из :total моделей',
         'in_stock_count' => ':count в наличии',
         'filters' => 'Фильтры',
         'filters_title' => 'Подбор',
@@ -103,6 +103,19 @@ return [
             'new' => 'Новинки',
             'name' => 'По названию',
         ],
+    ],
+
+    'brands' => [
+        'title' => 'Бренды',
+        'count' => ':count бренд|:count бренда|:count брендов',
+        'all' => 'Все бренды',
+        'all_count' => 'Все :count бренд|Все :count бренда|Все :count брендов',
+        'letters' => 'Бренды на букву :letter',
+        'meta_title' => 'Каталог :brand',
+        'sections' => 'Разделы:',
+        'sections_label' => 'Разделы каталога :brand',
+        'empty' => 'Товаров этого бренда сейчас нет на витрине. Посмотрите разделы каталога или напишите нам — подберём.',
+        'list_empty' => 'Бренды появятся, когда в каталоге будут товары.',
     ],
 
     'product' => [

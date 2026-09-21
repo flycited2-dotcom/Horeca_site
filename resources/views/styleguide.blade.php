@@ -237,12 +237,16 @@
                 <x-catalog.view-toggle view="grid" :filters="$listing['filters']" :url-for="$listing['urlFor']" />
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-                <span class="text-sm text-steel-500">{{ __('shop.catalog.selected') }}</span>
-                <x-ui.chip :href="$listing['urlFor']($listing['filters']->without('in_stock'))">{{ __('shop.catalog.in_stock_only') }}</x-ui.chip>
-                <x-ui.chip :href="$listing['urlFor']($listing['filters']->without('brand', 'abat'))">Abat</x-ui.chip>
-                <x-ui.chip :href="$listing['urlFor']($listing['filters']->without('price'))">20{{ $nbsp }}000 — 400{{ $nbsp }}000{{ $nbsp }}₽</x-ui.chip>
-            </div>
+            <x-catalog.section-links
+                :label="__('shop.brands.sections_label', ['brand' => 'Abat'])"
+                :title="__('shop.brands.sections')"
+                :sections="$listing['sections']"
+                :current="$listing['section']"
+                :filters="$listing['filters']"
+                :url-for="$listing['urlFor']"
+            />
+
+            <x-catalog.filter-chips :chips="$listing['chips']" :reset-url="$listing['urlFor']($listing['filters']->cleared())" />
 
             <x-catalog.pagination :slice="$listing['slice']" :filters="$listing['filters']" :url-for="$listing['urlFor']" class="border-t border-line-soft pt-4" />
         </x-styleguide.panel>
@@ -254,6 +258,9 @@
 
                 <span class="mt-2 text-sm text-steel-500">{{ __('styleguide.breadcrumbs.product') }}</span>
                 <x-catalog.breadcrumbs :product="$crumbProduct" />
+
+                <span class="mt-2 text-sm text-steel-500">{{ __('styleguide.breadcrumbs.brand') }}</span>
+                <x-catalog.breadcrumbs :brand="$crumbBrand" />
             </div>
         </x-styleguide.panel>
     </div>

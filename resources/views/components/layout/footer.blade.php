@@ -41,6 +41,9 @@
                     <li>
                         <a href="{{ route('catalog') }}" class="text-base font-medium text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark">{{ __('shop.layout.all_categories') }}</a>
                     </li>
+                    <li>
+                        <a href="{{ route('brands') }}" class="text-base font-medium text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark">{{ __('shop.brands.all') }}</a>
+                    </li>
                 </ul>
             </nav>
         @endif

@@ -2,19 +2,14 @@
 
 namespace App\Livewire;
 
-use App\Livewire\Concerns\FiltersListing;
-use App\Models\Category;
-use App\Models\Product;
+use App\Livewire\Concerns\RefinesBySection;
 use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CatalogSort;
-use App\Services\Catalog\CategoryTree;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Search\ProductSearch;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Locked;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 
 /**
@@ -25,10 +20,7 @@ use Livewire\Component;
  */
 final class SearchListing extends Component
 {
-    use FiltersListing {
-        removeFilter as private removeListingFilter;
-        resetFilters as private resetListingFilters;
-    }
+    use RefinesBySection;
 
     /**
      * Sections offered under «Уточнить:».
@@ -38,36 +30,12 @@ final class SearchListing extends Component
     #[Locked]
     public string $query = '';
 
-    /**
-     * «Уточнить: Пароконвектоматы» narrows the results to a section and its subsections.
-     */
-    #[Url(as: 'category', history: true, except: '')]
-    public string $category = '';
-
     public function mount(string $query): void
     {
         $this->query = mb_substr(trim($query), 0, 200);
     }
 
-    public function removeFilter(string $filter, ?string $brand = null): void
-    {
-        if ($filter === 'category') {
-            $this->category = '';
-            $this->startOver();
-
-            return;
-        }
-
-        $this->removeListingFilter($filter, $brand);
-    }
-
-    public function resetFilters(): void
-    {
-        $this->category = '';
-        $this->resetListingFilters();
-    }
-
-    public function render(ProductSearch $search, CatalogQuery $catalog, PriceResolver $prices, CategoryTree $tree): View
+    public function render(ProductSearch $search, CatalogQuery $catalog, PriceResolver $prices): View
     {
         $scope = $search->scope($this->query);
 
@@ -87,9 +55,7 @@ final class SearchListing extends Component
             ]);
         }
 
-        $section = $this->category === ''
-            ? null
-            : Category::query()->active()->where('slug', $this->category)->first(['id', 'name', 'slug']);
+        $section = $this->section();
 
         // Counts and facets go by the ids of the matches ($base), the list keeps the relevance
         // order of the search query ($list).
@@ -97,9 +63,8 @@ final class SearchListing extends Component
         $list = $scope->products();
 
         if ($section !== null) {
-            $branch = $tree->activeBranch($section->id);
-            $base->whereIn('category_id', $branch);
-            $list->whereIn('category_id', $branch);
+            $catalog->inBranch($base, $section);
+            $catalog->inBranch($list, $section);
         }
 
         $exact = $search->exact($scope, $user);
@@ -114,16 +79,7 @@ final class SearchListing extends Component
 
         $slice = $catalog->slice($ordered, $user, $this->page, $this->pages);
         $brands = $catalog->brandFacet($catalog->filtered(clone $base, $filters->without('brand')));
-        $chips = $this->chips($filters, $brands);
-
-        if ($section !== null) {
-            array_unshift($chips, [
-                'label' => $section->name,
-                'filter' => 'category',
-                'brand' => null,
-                'url' => $this->urlFor($filters, ['category' => '']),
-            ]);
-        }
+        $chips = $this->withSectionChip($this->chips($filters, $brands), $section, $filters);
 
         $listed = $exact === null ? $slice->products : $slice->products->concat([$exact]);
 
@@ -143,37 +99,17 @@ final class SearchListing extends Component
             'inStockCount' => $catalog->inStockCount($catalog->filtered(clone $base, $filters->without('in_stock'))),
             'priceRange' => $catalog->priceRange($base),
             'chips' => $chips,
-            'suggestions' => $slice->total === 0 ? $this->searchSuggestions($catalog, $scope->matching(), $rest, $exact?->id, $filters, $chips) : [],
+            'suggestions' => $slice->total === 0 ? $this->sectionSuggestions(
+                fn (CatalogFilters $state): int => $catalog->filtered(clone $rest, $state)->count(),
+                fn (CatalogFilters $state): int => $catalog->filtered($exact === null ? $scope->matching() : $scope->matching()->whereKeyNot($exact->id), $state)->count(),
+                $filters,
+                $chips,
+            ) : [],
             'sorts' => CatalogSort::cases(),
             'brandQuery' => $this->brandQuery,
             'allBrands' => $this->allBrands,
             'urlFor' => fn (CatalogFilters $state, array $extra = []): string => $this->urlFor($state, $extra),
         ]);
-    }
-
-    /**
-     * What to drop when the filters leave nothing: a filter, as in the listing, or the
-     * chosen section — the section is not one of CatalogFilters, so it is counted here.
-     *
-     * @param  Builder<Product>  $everything  all matches, without the section
-     * @param  Builder<Product>  $rest  matches of the section, without the exact one
-     * @param  list<array{label: string, filter: string, brand: ?string, url: string}>  $chips
-     * @return list<array{label: string, filter: string, brand: ?string, url: string, count: int}>
-     */
-    private function searchSuggestions(CatalogQuery $catalog, Builder $everything, Builder $rest, ?int $exactId, CatalogFilters $filters, array $chips): array
-    {
-        $filterChips = array_values(array_filter($chips, fn (array $chip): bool => $chip['filter'] !== 'category'));
-        $suggestions = $this->suggestions(fn (CatalogFilters $state): int => $catalog->filtered(clone $rest, $state)->count(), $filters, $filterChips);
-
-        if ($filterChips !== $chips) {
-            $everywhere = $catalog->filtered($exactId === null ? $everything : $everything->whereKeyNot($exactId), $filters)->count();
-
-            if ($everywhere > 0) {
-                array_unshift($suggestions, $chips[0] + ['count' => $everywhere]);
-            }
-        }
-
-        return $suggestions;
     }
 
     /**
@@ -184,8 +120,6 @@ final class SearchListing extends Component
      */
     protected function urlFor(CatalogFilters $state, array $extra = []): string
     {
-        $parameters = $extra + $state->toQuery() + ['q' => $this->query, 'category' => $this->category];
-
-        return route('search', array_filter($parameters, fn (mixed $value): bool => $value !== '' && $value !== null));
+        return $this->sectionUrl('search', ['q' => $this->query], $state, $extra);
     }
 }

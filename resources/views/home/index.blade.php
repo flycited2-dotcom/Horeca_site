@@ -2,7 +2,7 @@
     Главная (ТЗ §8.1, макет — экран 4): плитки корневых разделов с числами вместо баннеров,
     рядом — «Знаю артикул», ниже — ленты карточек. Панель подбора по задаче на месте
     «Знаю артикул» появится вместе с подборками (спринт 6), вставка списка артикулов —
-    с заказом списком (спринт 5).
+    с заказом списком (спринт 5). Внизу — бренды списком названий (ТЗ §8.1, п. 5).
 --}}
 @php
     use App\Support\Typography;
@@ -78,4 +78,26 @@
             </div>
         </section>
     @endforeach
+
+    @if ($brands !== [])
+        <section class="mt-10" aria-labelledby="home-brands">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h2 id="home-brands" class="text-xl font-bold">{{ __('shop.brands.title') }}</h2>
+                <a href="{{ route('brands') }}" class="tap-target text-base font-medium text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark">
+                    {{ $count('shop.brands.all_count', $brandsTotal) }}
+                </a>
+            </div>
+
+            <ul class="mt-4 grid grid-cols-2 gap-x-6 rounded-card border border-line bg-surface px-4 py-2 md:grid-cols-4 md:px-6 md:py-4 lg:grid-cols-6">
+                @foreach ($brands as $brand)
+                    <li class="min-w-0">
+                        <a href="{{ route('brand', $brand['slug']) }}" class="flex min-h-control items-center justify-between gap-2 text-base transition-colors duration-150 ease-out hover:text-accent-ink md:min-h-9">
+                            <span class="min-w-0 truncate">{{ $brand['name'] }}</span>
+                            <span class="shrink-0 text-sm text-steel-500 tabular">{{ Typography::number($brand['products_count']) }}</span>
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
 </x-layouts.app>

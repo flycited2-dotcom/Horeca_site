@@ -36,25 +36,15 @@
             @endif
 
             @if ($refine->count() > 1 || $offerInStock)
-                <nav aria-label="{{ __('shop.search.refine_label') }}" class="flex items-center gap-2 pt-0.5 max-md:-mx-3 max-md:overflow-x-auto max-md:px-3 max-md:py-1.5 max-md:[scrollbar-width:none] md:flex-wrap">
-                    <span class="shrink-0 text-sm text-steel-500">{{ __('shop.search.refine') }}</span>
-
-                    @if ($refine->count() > 1)
-                        @foreach ($refine as $category)
-                            <a
-                                href="{{ $urlFor($filters, ['category' => $category->slug]) }}"
-                                wire:click.prevent="$set('category', '{{ $category->slug }}')"
-                                wire:key="refine-{{ $category->id }}"
-                                @if ($section?->id === $category->id) aria-current="true" @endif
-                                @class([
-                                    'tap-target inline-flex h-8 shrink-0 items-center rounded-control border px-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-out hover:border-accent-ink hover:text-accent-ink',
-                                    'border-accent bg-accent-soft text-accent-ink' => $section?->id === $category->id,
-                                    'border-line bg-surface' => $section?->id !== $category->id,
-                                ])
-                            >{{ $category->name }} · {{ Typography::number($category->products_count) }}</a>
-                        @endforeach
-                    @endif
-
+                <x-catalog.section-links
+                    :label="__('shop.search.refine_label')"
+                    :title="__('shop.search.refine')"
+                    :sections="$refine->count() > 1 ? $refine : collect()"
+                    :current="$section"
+                    :filters="$filters"
+                    :url-for="$urlFor"
+                    class="pt-0.5"
+                >
                     @if ($offerInStock)
                         <a
                             href="{{ $inStockUrl }}"
@@ -62,7 +52,7 @@
                             class="tap-target inline-flex h-8 shrink-0 items-center rounded-control border border-line bg-surface px-2.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-out hover:border-accent-ink hover:text-accent-ink"
                         >{{ __('shop.catalog.in_stock_only') }} · {{ Typography::number($totalInStock) }}</a>
                     @endif
-                </nav>
+                </x-catalog.section-links>
             @endif
         </div>
 
@@ -72,17 +62,7 @@
 
         {{-- Кроме точного совпадения ничего не нашлось и фильтров нет: сужать нечего. --}}
         @if ($slice->total > 0 || $filters->isFiltered() || $section)
-        <div class="sticky top-0 z-20 -mx-3 flex gap-2 border-y border-line-soft bg-bg px-3 py-2.5 md:top-17 md:-mx-6 md:px-6 lg:-mx-8 lg:px-8 xl:hidden">
-            <button
-                type="button"
-                popovertarget="catalog-filters"
-                class="inline-flex h-control flex-1 items-center justify-center gap-2 rounded-control border border-accent bg-surface px-5 text-base leading-none font-medium text-accent-ink transition-colors duration-150 ease-out hover:bg-accent-soft md:flex-none"
-            >
-                {{ $filters->isFiltered() ? __('shop.catalog.filters_count', ['count' => $filters->activeCount()]) : __('shop.catalog.filters') }}
-            </button>
-
-            <x-catalog.sort-control variant="select" :filters="$filters" :sorts="$sorts" :url-for="$urlFor" :labels="$sortLabels" :hidden="$hidden" class="flex-1 lg:hidden" />
-        </div>
+        <x-catalog.filter-bar :filters="$filters" :sorts="$sorts" :url-for="$urlFor" :labels="$sortLabels" :hidden="$hidden" />
 
         <div class="flex flex-col gap-6 xl:flex-row xl:items-start">
             <div class="max-xl:contents xl:sticky xl:top-21 xl:w-72 xl:shrink-0">
@@ -103,25 +83,7 @@
             </div>
 
             <div class="flex min-w-0 flex-1 flex-col gap-4" wire:loading.delay.class="busy">
-                @if ($chips !== [])
-                    <div class="flex items-center gap-2 max-md:-mx-3 max-md:overflow-x-auto max-md:px-3 max-md:py-1.5 max-md:[scrollbar-width:none] md:flex-wrap">
-                        <span class="text-sm text-steel-500 max-md:hidden">{{ __('shop.catalog.selected') }}</span>
-
-                        @foreach ($chips as $chip)
-                            <x-ui.chip
-                                :href="$chip['url']"
-                                wire:key="chip-{{ $chip['filter'] }}-{{ $chip['brand'] }}"
-                                wire:click.prevent="removeFilter('{{ $chip['filter'] }}', '{{ $chip['brand'] }}')"
-                            >{{ $chip['label'] }}</x-ui.chip>
-                        @endforeach
-
-                        <a
-                            href="{{ $urlFor($filters->cleared(), ['category' => '']) }}"
-                            wire:click.prevent="resetFilters"
-                            class="tap-target ml-1 shrink-0 text-sm font-medium whitespace-nowrap text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark"
-                        >{{ __('shop.catalog.reset_all') }}</a>
-                    </div>
-                @endif
+                <x-catalog.filter-chips :chips="$chips" :reset-url="$urlFor($filters->cleared(), ['category' => ''])" />
 
                 @if ($slice->total === 0)
                     @if ($filters->isFiltered() || $section)

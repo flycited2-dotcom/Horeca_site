@@ -1,8 +1,10 @@
-@props(['category' => null, 'product' => null])
+@props(['category' => null, 'product' => null, 'brand' => null])
 
-{{-- Хлебные крошки с разметкой BreadcrumbList (ТЗ §8.2). --}}
+{{-- Хлебные крошки с разметкой BreadcrumbList (ТЗ §8.2): каталог и разделы или бренды. --}}
 @php
-    $trail = [['name' => __('shop.layout.catalog'), 'url' => route('catalog')]];
+    $trail = $brand === null
+        ? [['name' => __('shop.layout.catalog'), 'url' => route('catalog')]]
+        : [['name' => __('shop.brands.title'), 'url' => route('brands')], ['name' => $brand->name, 'url' => null]];
 
     $branch = collect();
     for ($node = $product?->category ?? $category; $node !== null; $node = $node->parent) {

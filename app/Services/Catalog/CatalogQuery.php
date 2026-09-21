@@ -150,6 +150,39 @@ final class CatalogQuery
     }
 
     /**
+     * Switched-on brands with products on the storefront, by name, with the number of those
+     * products: the page «Бренды» and the list on the home page (TZ §8.1). Cached until the
+     * catalog changes, like the navigation.
+     *
+     * @return list<array{name: string, slug: string, products_count: int}>
+     */
+    public function brandDirectory(): array
+    {
+        return Cache::remember($this->cache->key('brands'), now()->addDay(), fn (): array => $this->brandFacet($this->listed())
+            ->map(fn (Brand $brand): array => [
+                'name' => $brand->name,
+                'slug' => $brand->slug,
+                'products_count' => (int) $brand->products_count,
+            ])
+            ->values()
+            ->all());
+    }
+
+    /**
+     * The brands with the most products on the storefront, still by name: the list of brands
+     * on the home page (TZ §8.1).
+     *
+     * @return list<array{name: string, slug: string, products_count: int}>
+     */
+    public function leadingBrands(int $limit): array
+    {
+        $directory = collect($this->brandDirectory());
+        $leading = $directory->sortByDesc('products_count')->take($limit)->keys()->all();
+
+        return $directory->only($leading)->values()->all();
+    }
+
+    /**
      * «Часто заказывают» — products the manager marked as hits (TZ §8.1).
      *
      * @return Collection<int, Product>
@@ -381,7 +414,29 @@ final class CatalogQuery
      */
     public function inCategory(Category $category): Builder
     {
-        return $this->listed()->whereIn('category_id', $this->tree->activeBranch($category->id));
+        return $this->inBranch($this->listed(), $category);
+    }
+
+    /**
+     * Products of a brand page before the customer's filters.
+     *
+     * @return Builder<Product>
+     */
+    public function ofBrand(Brand $brand): Builder
+    {
+        return $this->listed()->where('brand_id', $brand->id);
+    }
+
+    /**
+     * The given products narrowed to a category and its switched-on subcategories: a section
+     * chosen on the search page or on a brand page.
+     *
+     * @param  Builder<Product>  $products
+     * @return Builder<Product>
+     */
+    public function inBranch(Builder $products, Category $category): Builder
+    {
+        return $products->whereIn('category_id', $this->tree->activeBranch($category->id));
     }
 
     /**
