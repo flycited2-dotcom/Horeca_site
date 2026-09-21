@@ -20,6 +20,7 @@ livewire/livewire ^4.4
 filament/filament ^5.8
 openspout/openspout ^4.23         чтение и запись XLSX потоком; та же версия, что требует Filament
 spatie/laravel-medialibrary ^11.23
+filament/spatie-laravel-media-library-plugin ^5.8   загрузка и порядок фото товара в админке
 spatie/laravel-sitemap ^8.2
 laravel/pint ^1.32                (dev)
 pestphp/pest ^5.2                 (dev)

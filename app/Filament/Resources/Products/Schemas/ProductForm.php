@@ -13,6 +13,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -49,6 +50,7 @@ class ProductForm
                         Tab::make(__('admin.product.tabs.main'))->schema(self::main()),
                         Tab::make(__('admin.product.tabs.prices'))->schema(self::prices()),
                         Tab::make(__('admin.product.tabs.details'))->schema(self::details()),
+                        Tab::make(__('admin.product.tabs.photos'))->schema(self::photos()),
                         Tab::make(__('admin.product.tabs.seo'))->schema(self::seo()),
                     ]),
             ]);
@@ -197,6 +199,32 @@ class ProductForm
                 TextInput::make('width_mm')->label(__('admin.product.width_mm'))->integer()->minValue(0)->maxValue(100000),
                 TextInput::make('height_mm')->label(__('admin.product.height_mm'))->integer()->minValue(0)->maxValue(100000),
             ]),
+        ];
+    }
+
+    /**
+     * Ручные фото (ТЗ §6.6): импорт их не удаляет и не переставляет. Пока поставщик
+     * не отдаёт фотографии, это единственный способ показать товар лицом.
+     *
+     * @return list<mixed>
+     */
+    private static function photos(): array
+    {
+        return [
+            SpatieMediaLibraryFileUpload::make('images')
+                ->label(__('admin.product.photos'))
+                ->helperText(__('admin.product.photos_hint'))
+                ->collection(Product::IMAGES)
+                ->conversion('card')
+                ->customProperties(['source' => 'manual'])
+                ->multiple()
+                ->reorderable()
+                ->appendFiles()
+                ->image()
+                ->maxSize(10 * 1024)
+                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                ->panelLayout('grid')
+                ->columnSpanFull(),
         ];
     }
 
