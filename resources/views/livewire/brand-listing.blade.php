@@ -60,7 +60,7 @@
             />
         </div>
 
-        <div class="flex min-w-0 flex-1 flex-col gap-5" wire:loading.delay.class="busy">
+        <div class="flex min-w-0 flex-1 flex-col gap-5" wire:loading.delay.long.class="busy">
             <x-catalog.filter-chips :chips="$chips" :reset-url="$resetUrl" />
 
             @if ($slice->total === 0)

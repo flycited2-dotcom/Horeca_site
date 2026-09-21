@@ -100,6 +100,6 @@ it('explains an expired form in Russian', function () {
 });
 
 it('answers any other error in Russian too', function () {
-    expect(view('errors.4xx', ['exception' => new HttpException(405)])->render())->toContain('Ошибка 405', 'Запрос не выполнен')
-        ->and(view('errors.5xx', ['exception' => new HttpException(502)])->render())->toContain('Ошибка 502', 'Ошибка на сайте');
+    expect(view('errors.4xx', ['exception' => new HttpException(405)])->render())->toContain('Запрос не выполнен', 'Открыть каталог')->not->toContain('Ошибка 405')
+        ->and(view('errors.5xx', ['exception' => new HttpException(502)])->render())->toContain('Ошибка на сайте');
 });

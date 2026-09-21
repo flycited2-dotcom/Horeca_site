@@ -1,6 +1,7 @@
 {{--
     404 (ТЗ §14): страница в стиле витрины — поиск по артикулу или названию и разделы
-    каталога, чтобы из тупика был ход дальше. Старые адреса сюда не попадают: их уводит
+    каталога, чтобы из тупика был ход дальше; кода ошибки на экране нет (макет, экран 11).
+    Старые адреса сюда не попадают: их уводит
     таблица redirects (App\Actions\Storefront\FollowRedirect).
 --}}
 @inject('catalog', 'App\Services\Catalog\CatalogQuery')
@@ -10,7 +11,6 @@
 <x-layouts.app :title="__('shop.errors.404.title')" noindex>
     <section class="flex max-w-3xl flex-col gap-5 rounded-card border border-line bg-surface p-4 md:p-8" aria-labelledby="not-found-heading">
         <div class="flex flex-col gap-2">
-            <p class="font-mono text-sm text-steel-500">{{ __('shop.errors.code', ['code' => 404]) }}</p>
             <h1 id="not-found-heading" class="text-2xl font-bold md:text-3xl">{{ __('shop.errors.404.heading') }}</h1>
             <p class="max-w-prose text-base text-steel-500">{{ __('shop.errors.404.text') }}</p>
         </div>
