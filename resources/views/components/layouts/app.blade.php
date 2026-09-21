@@ -47,7 +47,7 @@
                     name="q"
                     value="{{ request()->routeIs('search') ? request()->query('q') : '' }}"
                     placeholder="{{ __('shop.layout.search_placeholder') }}"
-                    class="h-control w-full rounded-control border border-line bg-surface px-3 text-base placeholder:text-steel-400"
+                    class="h-control w-full rounded-control border border-line bg-surface px-3 text-base placeholder:text-steel-500"
                 >
                 <x-ui.button type="submit">{{ __('shop.layout.search') }}</x-ui.button>
             </form>

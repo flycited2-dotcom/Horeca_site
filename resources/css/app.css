@@ -25,14 +25,17 @@
     --color-line-soft: #e7ebee;    /* внутренние разделители */
     --color-surface: #ffffff;      /* карточки */
 
+    /* Статусы наличия различаются не только цветом, но и формой маркера. */
     --color-stock-text: #166b49;   /* «В наличии» (5,4:1) */
     --color-stock-bg: #e6f2ec;
     --color-stock-line: #bfdfd0;
+    --color-stock-dot: #1f8a5f;    /* круглая точка */
     --color-incoming: #8f4207;     /* «Ожидается <дата>» (6,2:1) */
     --color-incoming-bg: #fdf4e7;
     --color-incoming-line: #e3b473;
+    --color-incoming-dot: #b45309; /* ромб */
     --color-on-order: #a3350b;     /* «Под заказ» (6,1:1) */
-    --color-on-order-line: #c2410c;
+    --color-on-order-line: #c2410c; /* пунктирная рамка и квадратный маркер */
     --color-danger: #c2410c;       /* рамка поля с ошибкой */
     --color-danger-text: #a3350b;  /* текст ошибки */
 

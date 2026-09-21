@@ -32,11 +32,7 @@
                 </div>
             </fieldset>
 
-            <label class="flex items-center gap-3 text-base">
-                <input type="checkbox" name="in_stock" value="1" @checked($filters->inStockOnly)
-                       class="size-5 rounded-sm border-line text-accent-ink focus:ring-accent">
-                {{ __('shop.catalog.in_stock_only') }}
-            </label>
+            <x-ui.toggle name="in_stock" :checked="$filters->inStockOnly">{{ __('shop.catalog.in_stock_only') }}</x-ui.toggle>
 
             @if ($brands->isNotEmpty())
                 <fieldset class="border-t border-line-soft pt-4">

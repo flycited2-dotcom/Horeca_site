@@ -10,7 +10,7 @@
     сдвига при наведении нет — меняются только цвета.
 --}}
 @php
-    $base = 'inline-flex h-control items-center justify-center gap-2 rounded-control px-4 text-md font-semibold transition-colors duration-150 ease-out';
+    $base = 'inline-flex h-control items-center justify-center gap-2 rounded-control px-4 text-base leading-none font-medium transition-colors duration-150 ease-out';
 
     $styles = [
         'primary' => 'bg-accent-ink text-white hover:bg-accent-dark',
@@ -19,7 +19,7 @@
     ];
 
     $classes = $base.' '.($disabled
-        ? 'pointer-events-none bg-bg text-steel-400'
+        ? 'pointer-events-none border border-line-soft bg-bg text-steel-400'
         : ($styles[$variant] ?? $styles['primary']));
 @endphp
 
