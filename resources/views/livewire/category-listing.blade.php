@@ -60,7 +60,7 @@
 
         <div class="flex min-w-0 flex-1 flex-col gap-5" wire:loading.delay.class="busy">
             @if ($chips !== [])
-                <div class="flex items-center gap-2 max-md:-mx-3 max-md:overflow-x-auto max-md:px-3 max-md:py-1.5 md:flex-wrap">
+                <div class="flex items-center gap-2 max-md:-mx-3 max-md:overflow-x-auto max-md:px-3 max-md:py-1.5 max-md:[scrollbar-width:none] md:flex-wrap">
                     <span class="text-sm text-steel-500 max-md:hidden">{{ __('shop.catalog.selected') }}</span>
 
                     @foreach ($chips as $chip)

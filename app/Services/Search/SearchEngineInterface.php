@@ -17,4 +17,13 @@ interface SearchEngineInterface
      * @return Builder<Product>
      */
     public function apply(Builder $products, NormalizedQuery $query): Builder;
+
+    /**
+     * Narrows the products to those whose article, 1C code or model is exactly the query
+     * (the first level of relevance): the one answer to an article from somebody's order.
+     *
+     * @param  Builder<Product>  $products
+     * @return Builder<Product>
+     */
+    public function exact(Builder $products, NormalizedQuery $query): Builder;
 }

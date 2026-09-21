@@ -57,6 +57,36 @@ final class DatabaseSearchEngine implements SearchEngineInterface
             ->orderBy('name');
     }
 
+    public function exact(Builder $products, NormalizedQuery $query): Builder
+    {
+        if (! $query->looksLikeCode()) {
+            return $products->whereRaw('1 = 0');
+        }
+
+        // Compared with the codes themselves, not with search_text: an article mentioned in the
+        // name of an accessory is not that accessory's article.
+        return $products->where(function (Builder $where) use ($query): void {
+            foreach (['sku', 'supplier_code', 'model'] as $column) {
+                $where->orWhereRaw(self::compactSql($column).' = ?', [$query->compact]);
+            }
+        });
+    }
+
+    /**
+     * The compact form of a code column in SQL, the same as SearchTextBuilder::compact():
+     * lower case, «ё» as «е», no spaces, dashes, dots, slashes, commas or underscores.
+     */
+    private static function compactSql(string $column): string
+    {
+        $sql = "REPLACE(LOWER({$column}), 'ё', 'е')";
+
+        foreach ([' ', '-', '.', '/', ',', '_'] as $separator) {
+            $sql = "REPLACE({$sql}, '{$separator}', '')";
+        }
+
+        return $sql;
+    }
+
     /**
      * Escapes the LIKE wildcards: "50%" searches for "50%", not for anything after "50".
      */

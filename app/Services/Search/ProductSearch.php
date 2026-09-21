@@ -3,18 +3,17 @@
 namespace App\Services\Search;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
-use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
-use App\Services\Catalog\CatalogSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Search of the storefront (TZ §8.4): the instant results under the header field and the
- * /search page with the listing filters. Discontinued products never show up. When a
- * query finds nothing, it is tried again in the other keyboard layout.
+ * products of the /search page, which the listing filters then narrow. Discontinued
+ * products never show up. When a query finds nothing, it is tried again in the other
+ * keyboard layout.
  */
 final class ProductSearch
 {
@@ -49,29 +48,59 @@ final class ProductSearch
         });
     }
 
-    public function page(string $text, CatalogFilters $filters, ?User $user, int $page = 1): SearchResult
+    /**
+     * The products the /search page works with: the query as typed or, when that finds
+     * nothing, in the other keyboard layout. Null for a query too short to search for.
+     */
+    public function scope(string $text): ?SearchScope
     {
-        return $this->firstFound($text, fn (NormalizedQuery $query): SearchResult => new SearchResult(
-            new LengthAwarePaginator([], 0, CatalogFilters::PER_PAGE, $page),
-            new Collection,
-            $query->text,
-        ), function (NormalizedQuery $query) use ($filters, $user, $page): SearchResult {
-            $products = $this->engine->apply(
-                $this->catalog->filtered($this->catalog->withCardData($this->catalog->listed(), $user), $filters),
-                $query,
-            );
+        $query = $this->normalizer->normalize($text);
 
-            // Relevance is the default order of search; a chosen sort replaces it.
-            if ($filters->sort !== CatalogSort::Popular) {
-                $products = $this->catalog->sorted($products->reorder(), $filters->sort);
-            }
+        if (! $query->isSearchable()) {
+            return null;
+        }
 
-            return new SearchResult(
-                $products->paginate(CatalogFilters::PER_PAGE, page: max(1, $page)),
-                new Collection,
-                $query->text,
-            );
-        });
+        $scope = $this->scopeOf($query);
+
+        if ($scope->total() > 0) {
+            return $scope;
+        }
+
+        $switched = $this->normalizer->normalize($this->normalizer->switchLayout($text));
+
+        if ($switched->text === $query->text || ! $switched->isSearchable()) {
+            return $scope;
+        }
+
+        $retry = $this->scopeOf($switched, layoutSwitched: true);
+
+        return $retry->total() > 0 ? $retry : $scope;
+    }
+
+    /**
+     * The product whose article, 1C code or model is exactly the query (layout — screen 8),
+     * when there is exactly one: an article from somebody's order has one answer.
+     */
+    public function exact(SearchScope $scope, ?User $user): ?Product
+    {
+        $found = $this->engine
+            ->exact($this->catalog->withCardData($scope->matching(), $user), $scope->query)
+            ->limit(2)
+            ->get();
+
+        return $found->count() === 1 ? $found->first() : null;
+    }
+
+    private function scopeOf(NormalizedQuery $query, bool $layoutSwitched = false): SearchScope
+    {
+        $products = $this->engine->apply($this->catalog->listed(), $query);
+
+        return new SearchScope(
+            $products,
+            $query,
+            (clone $products)->pluck('products.id')->map(fn (mixed $id): int => (int) $id)->all(),
+            $layoutSwitched,
+        );
     }
 
     /**

@@ -4,9 +4,7 @@ use App\Enums\Availability;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
-use App\Services\Catalog\CatalogFilters;
 use App\Services\Search\ProductSearch;
-use App\Support\Money;
 
 beforeEach(function () {
     $this->category = Category::factory()->create(['name' => 'Плиты индукционные', 'is_active' => true]);
@@ -98,22 +96,28 @@ it('does not search for a single character', function () {
     expect(app(ProductSearch::class)->instant('я', null)->isEmpty())->toBeTrue();
 });
 
-it('filters and paginates the search page', function () {
-    ($this->make)(['name' => 'Плита дешёвая', 'retail_price' => Money::ofRubles(10_000)]);
-    $dear = ($this->make)(['name' => 'Плита дорогая', 'retail_price' => Money::ofRubles(90_000)]);
+it('gives the search page its products, in the other layout when needed', function () {
+    ($this->make)(['name' => 'Плита индукционная']);
+    ($this->make)(['name' => 'Пароконвектомат']);
 
-    $page = app(ProductSearch::class)->page('плита', CatalogFilters::fromQuery(['price_from' => '50000']), null)->products;
+    $search = app(ProductSearch::class);
+    $plain = $search->scope('плита');
+    $switched = $search->scope('gkbnf');
 
-    expect($page->total())->toBe(1)
-        ->and($page->first()?->id)->toBe($dear->id);
+    expect($plain->products()->count())->toBe(1)
+        ->and($plain->layoutSwitched)->toBeFalse()
+        ->and($switched->products()->count())->toBe(1)
+        ->and($switched->layoutSwitched)->toBeTrue()
+        ->and($switched->query->text)->toBe('плита')
+        ->and($search->scope('п'))->toBeNull();
 });
 
-it('sorts the search page by price when asked', function () {
-    $dear = ($this->make)(['name' => 'Плита дорогая', 'retail_price' => Money::ofRubles(90_000)]);
-    $cheap = ($this->make)(['name' => 'Плита дешёвая', 'retail_price' => Money::ofRubles(10_000)]);
-    $onRequest = ($this->make)(['name' => 'Плита по запросу', 'retail_price' => null]);
+it('finds the one product with exactly the article', function () {
+    $wanted = ($this->make)(['name' => 'Плита ЭП-4ЖШ', 'sku' => '11000019106', 'model' => 'ЭП-4ЖШ']);
+    ($this->make)(['name' => 'Плита ЭП-4ЖШ-01', 'sku' => '11000019107', 'model' => 'ЭП-4ЖШ-01']);
 
-    $page = app(ProductSearch::class)->page('плита', CatalogFilters::fromQuery(['sort' => 'price_asc']), null)->products;
+    $search = app(ProductSearch::class);
 
-    expect($page->pluck('id')->all())->toBe([$cheap->id, $dear->id, $onRequest->id]);
+    expect($search->exact($search->scope('11000019106'), null)?->id)->toBe($wanted->id)
+        ->and($search->exact($search->scope('плита'), null))->toBeNull();
 });

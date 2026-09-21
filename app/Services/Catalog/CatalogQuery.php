@@ -215,19 +215,29 @@ final class CatalogQuery
 
     /**
      * Pages $page … $page + $pages − 1 of a category page (TZ §8.2): the category and its
-     * switched-on subcategories. «Показать ещё» adds pages to those on screen; a page past
-     * the end shows the last one. At most MAX_PAGES are loaded at once.
+     * switched-on subcategories.
      */
     public function categorySlice(Category $category, CatalogFilters $filters, ?User $user, int $page = 1, int $pages = 1): ListingSlice
     {
-        $products = $this->filtered($this->inCategory($category), $filters);
-        $total = (clone $products)->count();
+        return $this->slice($this->sorted($this->filtered($this->inCategory($category), $filters), $filters->sort), $user, $page, $pages);
+    }
+
+    /**
+     * Pages $page … $page + $pages − 1 of an ordered listing: «Показать ещё» adds pages to
+     * those on screen; a page past the end shows the last one. At most MAX_PAGES are loaded
+     * at once.
+     *
+     * @param  Builder<Product>  $ordered
+     */
+    public function slice(Builder $ordered, ?User $user, int $page = 1, int $pages = 1): ListingSlice
+    {
+        $total = (clone $ordered)->count();
 
         $pageCount = max(1, (int) ceil($total / CatalogFilters::PER_PAGE));
         $first = min(max(1, $page), $pageCount);
         $last = min($pageCount, $first + min(max(1, $pages), self::MAX_PAGES) - 1);
 
-        $items = $total === 0 ? new Collection : $this->sorted($this->withCardData($products, $user), $filters->sort)
+        $items = $total === 0 ? new Collection : $this->withCardData($ordered, $user)
             ->skip(($first - 1) * CatalogFilters::PER_PAGE)
             ->take(($last - $first + 1) * CatalogFilters::PER_PAGE)
             ->get();
@@ -333,6 +343,33 @@ final class CatalogQuery
             ->orderBy('name')
             ->get(['id', 'name', 'slug'])
             ->each(fn (Brand $brand) => $brand->setAttribute('products_count', (int) $counts[$brand->id]));
+    }
+
+    /**
+     * Switched-on categories the given products belong to, most products first, with the
+     * number of those products: «Уточнить: Пароконвектоматы · 34» on the search page.
+     *
+     * @param  Builder<Product>  $products
+     * @return Collection<int, Category>
+     */
+    public function categoryFacet(Builder $products, int $limit = 5): Collection
+    {
+        $counts = (clone $products)
+            ->toBase()
+            ->reorder()
+            ->groupBy('category_id')
+            ->selectRaw('category_id, COUNT(*) AS aggregate')
+            ->orderByDesc('aggregate')
+            ->limit($limit)
+            ->pluck('aggregate', 'category_id');
+
+        $categories = Category::query()
+            ->active()
+            ->whereKey($counts->keys()->all())
+            ->get(['id', 'name', 'slug'])
+            ->each(fn (Category $category) => $category->setAttribute('products_count', (int) $counts[$category->id]));
+
+        return $categories->sortByDesc('products_count')->values();
     }
 
     /**

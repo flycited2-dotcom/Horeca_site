@@ -13,7 +13,7 @@ it('shows every component state side by side in local development', function () 
 
     $response = $this->get('/styleguide')->assertOk();
 
-    foreach (['Палитра', 'Типографика', 'Кнопки', 'Поля, счётчик, тумблер', 'Статусы наличия', 'Цены', 'Карточки листинга', 'Листинг', 'Хлебные крошки'] as $section) {
+    foreach (['Палитра', 'Типографика', 'Кнопки', 'Поля, счётчик, тумблер', 'Статусы наличия', 'Цены', 'Карточки листинга', 'Строки поиска', 'Листинг', 'Хлебные крошки'] as $section) {
         $response->assertSee($section);
     }
 

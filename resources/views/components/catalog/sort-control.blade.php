@@ -1,9 +1,11 @@
-@props(['filters', 'sorts', 'urlFor', 'variant' => 'segments'])
+@props(['filters', 'sorts', 'urlFor', 'variant' => 'segments', 'labels' => [], 'hidden' => []])
 
 {{--
     Сортировка (макет, экраны 2 и 14): на широком экране — сегменты, чтобы «Сначала
     в наличии» было видно без открывания; на узком — выпадающий список. Сегменты — ссылки,
     список — GET-форма с кнопкой для браузера без скриптов; Livewire перехватывает оба.
+    $labels подменяет подписи: в поиске сортировка по умолчанию — «По релевантности»;
+    $hidden — поля, которые форма без скриптов должна сохранить (запрос и раздел поиска).
 --}}
 @if ($variant === 'segments')
     <nav aria-label="{{ __('shop.catalog.sort.label') }}" {{ $attributes }}>
@@ -19,14 +21,14 @@
                             'bg-slate' => $filters->sort === $sort,
                             'hover:bg-bg' => $filters->sort !== $sort,
                         ])
-                    >{{ $sort->label() }}</a>
+                    >{{ $labels[$sort->value] ?? $sort->label() }}</a>
                 </li>
             @endforeach
         </ul>
     </nav>
 @else
     <form method="get" {{ $attributes }}>
-        @foreach (Arr::except($filters->toQuery(), ['sort']) as $name => $value)
+        @foreach (Arr::except($filters->toQuery(), ['sort']) + array_filter($hidden, fn ($value) => $value !== '' && $value !== null) as $name => $value)
             <x-catalog.hidden-input :name="$name" :value="$value" />
         @endforeach
 
@@ -38,7 +40,7 @@
             class="h-control w-full rounded-control border border-line bg-surface px-3 text-base font-medium"
         >
             @foreach ($sorts as $sort)
-                <option value="{{ $sort->value }}" @selected($filters->sort === $sort)>{{ $sort->label() }}</option>
+                <option value="{{ $sort->value }}" @selected($filters->sort === $sort)>{{ $labels[$sort->value] ?? $sort->label() }}</option>
             @endforeach
         </select>
 

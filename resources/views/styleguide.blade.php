@@ -221,6 +221,16 @@
             </div>
         </x-styleguide.panel>
 
+        <x-styleguide.panel :title="__('styleguide.rows.title')" :note="__('styleguide.rows.note')" tone="canvas">
+            <x-catalog.product-row :product="$cards[0]['product']" :price="$cards[0]['price']" exact />
+
+            <div class="flex flex-col gap-2 md:gap-0 md:overflow-hidden md:rounded-card md:border md:border-line md:bg-surface md:[&>article:last-child]:border-b-0">
+                @foreach (array_slice($cards, 2, 3) as $card)
+                    <x-catalog.product-row :product="$card['product']" :price="$card['price']" />
+                @endforeach
+            </div>
+        </x-styleguide.panel>
+
         <x-styleguide.panel :title="__('styleguide.listing.title')" :note="__('styleguide.listing.note')">
             <div class="flex flex-wrap items-center gap-3">
                 <x-catalog.sort-control :filters="$listing['filters']" :sorts="$listing['sorts']" :url-for="$listing['urlFor']" />
