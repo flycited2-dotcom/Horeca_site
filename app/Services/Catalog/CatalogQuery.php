@@ -4,6 +4,7 @@ namespace App\Services\Catalog;
 
 use App\Enums\AttributeType;
 use App\Enums\Availability;
+use App\Enums\WarehouseStockStatus;
 use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
@@ -94,6 +95,101 @@ final class CatalogQuery
             $this->withCardData($this->listed()->where('availability', Availability::InStock), $user),
             CatalogSort::Popular,
         )->limit($limit)->get();
+    }
+
+    /**
+     * The tiles of the home page (TZ §8.1, layout — screen 4): the root sections marked for
+     * the home page with the number of products, how many of them are in stock and the
+     * biggest subsections. Cached until the catalog changes, like the navigation.
+     *
+     * @return array{products: int, brands: int, sections: list<array{id: int, name: string, slug: string, icon: ?string, products_count: int, in_stock: int, children: list<string>}>}
+     */
+    public function homeSections(): array
+    {
+        return Cache::remember($this->cache->key('home'), now()->addDay(), function (): array {
+            $roots = $this->homeRootCategories();
+            $inStock = [];
+
+            $counts = $this->listed()
+                ->whereIn('availability', [Availability::InStock, Availability::Low])
+                ->toBase()
+                ->groupBy('category_id')
+                ->selectRaw('category_id, COUNT(*) AS aggregate')
+                ->pluck('aggregate', 'category_id');
+
+            foreach ($counts as $categoryId => $count) {
+                $root = $this->tree->rootOf((int) $categoryId);
+
+                if ($root !== null) {
+                    $inStock[$root] = ($inStock[$root] ?? 0) + (int) $count;
+                }
+            }
+
+            $children = Category::query()
+                ->active()
+                ->whereIn('parent_id', $roots->modelKeys())
+                ->where('products_count', '>', 0)
+                ->orderByDesc('products_count')
+                ->get(['parent_id', 'name'])
+                ->groupBy('parent_id');
+
+            return [
+                'products' => $this->listed()->count(),
+                'brands' => $this->listed()->whereNotNull('brand_id')->distinct()->count('brand_id'),
+                'sections' => $roots->map(fn (Category $root): array => [
+                    'id' => $root->id,
+                    'name' => $root->name,
+                    'slug' => $root->slug,
+                    'icon' => $root->icon,
+                    'products_count' => $root->products_count,
+                    'in_stock' => $inStock[$root->id] ?? 0,
+                    'children' => $children->get($root->id, collect())->take(3)->pluck('name')->all(),
+                ])->all(),
+            ];
+        });
+    }
+
+    /**
+     * «Часто заказывают» — products the manager marked as hits (TZ §8.1).
+     *
+     * @return Collection<int, Product>
+     */
+    public function hitsStrip(?User $user, int $limit = 4): Collection
+    {
+        return $this->sorted($this->withCardData($this->listed()->where('is_hit', true), $user), CatalogSort::Popular)
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * «Новинки» — products the manager marked as new, newest first (TZ §8.1).
+     *
+     * @return Collection<int, Product>
+     */
+    public function newStrip(?User $user, int $limit = 4): Collection
+    {
+        return $this->sorted($this->withCardData($this->listed()->where('is_new', true), $user), CatalogSort::Newest)
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * Products in stock at the local warehouse (TZ §8.1): the strip appears only when there
+     * are at least $minimum of them, otherwise it would look like an empty shop.
+     *
+     * @return Collection<int, Product>
+     */
+    public function localStockStrip(?User $user, string $warehouse, int $minimum, int $limit = 4): Collection
+    {
+        $products = $this->listed()->whereHas('stocks', fn (Builder $stocks) => $stocks
+            ->whereIn('status', [WarehouseStockStatus::InStock, WarehouseStockStatus::Low])
+            ->whereHas('warehouse', fn (Builder $warehouses) => $warehouses->where('name', $warehouse)->where('is_visible', true)));
+
+        if ((clone $products)->count() < $minimum) {
+            return new Collection;
+        }
+
+        return $this->sorted($this->withCardData($products, $user), CatalogSort::Popular)->limit($limit)->get();
     }
 
     /**
