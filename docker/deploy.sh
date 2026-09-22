@@ -19,10 +19,12 @@ if [ ! -f "$base/.env" ]; then
     exit 1
 fi
 
+# Скрипт приходит в bash через стандартный ввод, поэтому docker compose ввод не получает:
+# иначе `run` и `exec` съедят остаток скрипта, и выкладка оборвётся на середине.
 compose() {
     local dir="$1"
     shift
-    docker compose --project-name gastrosnab --env-file "$base/.env" -f "$dir/docker/compose.yml" "$@"
+    docker compose --project-name gastrosnab --env-file "$base/.env" -f "$dir/docker/compose.yml" "$@" < /dev/null
 }
 
 rm -rf "$release"
