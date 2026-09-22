@@ -38,7 +38,7 @@
             @if ($price === null)
                 <x-ui.button variant="secondary" class="w-full max-md:hidden">{{ __('shop.product.request_price') }}</x-ui.button>
             @else
-                <x-ui.button class="w-full max-md:hidden">{{ __('shop.product.add_to_cart_short') }}</x-ui.button>
+                <x-cart.add :product="$product" class="max-md:hidden" button-class="w-full" />
             @endif
 
             <x-compare.toggle :product="$product" class="max-md:hidden md:-mt-1.5" />

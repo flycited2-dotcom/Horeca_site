@@ -9,6 +9,7 @@ use App\Services\Catalog\CatalogQuery;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Settings\Settings;
 use App\Support\Money;
+use App\View\CartHeadline;
 
 /**
  * Сверка корзины при каждом открытии (ТЗ §7, §10.1): цена сравнивается с зафиксированной
@@ -72,15 +73,13 @@ final class CartReview
     /**
      * For the header: how many positions and for how much, by the prices in the cart —
      * one query, the check happens on the cart page.
-     *
-     * @return array{positions: int, total: Money}
      */
-    public function headline(?User $user): array
+    public function headline(?User $user): CartHeadline
     {
         $cart = $this->carts->current($user);
 
         if ($cart === null) {
-            return ['positions' => 0, 'total' => Money::zero()];
+            return new CartHeadline;
         }
 
         $row = CartItem::query()
@@ -89,9 +88,6 @@ final class CartReview
             ->selectRaw('COUNT(*) AS positions, COALESCE(SUM(qty * price), 0) AS total')
             ->first();
 
-        return [
-            'positions' => (int) ($row->positions ?? 0),
-            'total' => Money::fromDecimal((string) ($row->total ?? '0')),
-        ];
+        return new CartHeadline((int) ($row->positions ?? 0), Money::fromDecimal((string) ($row->total ?? '0')));
     }
 }

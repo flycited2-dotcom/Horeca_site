@@ -39,4 +39,15 @@ final class Typography
 
         return implode(self::NBSP, [...$groups, ...str_split(substr($digits, $head), 3)]);
     }
+
+    /**
+     * «18,5 кг», «39 кг», «0,25 кг»: grams as kilograms with a decimal comma, no float.
+     */
+    public static function kilograms(int $grams): string
+    {
+        $whole = intdiv($grams, 1000);
+        $rest = rtrim(str_pad((string) ($grams % 1000), 3, '0', STR_PAD_LEFT), '0');
+
+        return self::number($whole).($rest === '' ? '' : ','.$rest).self::NBSP.'кг';
+    }
 }

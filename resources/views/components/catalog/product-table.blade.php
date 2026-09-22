@@ -38,14 +38,14 @@
                     </td>
                     <td class="px-4 py-3">
                         @if ($price !== null)
-                            <x-ui.counter name="quantity[{{ $product->id }}]" id="quantity-{{ $product->id }}" :label="__('shop.counter.label').': '.$product->name" />
+                            <x-ui.counter name="quantity" id="quantity-{{ $product->id }}" form="cart-add-{{ $product->id }}" :label="__('shop.counter.label').': '.$product->name" />
                         @endif
                     </td>
                     <td class="px-4 py-3">
                         @if ($price === null)
                             <x-ui.button variant="secondary" class="w-full whitespace-nowrap">{{ __('shop.product.request_price') }}</x-ui.button>
                         @else
-                            <x-ui.button class="w-full whitespace-nowrap">{{ __('shop.product.add_to_cart_short') }}</x-ui.button>
+                            <x-cart.add :product="$product" :form-id="'cart-add-'.$product->id" button-class="w-full whitespace-nowrap" />
                         @endif
                         <x-compare.toggle :product="$product" class="mt-1" />
                     </td>

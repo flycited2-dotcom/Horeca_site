@@ -144,20 +144,12 @@ document.addEventListener('click', (event) => {
     event.target.closest('[data-notice-close]')?.closest('[data-notice-item]')?.remove();
 });
 
-// Сравнение (ТЗ §8.5): формы «Сравнить» работают и без скриптов; со скриптами кнопка
-// меняется на месте — на всех карточках этого товара, — счётчик в шапке обновляется.
-// Обработчик на документе: Livewire перерисовывает листинг, формы появляются заново.
-document.addEventListener('submit', async (event) => {
-    const form = event.target;
-
-    if (!(form instanceof HTMLFormElement) || !form.hasAttribute('data-compare-form')) {
-        return;
-    }
-
-    event.preventDefault();
-
-    let result;
-
+// Формы, которые скрипт отправляет без перезагрузки: «Сравнить» и «В корзину» (ТЗ §8.5,
+// §10.1). Без скриптов это обычные формы. Ответ — JSON; 422 — отказ с объяснением
+// («цена по запросу»), его показывает уведомление; при любом другом сбое форма уходит
+// обычным способом. Обработчик на документе: Livewire перерисовывает листинг, формы
+// появляются заново.
+const sendForm = async (form) => {
     try {
         const response = await fetch(form.action, {
             method: 'POST',
@@ -165,19 +157,20 @@ document.addEventListener('submit', async (event) => {
             headers: { Accept: 'application/json' },
         });
 
-        if (!response.ok) {
-            throw new Error(String(response.status));
+        if (response.ok || response.status === 422) {
+            return { ok: response.ok, result: await response.json() };
         }
-
-        result = await response.json();
     } catch {
-        form.submit();
-
-        return;
+        // Сеть или сервер не ответили — ниже форма уйдёт обычным способом.
     }
 
-    const holder = form.closest('[data-compare]');
+    form.submit();
 
+    return null;
+};
+
+// Сравнение: кнопка меняется на всех карточках этого товара, счётчик в шапке обновляется.
+const onCompared = (form, result) => {
     for (const toggle of document.querySelectorAll(`[data-compare="${result.product}"]`)) {
         const [add, remove] = toggle.querySelectorAll('form[data-compare-form]');
         add.hidden = result.compared;
@@ -185,7 +178,7 @@ document.addEventListener('submit', async (event) => {
     }
 
     // Нажатая кнопка спряталась: фокус переходит на ту, что встала на её место.
-    holder?.querySelector('form[data-compare-form]:not([hidden]) button')?.focus();
+    form.closest('[data-compare]')?.querySelector('form[data-compare-form]:not([hidden]) button')?.focus();
 
     const link = document.querySelector('[data-compare-link]');
 
@@ -193,8 +186,112 @@ document.addEventListener('submit', async (event) => {
         link.hidden = result.count === 0;
         link.querySelector('[data-compare-count]').textContent = String(result.count);
     }
+};
 
-    showNotice(result.notice);
+// Корзина в шапке: число позиций и сумма (макет, экран 5).
+const onAddedToCart = (form, result) => {
+    const link = document.querySelector('[data-cart-link]');
+
+    if (!link) {
+        return;
+    }
+
+    const { positions, label, total } = result.headline;
+    const empty = positions === 0;
+
+    link.querySelector('[data-cart-positions]').textContent = label;
+    link.querySelector('[data-cart-caption]').hidden = empty;
+
+    const sum = link.querySelector('[data-cart-total]');
+    sum.textContent = total;
+    sum.hidden = empty;
+
+    const badge = link.querySelector('[data-cart-badge]');
+    badge.textContent = String(positions);
+    badge.hidden = empty;
+};
+
+const formHandlers = { 'data-compare-form': onCompared, 'data-cart-form': onAddedToCart };
+
+// Страница корзины (Livewire) после каждого изменения сообщает новые число позиций и сумму.
+window.addEventListener('cart-updated', (event) => onAddedToCart(null, event.detail));
+
+document.addEventListener('submit', async (event) => {
+    const form = event.target;
+
+    if (!(form instanceof HTMLFormElement)) {
+        return;
+    }
+
+    const kind = Object.keys(formHandlers).find((name) => form.hasAttribute(name));
+
+    if (kind === undefined) {
+        return;
+    }
+
+    event.preventDefault();
+
+    // Второе нажатие, пока первое не вернулось, не кладёт товар дважды.
+    if (form.hasAttribute('aria-busy')) {
+        return;
+    }
+
+    form.setAttribute('aria-busy', 'true');
+    const answer = await sendForm(form);
+    form.removeAttribute('aria-busy');
+
+    if (answer === null) {
+        return;
+    }
+
+    if (answer.ok) {
+        formHandlers[kind](form, answer.result);
+    }
+
+    showNotice(answer.result.notice);
+});
+// Маска телефона «+7 ___ ___-__-__» (ТЗ §10.2). Восьмёрку или семёрку в начале заменяет
+// на +7; без скриптов поле принимает номер в любом виде — сервер приведёт его к тому же.
+const formatPhone = (value) => {
+    const typed = value.trim();
+    const masked = typed.startsWith('+7');
+    let digits = (masked ? typed.slice(2) : typed).replace(/\D/g, '');
+
+    // Поле ещё без маски (первая цифра или вставка «8 978…»): 8 или 7 в начале — код страны.
+    if (!masked && (digits[0] === '7' || digits[0] === '8')) {
+        digits = digits.slice(1);
+    }
+
+    digits = digits.slice(0, 10);
+
+    if (digits === '') {
+        return '';
+    }
+
+    const parts = [digits.slice(0, 3), digits.slice(3, 6), digits.slice(6, 8), digits.slice(8, 10)];
+    let formatted = `+7 ${parts[0]}`;
+
+    if (parts[1]) {
+        formatted += ` ${parts[1]}`;
+    }
+
+    if (parts[2]) {
+        formatted += `-${parts[2]}`;
+    }
+
+    if (parts[3]) {
+        formatted += `-${parts[3]}`;
+    }
+
+    return formatted;
+};
+
+document.addEventListener('input', (event) => {
+    const field = event.target;
+
+    if (field instanceof HTMLInputElement && field.hasAttribute('data-phone-mask')) {
+        field.value = formatPhone(field.value);
+    }
 });
 
 // Липкая полоса покупки ниже 1024 px: появляется, когда панель покупки ушла вверх за экран.

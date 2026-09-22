@@ -251,6 +251,16 @@
             <x-catalog.pagination :slice="$listing['slice']" :filters="$listing['filters']" :url-for="$listing['urlFor']" class="border-t border-line-soft pt-4" />
         </x-styleguide.panel>
 
+        <x-styleguide.panel :title="__('styleguide.checkout.title')" :note="__('styleguide.checkout.note')">
+            <div role="radiogroup" aria-label="{{ __('shop.checkout.delivery') }}" class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                <x-ui.choice name="sample_delivery" value="pickup" :title="__('enums.delivery_method.pickup')" :description="__('shop.checkout.delivery_notes.pickup')" checked />
+                <x-ui.choice name="sample_delivery" value="transport" :title="__('enums.delivery_method.transport_company')" :description="__('shop.checkout.delivery_notes.transport_company')" />
+                <x-ui.choice name="sample_delivery" value="courier" :title="__('enums.delivery_method.courier_city')" :description="__('shop.checkout.delivery_notes.courier_city')" />
+            </div>
+
+            <x-ui.notice :text="__('shop.cart.added', ['name' => 'Пароконвектомат ПКА 10-1/1ВП2-01', 'quantity' => 2, 'unit' => 'шт'])" href="#" :link="__('shop.cart.open')" />
+        </x-styleguide.panel>
+
         <x-styleguide.panel :title="__('styleguide.breadcrumbs.title')">
             <div class="flex flex-col gap-3">
                 <span class="text-sm text-steel-500">{{ __('styleguide.breadcrumbs.category') }}</span>

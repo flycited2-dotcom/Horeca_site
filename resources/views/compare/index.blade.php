@@ -112,7 +112,7 @@
                                         @elseif ($price === null)
                                             <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
                                         @else
-                                            <x-ui.button class="w-full">{{ __('shop.product.add_to_cart_short') }}</x-ui.button>
+                                            <x-cart.add :product="$product" button-class="w-full" />
                                         @endif
 
                                         <form method="post" action="{{ route('compare.remove', $product->id) }}">

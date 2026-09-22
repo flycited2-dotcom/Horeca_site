@@ -51,9 +51,11 @@
                                 <span class="mt-auto text-lg font-semibold tabular">
                                     {{ $itemPrice === null ? __('shop.price.on_request') : \App\Support\Typography::money($itemPrice->amount) }}
                                 </span>
-                                <x-ui.button variant="secondary" class="w-full">
-                                    {{ $itemPrice === null ? __('shop.product.request_price') : __('shop.product.add_to_cart_short') }}
-                                </x-ui.button>
+                                @if ($itemPrice === null)
+                                    <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
+                                @else
+                                    <x-cart.add :product="$item" variant="secondary" button-class="w-full" />
+                                @endif
                             </li>
                         @endforeach
                     </ul>

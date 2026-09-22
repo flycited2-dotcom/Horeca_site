@@ -177,8 +177,10 @@ it('gives the header the positions and the sum in one query', function () {
 
     $headline = app(CartReview::class)->headline(null);
 
-    expect($headline['positions'])->toBe(2)
-        ->and($headline['total']->equals(Money::ofRubles(3_250)))->toBeTrue();
+    expect($headline->positions)->toBe(2)
+        ->and($headline->total->equals(Money::ofRubles(3_250)))->toBeTrue()
+        ->and($headline->label())->toBe('2 позиции')
+        ->and($headline->totalLabel())->toBe('3 250 ₽');
 });
 
 it('prunes expired guest carts and keeps the customers ones', function () {

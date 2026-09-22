@@ -25,8 +25,7 @@
         @if ($price === null)
             <x-ui.button variant="secondary">{{ __('shop.product.request_price') }}</x-ui.button>
         @else
-            <x-ui.counter name="quantity_bar" id="bar-quantity" class="max-sm:hidden" />
-            <x-ui.button>{{ __('shop.product.add_to_cart_short') }}</x-ui.button>
+            <x-cart.add :product="$product" counter counter-id="bar-quantity" counter-class="max-sm:hidden" class="flex items-center gap-3" />
         @endif
     </div>
 </div>

@@ -1,9 +1,12 @@
 <?php
 
 use App\Enums\ImportTrigger;
+use App\Models\Cart;
 use App\Models\ImportProfile;
 use App\Models\ImportRun;
+use App\Models\Product;
 use App\Models\Supplier;
+use App\Services\Cart\CartStore;
 use App\Services\Supplier\Import\ImportRunner;
 use Database\Seeders\ProductionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -84,4 +87,14 @@ function rosholodProfile(string $source): ImportProfile
 function runImport(ImportProfile $profile, bool $force = false, bool $dryRun = false): ImportRun
 {
     return app(ImportRunner::class)->run($profile, ImportTrigger::Cli, $force, $dryRun)->refresh();
+}
+
+/**
+ * Puts a product into the cart and keeps the cart cookie for the next requests of the test,
+ * as a browser does: the test client carries the session between requests, not cookies.
+ */
+function putInCart(Product $product, int $quantity = 1): void
+{
+    test()->post(route('cart.add', $product->id), ['quantity' => $quantity]);
+    test()->withCookie(CartStore::COOKIE, (string) Cart::query()->latest('id')->value('session_id'));
 }

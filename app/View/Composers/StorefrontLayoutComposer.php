@@ -5,6 +5,7 @@ namespace App\View\Composers;
 use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
+use App\Services\Cart\CartReview;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CategoryTree;
 use App\Services\Compare\CompareList;
@@ -35,6 +36,7 @@ final class StorefrontLayoutComposer
         private readonly CategoryTree $tree,
         private readonly Request $request,
         private readonly CompareList $compare,
+        private readonly CartReview $cart,
     ) {}
 
     public function compose(View $view): void
@@ -61,6 +63,7 @@ final class StorefrontLayoutComposer
             footerPages: array_values(array_filter(array_map(fn (string $slug): ?Page => $pages->get($slug), self::FOOTER_PAGES))),
             privacyPage: $pages->get(self::PRIVACY_PAGE),
             compareCount: $this->compare->count($this->request->user()),
+            cart: $this->cart->headline($this->request->user()),
         ));
     }
 

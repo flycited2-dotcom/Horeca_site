@@ -58,9 +58,11 @@
             <span class="text-title font-bold whitespace-nowrap tabular">
                 {{ $price === null ? __('shop.price.on_request') : \App\Support\Typography::money($price->amount) }}
             </span>
-            <x-ui.button :variant="$exact ? 'primary' : 'secondary'" class="ml-auto whitespace-nowrap">
-                {{ $price === null ? __('shop.product.request_price') : __('shop.product.add_to_cart_short') }}
-            </x-ui.button>
+            @if ($price === null)
+                <x-ui.button variant="secondary" class="ml-auto whitespace-nowrap">{{ __('shop.product.request_price') }}</x-ui.button>
+            @else
+                <x-cart.add :product="$product" :variant="$exact ? 'primary' : 'secondary'" class="ml-auto" button-class="whitespace-nowrap" />
+            @endif
         </div>
     </div>
 
@@ -70,7 +72,7 @@
         @if ($price === null)
             <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
         @else
-            <x-ui.button class="w-full">{{ __('shop.product.add_to_cart_short') }}</x-ui.button>
+            <x-cart.add :product="$product" button-class="w-full" />
         @endif
 
         @if ($exact)

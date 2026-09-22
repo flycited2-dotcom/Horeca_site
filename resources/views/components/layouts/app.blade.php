@@ -73,19 +73,7 @@
                 class="col-span-3 max-md:-mx-3 max-md:mt-1.5 max-md:-mb-1.5 max-md:border-t max-md:border-line max-md:px-3 max-md:py-2.5 md:col-span-1"
             />
 
-            {{-- Сравнение (ТЗ §8.5): ссылка видна, пока в сравнении есть модели; счётчик обновляет скрипт витрины. --}}
-            <a
-                href="{{ route('compare') }}"
-                data-compare-link
-                @if ($shell->compareCount === 0) hidden @endif
-                class="flex h-control items-center gap-2 rounded-control border border-line px-3 text-sm font-medium transition-colors duration-150 ease-out hover:border-accent-ink max-md:col-start-3 max-md:row-start-1"
-            >
-                <svg class="size-5 text-steel-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 20V10M12 20V4M19 20v-7"/>
-                </svg>
-                <span class="max-md:sr-only">{{ __('shop.compare.header') }}</span>
-                <span data-compare-count class="min-w-5 rounded-full bg-accent-ink px-1.5 text-center text-xs leading-5 font-semibold text-white tabular">{{ $shell->compareCount }}</span>
-            </a>
+            <x-layout.header-actions :shell="$shell" class="max-md:col-start-3 max-md:row-start-1" />
         </div>
     </header>
 

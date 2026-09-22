@@ -21,10 +21,7 @@
     @elseif ($price === null)
         <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
     @else
-        <div class="flex gap-2">
-            <x-ui.counter name="quantity" id="buy-quantity" :label="__('shop.counter.label').', '.$product->unit" />
-            <x-ui.button class="flex-1">{{ __('shop.product.add_to_cart') }}</x-ui.button>
-        </div>
+        <x-cart.add :product="$product" :label="__('shop.product.add_to_cart')" counter counter-id="buy-quantity" class="flex gap-2" button-class="flex-1" />
 
         @if ($product->availability === Availability::OnOrder)
             <p class="text-sm text-steel-500">{{ __('shop.product.on_order_note') }}</p>
