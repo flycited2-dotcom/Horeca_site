@@ -124,7 +124,7 @@ timestamps + softDeletes
 `invoice_path` string(500) nullable ·
 `payment_id` string(64) nullable · `paid_at` timestamp nullable — под будущую ЮKassa, в MVP всегда null ·
 `utm` json nullable · `ip` string(45) nullable · `user_agent` string(500) nullable ·
-timestamps
+timestamps · `deleted_at` (мягкое удаление администратором, §12)
 Индексы: `status`, `created_at`, `user_id`.
 
 **order_counters** — `date` date PK · `last_number` int unsigned
