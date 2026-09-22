@@ -15,6 +15,7 @@
         "filament/spatie-laravel-media-library-plugin": "^5.8",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.35",
         "openspout/openspout": "^4.23",
         "spatie/laravel-medialibrary": "^11.23"
     },
@@ -57,6 +58,9 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "pre-autoload-dump": [
+            "Aws\\Script\\Composer\\Composer::removeUnusedServices"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
@@ -78,6 +82,9 @@
         ]
     },
     "extra": {
+        "aws/aws-sdk-php": [
+            "S3"
+        ],
         "laravel": {
             "dont-discover": []
         }

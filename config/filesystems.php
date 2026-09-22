@@ -1,5 +1,25 @@
 <?php
 
+// Хранилище S3 (ТЗ §17): фото товаров лежат в открытой части, счета — закрытыми файлами.
+// Бакет общий для нескольких сайтов сервера, поэтому у магазина своя папка (AWS_ROOT).
+// Контрольные суммы — только там, где их требует запрос: новые версии AWS SDK добавляют
+// их всегда, а S3-совместимые хранилища понимают их не все.
+$s3 = [
+    'driver' => 's3',
+    'key' => env('AWS_ACCESS_KEY_ID'),
+    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'region' => env('AWS_DEFAULT_REGION'),
+    'bucket' => env('AWS_BUCKET'),
+    'root' => env('AWS_ROOT', ''),
+    'url' => env('AWS_URL'),
+    'endpoint' => env('AWS_ENDPOINT'),
+    'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+    'request_checksum_calculation' => 'when_required',
+    'response_checksum_validation' => 'when_required',
+    'throw' => true,
+    'report' => false,
+];
+
 return [
 
     /*
@@ -14,6 +34,13 @@ return [
     */
 
     'default' => env('FILESYSTEM_DISK', 'local'),
+
+    /*
+    | Where the invoices attached to orders are kept (ТЗ §12, §15): a private disk,
+    | «local» on a developer machine and «s3-private» on the server.
+    */
+
+    'invoices' => env('INVOICES_DISK', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -47,18 +74,9 @@ return [
             'report' => false,
         ],
 
-        's3' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
-            'report' => false,
-        ],
+        's3' => $s3 + ['visibility' => 'public'],
+
+        's3-private' => $s3 + ['visibility' => 'private'],
 
     ],
 

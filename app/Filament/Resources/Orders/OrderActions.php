@@ -73,7 +73,7 @@ final class OrderActions
             ->schema([
                 FileUpload::make('invoice')
                     ->label(__('admin.order.invoice'))
-                    ->disk(AttachInvoice::DISK)
+                    ->disk(AttachInvoice::disk())
                     ->directory(AttachInvoice::DIRECTORY)
                     ->visibility('private')
                     ->acceptedFileTypes(['application/pdf'])
@@ -95,7 +95,7 @@ final class OrderActions
             ->color('gray')
             ->visible(fn (Order $record): bool => filled($record->invoice_path))
             ->action(function (Order $record): ?StreamedResponse {
-                $disk = Storage::disk(AttachInvoice::DISK);
+                $disk = Storage::disk(AttachInvoice::disk());
 
                 if (! $disk->exists((string) $record->invoice_path)) {
                     Notification::make()->title(__('admin.order.invoice_missing'))->warning()->send();
