@@ -45,7 +45,8 @@ if [ -d "$base/src" ]; then
 fi
 mv "$release" "$base/src"
 
-compose "$base/src" up -d --remove-orphans
+# --wait: миграции и открытие сайта — только когда PHP-FPM готов, иначе nginx отдаст 502.
+compose "$base/src" up -d --wait --remove-orphans
 compose "$base/src" exec -T app php artisan migrate --force
 compose "$base/src" exec -T app php artisan up
 

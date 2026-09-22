@@ -121,7 +121,7 @@ git archive --format=tar.gz -o /tmp/gastrosnab.tar.gz HEAD \
 1. Распаковывает код в `src.new` и собирает новый образ — сайт в это время работает на прежнем.
 2. `php artisan down --render=errors::503`.
 3. Меняет `src` на `src.new`, прежний код остаётся в `src.old` до следующей выкладки.
-4. `docker compose up -d` пересоздаёт контейнеры. Кэш настроек, маршрутов и шаблонов собирает сам контейнер `app` при запуске (`php artisan optimize`).
+4. `docker compose up -d --wait` пересоздаёт контейнеры и ждёт, пока PHP-FPM начнёт принимать соединения: кэш настроек, маршрутов и шаблонов контейнер `app` собирает при запуске (`php artisan optimize`).
 5. `php artisan migrate --force`, затем `php artisan up`.
 6. Удаляет прежние образы магазина. Образы других проектов не трогаются.
 

@@ -32,6 +32,13 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
       target: app
+    # Готов, когда PHP-FPM принимает соединения: до этого контейнер собирает кэш шаблонов.
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1', 9000) ? 0 : 1);"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 60s
 
   web:
     image: gastrosnab-web
@@ -44,7 +51,8 @@ services:
     ports:
       - "127.0.0.1:8090:80"
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     logging: *logging
 
   queue-default:
