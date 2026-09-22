@@ -3,9 +3,11 @@
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
-/* Макеты и тесты — не источник классов: стили собираются одинаково здесь и в образе сервера. */
+/*
+ * Макеты, тесты и скомпилированные шаблоны (в них попадает админка Filament) — не источник
+ * классов: стили собираются одинаково здесь и в образе сервера.
+ */
 @source not '../../docs';
 @source not '../../tests';
 
