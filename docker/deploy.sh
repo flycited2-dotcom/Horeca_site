@@ -33,9 +33,9 @@ ln -s ../.env "$release/.env"
 
 compose "$release" build
 
-if [ -d "$base/src" ] && compose "$base/src" ps --status running --services | grep -qx app; then
-    compose "$base/src" exec -T app php artisan down --render=errors::503
-fi
+# Сайт закрывается до запуска новых контейнеров, в том числе при первой выкладке: флаг лежит
+# в общем томе storage, и пока он стоит, планировщик и очереди ждут миграций.
+compose "$release" run --rm --no-deps app php artisan down --render=errors::503
 
 rm -rf "$base/src.old"
 if [ -d "$base/src" ]; then
