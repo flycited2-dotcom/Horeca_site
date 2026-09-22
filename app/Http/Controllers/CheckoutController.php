@@ -13,7 +13,6 @@ use App\Support\Phone;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -49,7 +48,7 @@ class CheckoutController extends Controller
             'summary' => $summary,
             'user' => $user,
             'idempotencyKey' => old('idempotency_key', (string) Str::uuid()),
-            'started' => Crypt::encryptString((string) now()->getTimestamp()),
+            'started' => CheckoutRequest::openedAt(),
             'pickup' => $settings->get('pickup.address'),
             'payments' => CheckoutRequest::paymentMethods($settings),
             'carriers' => __('shop.checkout.carriers'),

@@ -59,7 +59,7 @@
                 {{ $price === null ? __('shop.price.on_request') : \App\Support\Typography::money($price->amount) }}
             </span>
             @if ($price === null)
-                <x-ui.button variant="secondary" class="ml-auto whitespace-nowrap">{{ __('shop.product.request_price') }}</x-ui.button>
+                <x-lead.request-price :product="$product" class="ml-auto whitespace-nowrap" />
             @else
                 <x-cart.add :product="$product" :variant="$exact ? 'primary' : 'secondary'" class="ml-auto" button-class="whitespace-nowrap" />
             @endif
@@ -70,7 +70,7 @@
 
     <div class="flex flex-col gap-2 max-md:hidden">
         @if ($price === null)
-            <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
+            <x-lead.request-price :product="$product" class="w-full" />
         @else
             <x-cart.add :product="$product" button-class="w-full" />
         @endif

@@ -48,4 +48,10 @@ return [
         'total' => 'Итого',
     ],
 
+    'lead' => [
+        'title' => 'Лид: :type',
+        'product' => 'Товар: :name:sku',
+        'message' => 'Сообщение: :message',
+    ],
+
 ];

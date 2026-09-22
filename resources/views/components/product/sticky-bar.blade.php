@@ -23,7 +23,7 @@
         </div>
 
         @if ($price === null)
-            <x-ui.button variant="secondary">{{ __('shop.product.request_price') }}</x-ui.button>
+            <x-ui.button variant="secondary" popovertarget="lead-price">{{ __('shop.product.request_price') }}</x-ui.button>
         @else
             <x-cart.add :product="$product" counter counter-id="bar-quantity" counter-class="max-sm:hidden" class="flex items-center gap-3" />
         @endif

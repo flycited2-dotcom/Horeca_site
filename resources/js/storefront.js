@@ -144,10 +144,10 @@ document.addEventListener('click', (event) => {
     event.target.closest('[data-notice-close]')?.closest('[data-notice-item]')?.remove();
 });
 
-// Формы, которые скрипт отправляет без перезагрузки: «Сравнить» и «В корзину» (ТЗ §8.5,
-// §10.1). Без скриптов это обычные формы. Ответ — JSON; 422 — отказ с объяснением
-// («цена по запросу»), его показывает уведомление; при любом другом сбое форма уходит
-// обычным способом. Обработчик на документе: Livewire перерисовывает листинг, формы
+// Формы, которые скрипт отправляет без перезагрузки: «Сравнить», «В корзину» и короткие
+// заявки (ТЗ §8.5, §10.1, §5: leads). Без скриптов это обычные формы. Ответ — JSON;
+// 422 — отказ с объяснением («цена по запросу») или ошибки полей; при любом другом сбое
+// форма уходит обычным способом. Обработчик на документе: Livewire перерисовывает листинг, формы
 // появляются заново.
 const sendForm = async (form) => {
     try {
@@ -211,7 +211,48 @@ const onAddedToCart = (form, result) => {
     badge.hidden = empty;
 };
 
-const formHandlers = { 'data-compare-form': onCompared, 'data-cart-form': onAddedToCart };
+// Короткая заявка отправлена: окно закрывается, форма очищается (ТЗ §5: leads).
+const onLeadSent = (form) => {
+    form.reset();
+    showFieldErrors(form, {});
+    form.closest('[popover]')?.hidePopover();
+};
+
+// Ошибки у полей формы лида (data-field-error): первая — в фокус.
+const showFieldErrors = (form, errors) => {
+    for (const slot of form.querySelectorAll('[data-field-error]')) {
+        const messages = errors[slot.dataset.fieldError];
+        slot.hidden = !messages;
+        slot.textContent = messages ? messages[0] : '';
+    }
+
+    const first = Object.keys(errors)[0];
+
+    if (first) {
+        form.querySelector(`[name="${first}"]`)?.focus();
+    }
+};
+
+const formHandlers = { 'data-compare-form': onCompared, 'data-cart-form': onAddedToCart, 'data-lead-form': onLeadSent };
+
+// Общее окно «Запросить цену» узнаёт товар от кнопки, которая его открыла.
+document.addEventListener('click', (event) => {
+    const opener = event.target.closest('[data-lead-product-id]');
+    const dialog = opener && document.getElementById(opener.getAttribute('popovertarget'));
+
+    if (!dialog) {
+        return;
+    }
+
+    dialog.querySelector('[data-lead-product-field]').value = opener.dataset.leadProductId;
+
+    const name = dialog.querySelector('[data-lead-product-name]');
+
+    if (name) {
+        name.textContent = opener.dataset.leadProductName;
+        name.hidden = false;
+    }
+});
 
 // Страница корзины (Livewire) после каждого изменения сообщает новые число позиций и сумму.
 window.addEventListener('cart-updated', (event) => onAddedToCart(null, event.detail));
@@ -246,9 +287,16 @@ document.addEventListener('submit', async (event) => {
 
     if (answer.ok) {
         formHandlers[kind](form, answer.result);
+    } else if (answer.result.errors) {
+        // Ошибки проверки полей (лиды): показываются у полей, уведомление не нужно.
+        showFieldErrors(form, answer.result.errors);
+
+        return;
     }
 
-    showNotice(answer.result.notice);
+    if (answer.result.notice) {
+        showNotice(answer.result.notice);
+    }
 });
 // Маска телефона «+7 ___ ___-__-__» (ТЗ §10.2). Восьмёрку или семёрку в начале заменяет
 // на +7; без скриптов поле принимает номер в любом виде — сервер приведёт его к тому же.

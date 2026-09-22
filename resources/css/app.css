@@ -355,6 +355,41 @@
 }
 
 /*
+ * Окно короткой заявки (лиды): нативный popover без скриптов — по центру на планшете
+ * и десктопе, снизу на телефоне, как шторка фильтров.
+ */
+@utility dialog-sheet {
+    &:popover-open {
+        display: block;
+        inset: 0;
+        width: min(100% - 24px, 32rem);
+        max-height: calc(100dvh - 24px);
+        margin: auto;
+        padding: 20px;
+        overflow-y: auto;
+        border: 1px solid var(--color-line);
+        border-radius: var(--radius-card);
+        color: var(--color-ink);
+        background: var(--color-surface);
+    }
+
+    &::backdrop {
+        background: rgb(21 25 29 / 0.55);
+    }
+
+    @media (width < 48rem) {
+        &:popover-open {
+            inset: auto 0 0;
+            width: 100%;
+            max-height: 90dvh;
+            margin: 0;
+            border-width: 1px 0 0;
+            border-radius: 0;
+        }
+    }
+}
+
+/*
  * Загрузка (ТЗ §9): скелетон там, где структура результата известна,
  * спиннер — только там, где нет.
  */

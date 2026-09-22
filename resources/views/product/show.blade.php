@@ -52,7 +52,7 @@
                                     {{ $itemPrice === null ? __('shop.price.on_request') : \App\Support\Typography::money($itemPrice->amount) }}
                                 </span>
                                 @if ($itemPrice === null)
-                                    <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
+                                    <x-lead.request-price :product="$item" class="w-full" />
                                 @else
                                     <x-cart.add :product="$item" variant="secondary" button-class="w-full" />
                                 @endif
@@ -74,6 +74,18 @@
                 @endforeach
             </div>
         </section>
+    @endif
+
+    {{-- Окна коротких заявок (ТЗ §6.5): только те, что нужны этому товару. --}}
+    @if ($product->availability === Availability::Discontinued)
+        <x-lead.dialog id="lead-analog" type="analog_request" :product="$product" />
+    @elseif ($price === null)
+        <x-lead.dialog id="lead-price" type="price_request" :product="$product" />
+    @else
+        <x-lead.dialog id="lead-one-click" type="one_click" :product="$product" />
+        @if ($product->availability === Availability::OnOrder)
+            <x-lead.dialog id="lead-term" type="availability_request" :product="$product" />
+        @endif
     @endif
 
     <script type="application/ld+json">{!! \App\Support\StructuredData::json($structuredData) !!}</script>

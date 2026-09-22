@@ -43,7 +43,7 @@
                     </td>
                     <td class="px-4 py-3">
                         @if ($price === null)
-                            <x-ui.button variant="secondary" class="w-full whitespace-nowrap">{{ __('shop.product.request_price') }}</x-ui.button>
+                            <x-lead.request-price :product="$product" class="w-full whitespace-nowrap" />
                         @else
                             <x-cart.add :product="$product" :form-id="'cart-add-'.$product->id" button-class="w-full whitespace-nowrap" />
                         @endif

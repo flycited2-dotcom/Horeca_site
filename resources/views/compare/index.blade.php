@@ -108,9 +108,9 @@
 
                                     <div class="mt-auto flex flex-col gap-1 pt-1.5">
                                         @if ($product->availability === Availability::Discontinued)
-                                            <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.find_analog') }}</x-ui.button>
+                                            <x-ui.button variant="secondary" :href="route('product', $product)" class="w-full">{{ __('shop.product.find_analog') }}</x-ui.button>
                                         @elseif ($price === null)
-                                            <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
+                                            <x-lead.request-price :product="$product" class="w-full" />
                                         @else
                                             <x-cart.add :product="$product" button-class="w-full" />
                                         @endif

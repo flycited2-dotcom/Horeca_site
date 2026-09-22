@@ -2,8 +2,8 @@
 
 {{--
     Поиск ничего не нашёл (ТЗ §8.4, макет — экран 8): не пустой экран, а объяснение и куда
-    идти дальше — самые большие разделы каталога и весь каталог. Форма «Найдём за вас»
-    появится вместе с лидами (спринт 4).
+    идти дальше — самые большие разделы каталога и весь каталог — и форма «Найдём за вас»
+    (лид not_found) с запросом в сообщении.
 --}}
 <div {{ $attributes->class('flex flex-col gap-6 rounded-card border border-line bg-surface p-6 md:flex-row md:gap-7 md:p-8') }}>
     <span class="flex size-14 shrink-0 items-center justify-center rounded-card border border-line bg-bg" aria-hidden="true">
@@ -25,5 +25,11 @@
 
             <x-ui.button variant="secondary" :href="route('catalog')">{{ __('shop.layout.all_categories') }}</x-ui.button>
         </div>
+
+        <section class="mt-2 flex max-w-xl flex-col gap-2 border-t border-line-soft pt-5" aria-labelledby="not-found-lead">
+            <h2 id="not-found-lead" class="text-lg font-semibold">{{ __('shop.leads.titles.not_found') }}</h2>
+            <p class="text-base text-steel-500">{{ __('shop.leads.texts.not_found') }}</p>
+            <x-lead.form id="not-found-lead-form" type="not_found" :message="__('shop.leads.looking_for', ['query' => $query])" :message-label="__('shop.leads.fields.what')" class="mt-2" />
+        </section>
     </div>
 </div>

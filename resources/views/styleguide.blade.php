@@ -259,6 +259,12 @@
             </div>
 
             <x-ui.notice :text="__('shop.cart.added', ['name' => 'Пароконвектомат ПКА 10-1/1ВП2-01', 'quantity' => 2, 'unit' => 'шт'])" href="#" :link="__('shop.cart.open')" />
+
+            <div class="flex max-w-xl flex-col gap-2 rounded-card border border-line p-4">
+                <h3 class="text-lg font-semibold">{{ __('shop.leads.titles.price_request') }}</h3>
+                <p class="text-base text-steel-500">{{ __('shop.leads.texts.price_request') }}</p>
+                <x-lead.form id="sample-lead" type="price_request" class="mt-2" />
+            </div>
         </x-styleguide.panel>
 
         <x-styleguide.panel :title="__('styleguide.breadcrumbs.title')">

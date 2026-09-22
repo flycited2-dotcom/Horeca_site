@@ -6,6 +6,7 @@
     строкой, разделы — лентой чипов. Поле поиска ведёт мгновенную выдачу (InstantSearch).
     Данные каркаса собирает StorefrontLayoutComposer.
 --}}
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -123,8 +124,14 @@
     >
         @if (is_array($notice = session('notice')))
             <x-ui.notice :text="$notice['text'] ?? ''" :href="$notice['href'] ?? null" :link="$notice['link'] ?? null" />
+        @elseif ($errors->getBag('lead')->any())
+            {{-- Форма лида без скриптов вернулась с ошибкой: окно закрыто, поэтому говорим здесь. --}}
+            <x-ui.notice :text="__('shop.leads.not_sent', ['error' => $errors->getBag('lead')->first()])" />
         @endif
     </div>
     <template data-notice-template><x-ui.notice /></template>
+
+    {{-- «Запросить цену» из листингов: одно окно на страницу, товар подставляет нажатая кнопка. --}}
+    <x-lead.dialog id="lead-price-shared" type="price_request" shared />
 </body>
 </html>

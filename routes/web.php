@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\FallbackController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StyleguideController;
@@ -31,6 +32,8 @@ Route::post('/cart/{product}/restore', [CartController::class, 'restore'])->wher
 Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{number}', [CheckoutController::class, 'success'])->name('checkout.success');
+
+Route::post('/leads', [LeadController::class, 'store'])->name('leads.store');
 
 Route::get('/compare', [CompareController::class, 'index'])->name('compare');
 Route::delete('/compare', [CompareController::class, 'clear'])->name('compare.clear');

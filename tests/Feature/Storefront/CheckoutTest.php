@@ -128,6 +128,22 @@ it('names what to fix at each field', function () {
     expect(Order::query()->count())->toBe(0);
 });
 
+it('shows each error at its field and lists them in the summary', function () {
+    putInCart(orderedProduct());
+
+    // The session is JSON-serialized: between real requests errors travel as arrays.
+    $this->withSession(['errors' => ['default' => ['format' => ':message', 'messages' => [
+        'phone' => ['Нужен российский номер: +7 и десять цифр, например +7 978 123-45-67.'],
+        'consent' => ['Отметьте согласие на обработку персональных данных.'],
+    ]]]])
+        ->get(route('checkout'))
+        ->assertOk()
+        ->assertSee('Осталось исправить 2 поля')
+        ->assertSee('href="#phone"', false)
+        ->assertSee('id="phone-error"', false)
+        ->assertSee('id="consent-error"', false);
+});
+
 it('takes a real INN of an organization and of a sole trader', function (string $inn) {
     putInCart(orderedProduct());
 

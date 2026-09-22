@@ -36,7 +36,7 @@
             <x-ui.availability :availability="$product->availability" class="md:hidden" />
 
             @if ($price === null)
-                <x-ui.button variant="secondary" class="w-full max-md:hidden">{{ __('shop.product.request_price') }}</x-ui.button>
+                <x-lead.request-price :product="$product" class="w-full max-md:hidden" />
             @else
                 <x-cart.add :product="$product" class="max-md:hidden" button-class="w-full" />
             @endif

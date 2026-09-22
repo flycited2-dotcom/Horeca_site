@@ -17,16 +17,22 @@
 
     @if ($product->availability === Availability::Discontinued)
         <p class="text-base text-steel-500">{{ __('shop.product.discontinued_note') }}</p>
-        <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.find_analog') }}</x-ui.button>
+        <x-ui.button variant="secondary" popovertarget="lead-analog" class="w-full">{{ __('shop.product.find_analog') }}</x-ui.button>
     @elseif ($price === null)
-        <x-ui.button variant="secondary" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
+        <x-ui.button variant="secondary" popovertarget="lead-price" class="w-full">{{ __('shop.product.request_price') }}</x-ui.button>
     @else
         <x-cart.add :product="$product" :label="__('shop.product.add_to_cart')" counter counter-id="buy-quantity" class="flex gap-2" button-class="flex-1" />
 
         @if ($product->availability === Availability::OnOrder)
             <p class="text-sm text-steel-500">{{ __('shop.product.on_order_note') }}</p>
-            <x-ui.button variant="neutral" class="w-full">{{ __('shop.product.ask_term') }}</x-ui.button>
+            <x-ui.button variant="neutral" popovertarget="lead-term" class="w-full">{{ __('shop.product.ask_term') }}</x-ui.button>
         @endif
+
+        <button
+            type="button"
+            popovertarget="lead-one-click"
+            class="tap-target -mt-1 self-center text-sm font-medium text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark"
+        >{{ __('shop.product.one_click') }}</button>
     @endif
 
     @if ($stocks->isNotEmpty() || $product->warranty_months)

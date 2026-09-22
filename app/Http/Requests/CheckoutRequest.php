@@ -4,14 +4,12 @@ namespace App\Http\Requests;
 
 use App\Enums\DeliveryMethod;
 use App\Enums\PaymentMethod;
+use App\Http\Requests\Concerns\GuardsAgainstBots;
 use App\Rules\Inn;
 use App\Rules\RussianPhone;
 use App\Services\Settings\Settings;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Validator;
 
 /**
  * Форма оформления заявки (ТЗ §10.2, §10.4): контакты, получение, оплата, согласие на
@@ -21,12 +19,7 @@ use Illuminate\Validation\Validator;
  */
 class CheckoutRequest extends FormRequest
 {
-    /**
-     * The trap field: people never see it, robots fill it.
-     */
-    public const string HONEYPOT = 'website';
-
-    public const int MIN_SECONDS = 3;
+    use GuardsAgainstBots;
 
     public function authorize(): bool
     {
@@ -92,17 +85,11 @@ class CheckoutRequest extends FormRequest
     }
 
     /**
-     * @return list<callable(Validator): void>
+     * @return list<callable>
      */
     public function after(): array
     {
-        return [
-            function (Validator $validator): void {
-                if (filled($this->input(self::HONEYPOT)) || ! $this->openedLongEnoughAgo()) {
-                    $validator->errors()->add('form', __('shop.checkout.errors.too_fast'));
-                }
-            },
-        ];
+        return [$this->botCheck(__('shop.checkout.errors.too_fast'))];
     }
 
     protected function prepareForValidation(): void
@@ -112,19 +99,5 @@ class CheckoutRequest extends FormRequest
             'inn' => is_string($this->input('inn')) ? preg_replace('/\s+/', '', $this->input('inn')) : $this->input('inn'),
             'is_legal_entity' => $this->boolean('is_legal_entity'),
         ]);
-    }
-
-    /**
-     * The form carries the moment it was opened, encrypted: a robot sends it in a blink.
-     */
-    private function openedLongEnoughAgo(): bool
-    {
-        try {
-            $opened = (int) Crypt::decryptString((string) $this->input('started'));
-        } catch (DecryptException) {
-            return false;
-        }
-
-        return now()->getTimestamp() - $opened >= self::MIN_SECONDS;
     }
 }
