@@ -4,7 +4,12 @@
 
 **Стек:** Laravel 13 · Livewire 4 · Filament 5 · Tailwind 4 · MariaDB 11.8 · PHP 8.4.
 
-**Статус:** спринт 2 выполнен, идёт спринт 3. Есть импорт каталога и остатков Росхолода, админка с двухфакторной аутентификацией и управлением каталогом, а также витрина по утверждённым макетам: главная, каталог, листинг с фильтрами, карточка товара и поиск. Корзина и заявка — спринт 4.
+**Статус:** спринты 0–4 выполнены, идёт спринт 5 — оптовики и личный кабинет. Уже есть:
+- импорт каталога и остатков Росхолода;
+- админка с двухфакторной аутентификацией, каталогом, заявками и лидами;
+- витрина по утверждённым макетам: каталог, поиск, карточка товара, бренды, сравнение, корзина, оформление заявки и короткие заявки.
+
+Тестовый сайт — https://test.gastrosnab.ru.
 
 ## Документы
 
@@ -134,3 +139,62 @@ npm run build
 - **PHP 8.3.** Папку `C:\Users\TLT-1\php-portable` для этого проекта не использовать: версия и модули не подходят.
 - **Модули PHP.** Файл `devtools\php-8.4\php.ini` сделан из `php.ini-development`: включены `curl`, `exif`, `fileinfo`, `gd`, `intl`, `mbstring`, `openssl`, `pdo_mysql`, `zip`; `date.timezone = Europe/Moscow`; `memory_limit = 512M`.
 - **Debugbar.** Работает только при `APP_DEBUG=true`, то есть локально.
+
+## Сервер
+
+Магазин «Гастроснаб» работает на VPS Спринтбокса `212.116.115.150` в своих контейнерах Docker (ТЗ §17). Сервер общий с другими сайтами, их программы магазин не затрагивает.
+
+| Что | Где |
+|---|---|
+| Тестовый сайт | https://test.gastrosnab.ru — закрыт от поисковиков, письма пишутся в журнал |
+| Код | `/opt/gastrosnab/src`, прежняя версия — `/opt/gastrosnab/src.old` |
+| Настройки | `/opt/gastrosnab/.env`, права 600, в git не попадает |
+| Контейнеры | `app`, `web`, `queue-default`, `queue-imports`, `scheduler`, `mariadb`, `redis` |
+| Данные | тома Docker `gastrosnab_db`, `gastrosnab_redis`, `gastrosnab_storage` |
+| Фото и счета | S3 Спринтхоста: бакет `s3-968732`, папка `gastrosnab/` (ТЗ §17.9) |
+| nginx сервера | `/etc/nginx/sites-available/test.gastrosnab.ru` из `docker/host-nginx/`, HTTPS — certbot |
+
+### Доступ
+
+В `~/.ssh/config` компьютера разработки — хост `gastrosnab`: пользователь root, порт 2222, ключ `~/.ssh/gastrosnab_deploy`. Пароли не используются.
+
+### Выложить новую версию
+
+В Git Bash на компьютере разработки:
+
+```bash
+git archive --format=tar.gz -o /tmp/gastrosnab.tar.gz HEAD && scp /tmp/gastrosnab.tar.gz gastrosnab:/tmp/ && ssh gastrosnab 'tar -xzOf /tmp/gastrosnab.tar.gz docker/deploy.sh | bash -s /tmp/gastrosnab.tar.gz'
+```
+
+- **Что уходит на сервер.** В архив попадает только закоммиченный код.
+- **Сколько ждать.** Образ собирается несколько минут, сайт в это время работает. Закрыт он только на время миграций.
+- **Первая выкладка.** Команда та же: скрипт выкладки берётся из архива.
+
+### Служебные команды на сервере
+
+`docker/dc` — это `docker compose` с настройками магазина:
+
+```bash
+/opt/gastrosnab/src/docker/dc ps
+/opt/gastrosnab/src/docker/dc logs --tail 100 app
+/opt/gastrosnab/src/docker/dc exec app php artisan about
+/opt/gastrosnab/src/docker/dc exec app php artisan supplier:import rosholod.catalog_xml
+```
+
+### Первичная установка
+
+1. **`/opt/gastrosnab/.env`** по образцу `.env.example`:
+   - `APP_KEY=base64:` и `DB_PASSWORD` генерируются на сервере через `openssl rand`;
+   - `DB_HOST=mariadb`, `REDIS_HOST=redis`;
+   - `SESSION_DRIVER`, `CACHE_STORE`, `QUEUE_CONNECTION` = `redis`;
+   - `MEDIA_DISK=s3`, `INVOICES_DISK=s3-private`;
+   - права — `chmod 600`.
+2. **Выкладка** — командой выше.
+3. **Справочники:** `/opt/gastrosnab/src/docker/dc exec app php artisan db:seed --class=ProductionSeeder --force`.
+4. **Ключи S3.** Заказчик сам запускает `/opt/gastrosnab/src/docker/set-s3-keys.sh` в консоли сервера. Скрипт спрашивает ключи и перезапускает контейнеры.
+5. **nginx сервера и HTTPS:**
+   - скопировать `docker/host-nginx/test.gastrosnab.ru.conf` в `/etc/nginx/sites-available/test.gastrosnab.ru`;
+   - включить ссылкой в `sites-enabled`;
+   - `nginx -t && systemctl reload nginx`;
+   - `certbot --nginx -d test.gastrosnab.ru`.
+6. **Администратор.** Заказчик запускает `/opt/gastrosnab/src/docker/dc exec app php artisan make:filament-user` и вводит имя, почту и пароль. Затем роль повышается: `dc exec app php artisan tinker --execute="App\Models\User::where('email', '<почта>')->update(['role' => 'admin'])"`. При первом входе в `/manage` админка попросит настроить двухфакторную аутентификацию.

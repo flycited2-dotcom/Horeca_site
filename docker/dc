@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# docker compose магазина с его настройками — для служебных команд на сервере:
+#
+#   /opt/gastrosnab/src/docker/dc ps
+#   /opt/gastrosnab/src/docker/dc exec app php artisan about
+exec docker compose --project-name gastrosnab --env-file /opt/gastrosnab/.env -f /opt/gastrosnab/src/docker/compose.yml "$@"

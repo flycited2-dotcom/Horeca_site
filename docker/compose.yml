@@ -1,0 +1,97 @@
+# Магазин «Гастроснаб» на сервере (ТЗ §17): сайт на PHP-FPM, nginx со статикой, две очереди,
+# планировщик, MariaDB 11.8 и Redis 7 — в своих контейнерах, программы других сайтов сервера
+# не затрагиваются. Запуск и обновление — docker/deploy.sh. Снаружи открыт только
+# 127.0.0.1:8090 — для nginx сервера с HTTPS. Журналы контейнеров ограничены: диск общий.
+
+name: gastrosnab
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
+x-app: &app
+  image: gastrosnab-app
+  pull_policy: never
+  restart: unless-stopped
+  env_file: ../.env
+  volumes:
+    - storage:/var/www/html/storage
+  depends_on:
+    mariadb:
+      condition: service_healthy
+    redis:
+      condition: service_started
+  logging: *logging
+
+services:
+  app:
+    <<: *app
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: app
+
+  web:
+    image: gastrosnab-web
+    pull_policy: never
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:80"
+    depends_on:
+      - app
+    logging: *logging
+
+  queue-default:
+    <<: *app
+    command: ["php", "artisan", "queue:work", "redis", "--queue=default", "--sleep=3", "--tries=3", "--timeout=120", "--max-time=3600"]
+    stop_grace_period: 180s
+
+  queue-imports:
+    <<: *app
+    command: ["php", "-d", "memory_limit=512M", "artisan", "queue:work", "redis-imports", "--queue=imports", "--sleep=3", "--tries=1", "--timeout=3600", "--max-time=7200"]
+    stop_grace_period: 3600s
+
+  scheduler:
+    <<: *app
+    command: ["php", "artisan", "schedule:work"]
+
+  mariadb:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --innodb-buffer-pool-size=256M
+      - --max-connections=60
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    logging: *logging
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "128mb", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redis:/data
+    logging: *logging
+
+volumes:
+  storage:
+  db:
+  redis:
