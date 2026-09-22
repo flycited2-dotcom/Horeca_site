@@ -29,83 +29,72 @@
 - **Отличия Windows от Linux** (переводы строк, регистр в именах файлов) закрываются `.gitattributes` и проверкой на стейджинге сервера.
 - Точные команды запуска — в README, раздел «Локальная разработка» (спринт 0).
 
-## 17.1 Требования к серверу
+## 17.1 Сервер
 
-- **ОС и панель:** Ubuntu 22.04/24.04, HestiaCP 1.10+.
-- **PHP 8.4-FPM** с расширениями: `bcmath`, `intl`, `gd`, `zip`, `mbstring`, `xml`, `xmlreader`, `curl`, `pdo_mysql`, `opcache`, `redis`, `exif`, `fileinfo`.
-- **Сервисы и инструменты:** MariaDB 11.8 (ставится HestiaCP по умолчанию) или MySQL 8.4, Redis 7, Node 24 (сборка), Composer 2, Git, Supervisor.
-- **Расположение:** сервер в РФ (§15.10).
-- **Память:** не меньше 2 ГБ. Если меньше, ассеты собираются локально и загружаются в `public/build`.
+**Изменено 22.09.2026 (v1.12)** после осмотра сервера. VPS Спринтбокса `212.116.115.150` (панель `cp.sprintbox.ru`) общий с другими сайтами заказчика: Ubuntu 24.04, 4 ядра, 5,8 ГБ памяти, диск 67 ГБ. Панели HestiaCP нет — её ставят только на чистый сервер. Сайты настроены через nginx из Ubuntu и certbot, часть проектов работает в Docker. На сервере нет PHP 8.4, MariaDB, системного Redis и Supervisor.
 
-## 17.2 Домен
+**Магазин — в своих контейнерах Docker** (`docker/compose.yml`, проект `gastrosnab`), системные программы сервера не меняются:
 
-Web-домен создаётся в HestiaCP. Document root указывает на `public/` симлинком:
+| Контейнер | Что внутри |
+|---|---|
+| `app` | PHP 8.4-FPM: `bcmath`, `intl`, `gd` с WebP, `zip`, `mbstring`, `xml`, `xmlreader`, `curl`, `pdo_mysql`, `opcache`, `redis`, `exif`, `fileinfo`, `pcntl` |
+| `web` | nginx 1.27 со статикой из `public`, остальное — в `app` |
+| `queue-default`, `queue-imports` | очереди (§17.4) |
+| `scheduler` | планировщик (§17.5) |
+| `mariadb` | MariaDB 11.8, буфер InnoDB 256 МБ |
+| `redis` | Redis 7 с журналом на диске, до 128 МБ, без вытеснения — очереди не теряются |
 
-```
-cd /home/<user>/web/<domain>
-rm -rf public_html
-ln -s /home/<user>/web/<domain>/app/public public_html
-```
+- **Снаружи** открыт только `127.0.0.1:8090` — в него ходит nginx сервера (§17.2).
+- **Образ** собирается на сервере. Стили собираются в стадии сборки образа, Node на сервер не ставится.
+- **Расположение:** код — `/opt/gastrosnab/src`, настройки — `/opt/gastrosnab/.env` (права 600, в git не попадает), данные — тома Docker `gastrosnab_db`, `gastrosnab_redis`, `gastrosnab_storage`.
+- **Ресурсы:** магазин рассчитан примерно на 1 ГБ памяти (PHP-FPM до 6 процессов). Журналы контейнеров — не больше трёх файлов по 10 МБ: диск общий.
+- **Доступ по SSH** — только ключом, пароли в работе не используются.
+- **Расположение сервера:** РФ (§15.10).
 
-Другой вариант — собственный шаблон nginx с `root …/app/public`. Код проекта — в `/home/<user>/web/<domain>/app`.
+## 17.2 Домены и HTTPS
+
+- **Домены:** `gastrosnab.ru` — главный, `гастроснаб.рф` (`xn--80aadf5cfnhch.xn--p1ai`) и `www` отдают 301 на `https://gastrosnab.ru`. DNS — у Спринтхоста.
+- **Тестовый сайт** — `test.gastrosnab.ru`: `APP_ENV=staging`, заголовок `X-Robots-Tag: noindex, nofollow`, письма только в журнал.
+- **nginx сервера:** конфиг из `docker/host-nginx/` кладётся в `/etc/nginx/sites-available/`, HTTPS выпускает `certbot --nginx -d <домен>`.
+- **Адрес покупателя** nginx сервера передаёт в `X-Forwarded-For` заменой, а не дописыванием, поэтому подделать его снаружи нельзя. Приложение верит заголовкам `X-Forwarded-*` только из частных сетей (`bootstrap/app.php`): от этого зависят ограничения частоты форм (§15).
 
 ## 17.3 Первичная установка
 
-```
-git clone <repo> app && cd app
-composer install --no-dev --optimize-autoloader
-cp .env.example .env && php artisan key:generate
-# заполнить .env: APP_URL, APP_TIMEZONE=Europe/Moscow, DB_*, REDIS_*, MAIL_*, TELEGRAM_*
-php artisan migrate --force
-php artisan db:seed --class=ProductionSeeder
-php artisan storage:link
-npm ci && npm run build
-php artisan optimize
-chown -R <user>:<user> storage bootstrap/cache
-```
+1. На сервере — `/opt/gastrosnab/.env` по образцу `.env.example`:
+   - `APP_KEY` и `DB_PASSWORD` генерируются на месте (`openssl rand`);
+   - `DB_HOST=mariadb`, `REDIS_HOST=redis`;
+   - сессии, кэш и очереди — `redis`;
+   - `MEDIA_DISK=s3`, `INVOICES_DISK=s3-private`.
+2. Первая выкладка (§17.7).
+3. `php artisan db:seed --class=ProductionSeeder --force` в контейнере `app`.
+4. Ключи S3 — `docker/set-s3-keys.sh`: заказчик вводит их сам на сервере (§17.9).
+5. nginx сервера и HTTPS (§17.2).
+6. Администратор создаётся в контейнере `app`, пароль вводит сам заказчик.
+
+Точные команды — в README, раздел «Сервер».
 
 ## 17.4 Очереди
 
-Две программы supervisor: импорт не занимает воркеры уведомлений.
+Два контейнера: импорт не занимает воркеры уведомлений.
 
-```
-[program:horeca-imports]
-command=php /home/<user>/web/<domain>/app/artisan queue:work redis-imports --queue=imports --sleep=3 --tries=1 --timeout=3600 --max-time=7200
-user=<user>
-numprocs=1
-autostart=true
-autorestart=true
-stopwaitsecs=3600
-stdout_logfile=/home/<user>/web/<domain>/app/storage/logs/worker-imports.log
-
-[program:horeca-default]
-command=php /home/<user>/web/<domain>/app/artisan queue:work redis --queue=default --sleep=3 --tries=3 --timeout=120 --max-time=3600
-user=<user>
-numprocs=2
-autostart=true
-autorestart=true
-stopwaitsecs=180
-stdout_logfile=/home/<user>/web/<domain>/app/storage/logs/worker-default.log
-```
+| Контейнер | Команда | Ожидание остановки |
+|---|---|---|
+| `queue-imports` | `php -d memory_limit=512M artisan queue:work redis-imports --queue=imports --sleep=3 --tries=1 --timeout=3600 --max-time=7200` | 3600 с |
+| `queue-default` | `php artisan queue:work redis --queue=default --sleep=3 --tries=3 --timeout=120 --max-time=3600` | 180 с |
 
 - **`redis-imports`** — отдельное соединение в `config/queue.php` с `retry_after = 3700`. Параметр больше таймаута задачи, иначе долгий импорт будет запущен повторно.
 - **Без Redis:** `QUEUE_CONNECTION=database` и соединение `database-imports` с тем же `retry_after`. Конфиг обязан работать в обоих режимах.
+- Контейнеры перезапускаются сами (`restart: unless-stopped`); при выкладке их пересоздаёт `docker compose up`.
 
-## 17.5 Cron и расписание
+## 17.5 Расписание
 
-В HestiaCP → Cron:
-
-```
-* * * * * cd /home/<user>/web/<domain>/app && php artisan schedule:run >> /dev/null 2>&1
-```
-
-Расписание в `routes/console.php`:
+Контейнер `scheduler` выполняет `php artisan schedule:work` — это замена строки cron. Расписание — в `routes/console.php`:
 
 | Задача | Когда |
 |---|---|
 | профили импорта | по `schedule` каждого профиля |
 | `popularity:recalculate` | ежедневно в 03:00 |
-| бэкап БД (`mariadb-dump` + gzip, 14 копий) и копия в удалённое хранилище (бэкапы HestiaCP на SFTP или S3-совместимое хранилище в РФ) | ежедневно в 03:30 |
+| бэкап БД (`mariadb-dump` + gzip, 14 копий) и внешняя копия. Бакет S3 сайта для бэкапов не используется (§17.9), место копии выбирается к спринту 8 | ежедневно в 03:30 |
 | `sitemap:generate` | ежедневно в 04:00 |
 | `carts:prune` (просроченные гостевые корзины) | ежедневно |
 | очистка файлов импорта сверх 30 на профиль | ежедневно |
@@ -114,25 +103,48 @@ stdout_logfile=/home/<user>/web/<domain>/app/storage/logs/worker-default.log
 
 ## 17.6 Почта
 
-- В HestiaCP: почтовый домен, ящик `shop@<domain>`, SPF и DKIM.
-- В `.env`: `MAIL_MAILER=smtp`, `MAIL_HOST=localhost`, порт 587, TLS.
-- Проверка: `php artisan mail:test {email}` отправляет тестовое письмо.
+- **Отправитель:** ящик `shop@gastrosnab.ru` с SPF и DKIM. На сервере уже работают Postfix и OpenDKIM для других доменов заказчика. Подключить к ним `gastrosnab.ru` или взять почтовый сервис в РФ — решается в спринте 8.
+- **`.env`:** `MAIL_MAILER=smtp`, адрес и порт выбранного сервера, TLS. На тестовом сайте — `MAIL_MAILER=log`.
+- **Проверка:** `php artisan mail:test {email}` отправляет тестовое письмо.
 
 ## 17.7 Деплой обновлений
 
-Скрипт `deploy.sh` в корне:
+С компьютера разработки одной командой в Git Bash. В архив попадает только закоммиченный код, скрипт выкладки берётся из того же архива — команда одна и для первой выкладки:
 
 ```
-php artisan down --render=errors::503
-git pull
-composer install --no-dev -o
-npm ci && npm run build        # или загрузка собранного public/build при нехватке памяти
-php artisan migrate --force
-php artisan optimize
-php artisan queue:restart
-php artisan up
+git archive --format=tar.gz -o /tmp/gastrosnab.tar.gz HEAD \
+  && scp /tmp/gastrosnab.tar.gz gastrosnab:/tmp/ \
+  && ssh gastrosnab 'tar -xzOf /tmp/gastrosnab.tar.gz docker/deploy.sh | bash -s /tmp/gastrosnab.tar.gz'
 ```
+
+`docker/deploy.sh` на сервере:
+1. Распаковывает код в `src.new` и собирает новый образ — сайт в это время работает на прежнем.
+2. `php artisan down --render=errors::503`.
+3. Меняет `src` на `src.new`, прежний код остаётся в `src.old` до следующей выкладки.
+4. `docker compose up -d` пересоздаёт контейнеры. Кэш настроек, маршрутов и шаблонов собирает сам контейнер `app` при запуске (`php artisan optimize`).
+5. `php artisan migrate --force`, затем `php artisan up`.
+6. Удаляет прежние образы магазина. Образы других проектов не трогаются.
+
+Служебные команды на сервере — через `docker/dc`, это `docker compose` с настройками магазина: `/opt/gastrosnab/src/docker/dc exec app php artisan about`.
 
 ## 17.8 Проверка восстановления
 
 Раз в месяц последний бэкап разворачивается в отдельную базу `horeca_restore_check` по инструкции из README, результат фиксируется. До запуска проверка выполняется один раз обязательно.
+
+## 17.9 Хранение файлов
+
+**Решение заказчика 22.09.2026 (v1.12).** Диск сервера почти заполнен, поэтому файлы магазина лежат в S3-хранилище Спринтхоста (РФ, Санкт-Петербург):
+- эндпоинт `https://s3.spb.sprinthost.ru`, регион `spb`;
+- бакет `s3-968732` на 100 ГБ, общий для сайтов сервера; у магазина своя папка `gastrosnab/` (`AWS_ROOT`).
+
+| Что | Диск | Доступ |
+|---|---|---|
+| Фото товаров во всех размерах (§5) | `s3` (`MEDIA_DISK`) | открыты для чтения: `https://s3.spb.sprinthost.ru/s3-968732/gastrosnab/…` |
+| Счета PDF | `s3-private` (`INVOICES_DISK`) | закрыты, отдаются только после проверки прав (§15.7) |
+
+- **На сервере остаются:** база (с полным каталогом — около 30 МБ), журналы, временные файлы загрузок и файлы импорта. Импорт читает файл с диска, файлов не больше 30 на профиль.
+- **Библиотека** — `league/flysystem-aws-s3-v3` (§3). Из AWS SDK при установке оставлен только S3.
+- **Контрольные суммы** запросов — только обязательные (`when_required`): новые версии AWS SDK добавляют их всегда, а S3-совместимые хранилища понимают не все.
+- **Ключи доступа** хранятся только в `.env` сервера и вписываются скриптом `docker/set-s3-keys.sh`, без чата и без git.
+- **Бэкапы в бакет не кладутся** — решение заказчика. Внешняя копия бэкапа обязательна (§19), место для неё выбирается к спринту 8.
+- **Локально** фото лежат на диске `public`, счета — на `local`.

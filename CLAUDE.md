@@ -12,7 +12,7 @@
 ## Стек
 
 PHP 8.4 · Laravel 13 · Livewire 4 (Alpine в составе) · Filament 5 · Tailwind 4 · MariaDB 11.8 LTS (совместимость с MySQL 8.4) · Redis 7 · Pest 5 · Node 24 LTS + Vite 8 (только сборка).
-Деплой: Ubuntu VPS в РФ + HestiaCP, PHP-FPM, supervisor с двумя очередями: `imports` и `default`.
+Деплой: Ubuntu VPS в РФ, магазин в своих контейнерах Docker (PHP-FPM, nginx, MariaDB, Redis, две очереди `imports` и `default`, планировщик), фото и счета — в S3 (ТЗ §17).
 
 Это свежие мажорные версии. API Filament 5, Livewire 4, Laravel 13 и Tailwind 4 сверяй с `vendor/`, `node_modules/` и официальной документацией, а не с памятью.
 
