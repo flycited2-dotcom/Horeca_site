@@ -36,8 +36,9 @@ return [
     'default' => env('FILESYSTEM_DISK', 'local'),
 
     /*
-    | Where the invoices attached to orders are kept (ТЗ §12, §15): a private disk,
-    | «local» on a developer machine and «s3-private» on the server.
+    | Where the invoices attached to orders are kept (ТЗ §12, §15): a private disk.
+    | «local» while the store has no private bucket of its own — files with customer
+    | data must not live in a bucket that the provider serves to everyone.
     */
 
     'invoices' => env('INVOICES_DISK', 'local'),
@@ -76,7 +77,13 @@ return [
 
         's3' => $s3 + ['visibility' => 'public'],
 
-        's3-private' => $s3 + ['visibility' => 'private'],
+        // Закрытые файлы: отдельный приватный бакет. В публичном бакете права на файле
+        // не спасают — провайдер отдаёт такой бакет целиком, это проверено на Спринтхосте.
+        's3-private' => [
+            'bucket' => env('AWS_PRIVATE_BUCKET') ?: env('AWS_BUCKET'),
+            'root' => env('AWS_PRIVATE_ROOT') ?: env('AWS_ROOT', ''),
+            'visibility' => 'private',
+        ] + $s3,
 
     ],
 
