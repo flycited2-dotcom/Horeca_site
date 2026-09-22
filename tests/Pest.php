@@ -1,14 +1,17 @@
 <?php
 
 use App\Enums\ImportTrigger;
+use App\Enums\UserRole;
 use App\Models\Cart;
 use App\Models\ImportProfile;
 use App\Models\ImportRun;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Models\User;
 use App\Services\Cart\CartStore;
 use App\Services\Supplier\Import\ImportRunner;
 use Database\Seeders\ProductionSeeder;
+use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Facades\Http;
@@ -97,4 +100,16 @@ function putInCart(Product $product, int $quantity = 1): void
 {
     test()->post(route('cart.add', $product->id), ['quantity' => $quantity]);
     test()->withCookie(CartStore::COOKIE, (string) Cart::query()->latest('id')->value('session_id'));
+}
+
+/**
+ * A manager or an administrator with two-factor authentication set up: the admin panel
+ * lets only such staff in (TZ §12).
+ */
+function staffUser(UserRole $role = UserRole::Manager): User
+{
+    return User::factory()->create([
+        'role' => $role,
+        'app_authentication_secret' => app(AppAuthentication::class)->generateSecret(),
+    ]);
 }

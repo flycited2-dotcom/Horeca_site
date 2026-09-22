@@ -60,7 +60,7 @@ class CheckoutController extends Controller
     public function store(CheckoutRequest $request, PlaceOrder $place): RedirectResponse
     {
         $data = $request->validated();
-        $repeat = Order::query()->where('idempotency_key', $data['idempotency_key'])->exists();
+        $repeat = Order::withTrashed()->where('idempotency_key', $data['idempotency_key'])->exists();
         $limits = ['checkout:ip:'.$request->ip() => self::PER_IP, 'checkout:phone:'.Phone::digits($data['phone']) => self::PER_PHONE];
 
         if (! $repeat) {

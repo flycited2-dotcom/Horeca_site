@@ -17,21 +17,11 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\PriceTier;
 use App\Models\Product;
-use App\Models\User;
 use App\Support\Money;
 use Filament\Actions\Testing\TestAction;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use OpenSpout\Reader\XLSX\Reader;
-
-function staffUser(UserRole $role = UserRole::Manager): User
-{
-    return User::factory()->create([
-        'role' => $role,
-        'app_authentication_secret' => app(AppAuthentication::class)->generateSecret(),
-    ]);
-}
 
 beforeEach(function () {
     $this->actingAs(staffUser());

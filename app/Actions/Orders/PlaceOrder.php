@@ -126,6 +126,7 @@ final class PlaceOrder
 
     private function existing(string $key): ?Order
     {
-        return Order::query()->where('idempotency_key', $key)->first();
+        // A deleted order still owns its key: the same form must not create it again.
+        return Order::withTrashed()->where('idempotency_key', $key)->first();
     }
 }

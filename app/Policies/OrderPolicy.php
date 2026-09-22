@@ -26,4 +26,17 @@ class OrderPolicy
     {
         return $user->isAdmin();
     }
+
+    /**
+     * An order deleted by mistake comes back the same way it went: by an administrator.
+     */
+    public function restore(User $user, Order $order): bool
+    {
+        return $user->isAdmin();
+    }
+
+    public function forceDelete(User $user, Order $order): bool
+    {
+        return false;
+    }
 }

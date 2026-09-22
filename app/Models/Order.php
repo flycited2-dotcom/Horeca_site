@@ -13,9 +13,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Status, manager fields, invoice and payment data change only through actions.
+ * Status, manager fields, invoice and payment data change only through actions. Only an
+ * administrator deletes an order, and only softly (TZ §12).
  */
 #[Fillable([
     'number', 'idempotency_key', 'user_id', 'company_id', 'type', 'customer_name', 'phone', 'email',
@@ -26,6 +28,8 @@ class Order extends Model
 {
     /** @use HasFactory<OrderFactory> */
     use HasFactory;
+
+    use SoftDeletes;
 
     /**
      * @var array<string, mixed>
