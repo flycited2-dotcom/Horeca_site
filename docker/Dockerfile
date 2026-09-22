@@ -6,7 +6,8 @@
 
 FROM php:8.4-fpm-alpine AS php
 
-# Модуль redis — архивом нужной версии с повторами: сбой каталога pecl не должен ломать выкладку.
+# Модуль redis — архивом нужной версии: pecl.php.net с сервера отвечает через раз, поэтому
+# попытки повторяются при любой ошибке, а запасной источник — тот же релиз на GitHub.
 ARG PHPREDIS_VERSION=6.3.0
 
 RUN apk add --no-cache icu-libs icu-data-full libzip libpng libjpeg-turbo libwebp freetype \
@@ -14,8 +15,12 @@ RUN apk add --no-cache icu-libs icu-data-full libzip libpng libjpeg-turbo libweb
         libjpeg-turbo-dev libwebp-dev freetype-dev linux-headers \
     && docker-php-source extract \
     && mkdir -p /usr/src/php/ext/redis \
-    && curl -fsSL --retry 5 --retry-delay 3 "https://pecl.php.net/get/redis-${PHPREDIS_VERSION}.tgz" \
-        | tar -xz -C /usr/src/php/ext/redis --strip-components=1 \
+    && { curl -fsSL --connect-timeout 20 --retry 5 --retry-all-errors --retry-delay 3 -o /tmp/phpredis.tgz \
+            "https://pecl.php.net/get/redis-${PHPREDIS_VERSION}.tgz" \
+        || curl -fsSL --connect-timeout 20 --retry 5 --retry-all-errors --retry-delay 3 -o /tmp/phpredis.tgz \
+            "https://codeload.github.com/phpredis/phpredis/tar.gz/refs/tags/${PHPREDIS_VERSION}"; } \
+    && tar -xzf /tmp/phpredis.tgz -C /usr/src/php/ext/redis --strip-components=1 \
+    && rm /tmp/phpredis.tgz \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" bcmath exif gd intl opcache pcntl pdo_mysql redis zip \
     && docker-php-source delete \
