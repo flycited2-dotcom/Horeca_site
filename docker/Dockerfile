@@ -6,15 +6,20 @@
 
 FROM php:8.4-fpm-alpine AS php
 
+# Модуль redis — архивом нужной версии с повторами: сбой каталога pecl не должен ломать выкладку.
+ARG PHPREDIS_VERSION=6.3.0
+
 RUN apk add --no-cache icu-libs icu-data-full libzip libpng libjpeg-turbo libwebp freetype \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev libzip-dev libpng-dev \
         libjpeg-turbo-dev libwebp-dev freetype-dev linux-headers \
+    && docker-php-source extract \
+    && mkdir -p /usr/src/php/ext/redis \
+    && curl -fsSL --retry 5 --retry-delay 3 "https://pecl.php.net/get/redis-${PHPREDIS_VERSION}.tgz" \
+        | tar -xz -C /usr/src/php/ext/redis --strip-components=1 \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install -j"$(nproc)" bcmath exif gd intl opcache pcntl pdo_mysql zip \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && apk del .build-deps \
-    && rm -rf /tmp/pear
+    && docker-php-ext-install -j"$(nproc)" bcmath exif gd intl opcache pcntl pdo_mysql redis zip \
+    && docker-php-source delete \
+    && apk del .build-deps
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/zz-gastrosnab.ini
