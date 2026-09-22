@@ -80,4 +80,5 @@ FROM nginx:1.27-alpine AS web
 LABEL project=gastrosnab
 
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY docker/nginx/maintenance.html /usr/share/nginx/html/maintenance.html
 COPY --from=app /var/www/html/public /var/www/html/public

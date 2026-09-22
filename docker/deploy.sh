@@ -45,6 +45,9 @@ if [ -d "$base/src" ]; then
 fi
 mv "$release" "$base/src"
 
+# Страница «Обновляем сайт» для nginx сервера: он показывает её, пока контейнеры перезапускаются.
+install -D -m 644 "$base/src/docker/nginx/maintenance.html" /var/www/gastrosnab/maintenance.html
+
 # --wait: миграции и открытие сайта — только когда PHP-FPM готов, иначе nginx отдаст 502.
 compose "$base/src" up -d --wait --remove-orphans
 compose "$base/src" exec -T app php artisan migrate --force
