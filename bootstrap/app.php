@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // On the server the request passes the nginx of the host and the nginx of the store
+        // container (TZ §17): the address of the buyer and HTTPS come in X-Forwarded-*
+        // headers, and only these private networks may send them.
+        $middleware->trustProxies(at: ['127.0.0.1', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']);
         $middleware->web(append: [RememberUtm::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
