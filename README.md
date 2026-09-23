@@ -186,7 +186,7 @@ git archive --format=tar.gz -o /tmp/gastrosnab.tar.gz HEAD && scp /tmp/gastrosna
 1. **`/opt/gastrosnab/.env`** по образцу `.env.example`:
    - `APP_KEY=base64:` и `DB_PASSWORD` генерируются на сервере через `openssl rand`;
    - `DB_HOST=mariadb`, `REDIS_HOST=redis`;
-   - `SESSION_DRIVER`, `CACHE_STORE`, `QUEUE_CONNECTION` = `redis`;
+   - `SESSION_DRIVER`, `CACHE_STORE`, `QUEUE_CONNECTION` = `redis`, `IMPORTS_QUEUE_CONNECTION=redis-imports` — иначе импорт и фото уйдут в очередь, которую никто не слушает;
    - `MEDIA_DISK=s3`, `INVOICES_DISK=s3-private`;
    - права — `chmod 600`.
 2. **Выкладка** — командой выше.

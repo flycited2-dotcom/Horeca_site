@@ -63,7 +63,7 @@
 1. На сервере — `/opt/gastrosnab/.env` по образцу `.env.example`:
    - `APP_KEY` и `DB_PASSWORD` генерируются на месте (`openssl rand`);
    - `DB_HOST=mariadb`, `REDIS_HOST=redis`;
-   - сессии, кэш и очереди — `redis`;
+   - сессии, кэш и очереди — `redis`, очередь импорта — `IMPORTS_QUEUE_CONNECTION=redis-imports`;
    - `MEDIA_DISK=s3`, `INVOICES_DISK=local` (пока нет приватного бакета, §17.9).
 2. Первая выкладка (§17.7).
 3. `php artisan db:seed --class=ProductionSeeder --force` в контейнере `app`.
