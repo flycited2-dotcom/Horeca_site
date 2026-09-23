@@ -14,7 +14,8 @@ use Illuminate\View\View;
 
 /**
  * Вход и выход покупателя на витрине (ТЗ §8; макет — экран 15a). После входа — туда, куда
- * клиент шёл, а гостевые корзина и сравнение переходят в кабинет (слушатели события входа).
+ * клиент шёл, иначе в личный кабинет; гостевые корзина и сравнение переходят в кабинет
+ * (слушатели события входа).
  */
 final class LoginController extends Controller
 {
@@ -44,7 +45,7 @@ final class LoginController extends Controller
         $request->clearAttempts();
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home'))
+        return redirect()->intended(route('account'))
             ->with('notice', ['text' => __('shop.auth.login.welcome', ['name' => $request->user()?->name])]);
     }
 

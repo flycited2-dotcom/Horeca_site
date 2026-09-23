@@ -22,6 +22,14 @@ class OrderPolicy
         return $user->isStaff();
     }
 
+    /**
+     * «Повторить заказ» (TZ §11) fills the customer's own cart: only the customer who placed the order.
+     */
+    public function repeat(User $user, Order $order): bool
+    {
+        return $order->user_id === $user->id;
+    }
+
     public function delete(User $user, Order $order): bool
     {
         return $user->isAdmin();

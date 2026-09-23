@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Mail;
 /**
  * Заявка на опт (ТЗ §13): сообщение в Telegram менеджеров, письмо менеджерам со ссылкой на
  * карточку компании и подтверждение клиенту. Всё — через очередь default: ответ клиенту
- * отправка не держит, падение Telegram или почты заявку не ломает.
+ * отправка не держит, падение Telegram или почты заявку не ломает. Повторная проверка после
+ * смены ИНН или названия в кабинете — только менеджерам: клиент видит итог на странице.
  */
 final class NotifyAboutWholesaleApplication
 {
@@ -34,6 +35,7 @@ final class NotifyAboutWholesaleApplication
             $company,
             $adminUrl,
             $this->settings->boolean('notify.telegram_include_contacts', false),
+            $event->recheck,
         ));
 
         $managers = User::query()
@@ -43,9 +45,11 @@ final class NotifyAboutWholesaleApplication
             ->all();
 
         if ($managers !== []) {
-            Mail::to($managers)->queue(new WholesaleApplicationMail($company, $adminUrl));
+            Mail::to($managers)->queue(new WholesaleApplicationMail($company, $adminUrl, $event->recheck));
         }
 
-        Mail::to($company->email)->queue(new WholesaleReceivedMail($company));
+        if (! $event->recheck) {
+            Mail::to($company->email)->queue(new WholesaleReceivedMail($company));
+        }
     }
 }

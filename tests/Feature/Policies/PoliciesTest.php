@@ -18,6 +18,15 @@ it('lets a customer see only their own orders', function () {
         ->and($owner->can('delete', $order))->toBeFalse();
 });
 
+it('lets only the customer of an order repeat it', function () {
+    $owner = User::factory()->create();
+    $order = Order::factory()->create(['user_id' => $owner->id]);
+
+    expect($owner->can('repeat', $order))->toBeTrue()
+        ->and(User::factory()->create()->can('repeat', $order))->toBeFalse()
+        ->and(User::factory()->manager()->create()->can('repeat', $order))->toBeFalse();
+});
+
 it('lets staff work with any order and only administrators delete', function () {
     $order = Order::factory()->create();
     $manager = User::factory()->manager()->create();

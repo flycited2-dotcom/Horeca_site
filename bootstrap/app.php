@@ -20,6 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // headers, and only these private networks may send them.
         $middleware->trustProxies(at: ['127.0.0.1', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']);
         $middleware->web(append: [RememberUtm::class]);
+        // A signed-in customer who opens the login or registration page goes to the account (TZ §11).
+        $middleware->redirectUsersTo(fn (): string => route('account'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Any 404 first asks the redirects table: the old address of a product matches the

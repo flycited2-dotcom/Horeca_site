@@ -1,4 +1,4 @@
-{{-- Заявка на опт менеджерам (ТЗ §11, §13): реквизиты и контакт таблицей, кнопка в админку. --}}
+{{-- Заявка на опт менеджерам (ТЗ §11, §13) или повторная проверка после смены реквизитов: реквизиты и контакт таблицей, кнопка в админку. --}}
 @php
     $rows = [
         __('admin.company.legal_name') => $company->legal_name,
@@ -12,8 +12,11 @@
     ];
 @endphp
 
-<x-mail.frame :title="__('notifications.wholesale.managers_subject', ['company' => $company->legal_name])" :heading="__('notifications.wholesale.managers_heading')">
-    <p style="margin:0 0 16px 0;">{{ __('notifications.wholesale.managers_intro') }}</p>
+<x-mail.frame
+    :title="__($recheck ? 'notifications.wholesale.recheck_title' : 'notifications.wholesale.managers_subject', ['company' => $company->legal_name])"
+    :heading="__($recheck ? 'notifications.wholesale.recheck_heading' : 'notifications.wholesale.managers_heading')"
+>
+    <p style="margin:0 0 16px 0;">{{ __($recheck ? 'notifications.wholesale.recheck_intro' : 'notifications.wholesale.managers_intro') }}</p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; font-size:14px;">
         @foreach ($rows as $label => $value)

@@ -34,6 +34,8 @@
                     <span class="truncate text-base font-semibold">{{ $shell->customerName }}</span>
                     <span class="truncate text-sm text-steel-500">{{ $shell->customerEmail }}</span>
                 </p>
+                <a href="{{ route('account') }}" class="{{ $menuItem }}">{{ __('shop.account.menu') }}</a>
+                <a href="{{ route('account.orders') }}" class="{{ $menuItem }}">{{ __('shop.account.menu_orders') }}</a>
                 <form method="post" action="{{ route('logout') }}" class="border-t border-line-soft pt-1">
                     @csrf
                     <button type="submit" class="{{ $menuItem }}">{{ __('shop.auth.logout') }}</button>

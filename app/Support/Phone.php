@@ -32,4 +32,25 @@ final class Phone
 
         return sprintf('+7 %s %s-%s-%s', substr($digits, 0, 3), substr($digits, 3, 3), substr($digits, 6, 2), substr($digits, 8, 2));
     }
+
+    /**
+     * The shop phones from the settings as links: the manager may enter one phone, several
+     * separated by commas, or a list.
+     *
+     * @return list<array{label: string, href: string}>
+     */
+    public static function links(mixed $value): array
+    {
+        $phones = is_array($value) ? $value : preg_split('/[,;\n]+/', is_string($value) ? $value : '');
+
+        $result = [];
+
+        foreach ($phones ?: [] as $phone) {
+            if (is_string($phone) && trim($phone) !== '') {
+                $result[] = ['label' => trim($phone), 'href' => 'tel:'.preg_replace('/[^+\d]/', '', $phone)];
+            }
+        }
+
+        return $result;
+    }
 }

@@ -27,21 +27,21 @@ it('shows the form to guests and sends a signed-in customer home', function () {
         ->assertSee(route('password.request'), false)
         ->assertSee(route('register'), false);
 
-    $this->actingAs(customerAccount())->get(route('login'))->assertRedirect(route('home'));
+    $this->actingAs(customerAccount())->get(route('login'))->assertRedirect(route('account'));
 });
 
 it('signs in by e-mail or by a phone written any way', function () {
     $user = customerAccount();
 
     $this->post(route('login.store'), ['login' => 'IRINA@kafe.ru', 'password' => 'Kofe-Kruassan-2026'])
-        ->assertRedirect(route('home'))
+        ->assertRedirect(route('account'))
         ->assertSessionHas('notice.text', 'Вы вошли как Ирина Соколова.');
     $this->assertAuthenticatedAs($user);
 
     $this->post(route('logout'))->assertRedirect(route('home'));
     $this->assertGuest();
 
-    $this->post(route('login.store'), ['login' => '8 (978) 123 45 67', 'password' => 'Kofe-Kruassan-2026'])->assertRedirect(route('home'));
+    $this->post(route('login.store'), ['login' => '8 (978) 123 45 67', 'password' => 'Kofe-Kruassan-2026'])->assertRedirect(route('account'));
     $this->assertAuthenticatedAs($user);
     expect($user->refresh()->last_login_at)->not->toBeNull();
 });
@@ -99,7 +99,7 @@ it('keeps the guest cart and comparison after signing in', function () {
     putInCart($product, 2);
     $this->post(route('compare.add', $product->id));
 
-    $this->post(route('login.store'), ['login' => 'irina@kafe.ru', 'password' => 'Kofe-Kruassan-2026'])->assertRedirect(route('home'));
+    $this->post(route('login.store'), ['login' => 'irina@kafe.ru', 'password' => 'Kofe-Kruassan-2026'])->assertRedirect(route('account'));
 
     $cart = Cart::query()->where('user_id', $user->id)->sole();
 
@@ -122,5 +122,7 @@ it('shows «Войти» to a guest and the name with «Выйти» to a custom
         ->get(route('home'))
         ->assertSee('aria-label="Кабинет: Ирина Соколова"', false)
         ->assertSee('irina@kafe.ru')
+        ->assertSee('href="'.route('account').'"', false)
+        ->assertSee('Личный кабинет')
         ->assertSee('action="'.route('logout').'"', false);
 });

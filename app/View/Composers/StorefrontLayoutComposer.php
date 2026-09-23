@@ -11,6 +11,7 @@ use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CategoryTree;
 use App\Services\Compare\CompareList;
 use App\Services\Settings\Settings;
+use App\Support\Phone;
 use App\View\StorefrontShell;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -61,7 +62,7 @@ final class StorefrontLayoutComposer
 
         $view->with('shell', new StorefrontShell(
             siteName: $this->text('site.name') ?? (string) config('app.name'),
-            phones: $this->phones(),
+            phones: Phone::links($this->settings->get('contacts.phones')),
             email: $this->text('contacts.email'),
             schedule: $this->text('contacts.schedule'),
             address: $this->text('contacts.address'),
@@ -84,27 +85,6 @@ final class StorefrontLayoutComposer
         $value = $this->settings->get($key);
 
         return is_string($value) && trim($value) !== '' ? trim($value) : null;
-    }
-
-    /**
-     * The customer may enter one phone, several separated by commas, or a list.
-     *
-     * @return list<array{label: string, href: string}>
-     */
-    private function phones(): array
-    {
-        $value = $this->settings->get('contacts.phones');
-        $phones = is_array($value) ? $value : preg_split('/[,;\n]+/', is_string($value) ? $value : '');
-
-        $result = [];
-
-        foreach ($phones as $phone) {
-            if (is_string($phone) && trim($phone) !== '') {
-                $result[] = ['label' => trim($phone), 'href' => 'tel:'.preg_replace('/[^+\d]/', '', $phone)];
-            }
-        }
-
-        return $result;
     }
 
     /**

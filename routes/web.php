@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AccountCompanyController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AccountOrderController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -52,6 +55,17 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/reset-password', [ResetPasswordController::class, 'store'])->middleware('throttle:10,1')->name('password.store');
 });
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
+
+// Личный кабинет (ТЗ §8, §11): сводка, заявки с повтором и счётом, реквизиты компании.
+Route::middleware('auth')->prefix('account')->group(function (): void {
+    Route::get('/', AccountController::class)->name('account');
+    Route::get('/orders', [AccountOrderController::class, 'index'])->name('account.orders');
+    Route::get('/orders/{order:number}', [AccountOrderController::class, 'show'])->name('account.order');
+    Route::post('/orders/{order:number}/repeat', [AccountOrderController::class, 'repeat'])->middleware('throttle:30,1')->name('account.order.repeat');
+    Route::get('/orders/{order:number}/invoice', [AccountOrderController::class, 'invoice'])->name('account.order.invoice');
+    Route::get('/company', [AccountCompanyController::class, 'edit'])->name('account.company');
+    Route::put('/company', [AccountCompanyController::class, 'update'])->middleware('throttle:10,1')->name('account.company.update');
+});
 
 // «Оптовым клиентам»: лендинг, заявка и её статус (ТЗ §11).
 Route::get('/wholesale', [WholesaleController::class, 'show'])->name('wholesale');
