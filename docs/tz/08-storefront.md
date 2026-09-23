@@ -9,6 +9,7 @@ GET  /catalog/{category:slug}            Листинг категории (с �
 GET  /product/{product:slug}             Карточка товара
 GET  /brands, /brands/{brand:slug}       Бренды
 GET  /search?q=                          Результаты поиска
+GET  /collections/{collection:slug}      Подборка «Соберём кухню под задачу»
 GET  /cart                               Корзина
 GET  /checkout                           Оформление заявки
 POST /checkout                           Создание заявки
