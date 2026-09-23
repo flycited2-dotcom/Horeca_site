@@ -1,4 +1,4 @@
-<x-layouts.app :title="$category->meta_title ?: $category->name" :description="$category->meta_description">
+<x-layouts.app :meta="$meta">
     <x-catalog.breadcrumbs :category="$category" />
 
     <div class="mt-3">

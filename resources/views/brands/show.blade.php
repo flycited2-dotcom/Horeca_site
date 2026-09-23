@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('shop.brands.meta_title', ['brand' => $brand->name])" :description="$brand->description ? \Illuminate\Support\Str::limit(trim($brand->description), 160) : null">
+<x-layouts.app :meta="$meta">
     <x-catalog.breadcrumbs :brand="$brand" />
 
     <div class="mt-3">

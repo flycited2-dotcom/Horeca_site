@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'noindex' => false])
+@props(['title' => null, 'description' => null, 'noindex' => false, 'meta' => null])
 
 {{--
     Каркас витрины (макет, экраны 5, 10 и 14): служебная полоса, шапка, ряд корневых
@@ -13,12 +13,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>document.documentElement.classList.add('js')</script>
-    <title>{{ $title ? $title.' | '.$shell->siteName : $shell->siteName }}</title>
-    @if ($description)
-        <meta name="description" content="{{ $description }}">
+    {{-- Страницы каталога передают готовое App\Services\Seo\Meta (ТЗ §14), служебные — заголовок. --}}
+    <title>{{ $meta?->title ?? ($title ? $title.' | '.$shell->siteName : $shell->siteName) }}</title>
+    @if ($meta?->description ?? $description)
+        <meta name="description" content="{{ $meta?->description ?? $description }}">
     @endif
     @if ($noindex)
         <meta name="robots" content="noindex">
+    @elseif ($meta?->robots)
+        <meta name="robots" content="{{ $meta->robots }}">
+    @endif
+    @if ($meta?->canonical)
+        <link rel="canonical" href="{{ $meta->canonical }}">
     @endif
     @vite(['resources/css/app.css', 'resources/js/storefront.js'])
     @if (request()->routeIs('home'))

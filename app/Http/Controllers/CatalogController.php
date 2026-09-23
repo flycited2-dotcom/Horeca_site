@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
+use App\Services\Seo\MetaBuilder;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -21,7 +24,7 @@ class CatalogController extends Controller
         ]);
     }
 
-    public function show(Category $category, CatalogQuery $catalog): View
+    public function show(Request $request, Category $category, CatalogQuery $catalog, MetaBuilder $meta): View
     {
         if (! $category->is_active) {
             throw new NotFoundHttpException;
@@ -29,6 +32,7 @@ class CatalogController extends Controller
 
         return view('catalog.show', [
             'category' => $category,
+            'meta' => $meta->category($category, CatalogFilters::fromQuery($request->query()), max(1, $request->integer('page', 1))),
             'subcategories' => $catalog->activeChildren($category)
                 ->map(fn (Category $child): array => [
                     'name' => $child->name,

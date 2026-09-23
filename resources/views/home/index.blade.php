@@ -16,7 +16,7 @@
     ];
 @endphp
 
-<x-layouts.app :title="__('shop.home.title')">
+<x-layouts.app :title="__('shop.home.title')" :description="__('shop.seo.home_description')">
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
         <section class="flex flex-col gap-5 rounded-card border border-line bg-surface p-4 md:p-6" aria-labelledby="home-heading">
             <div class="flex flex-col gap-2">

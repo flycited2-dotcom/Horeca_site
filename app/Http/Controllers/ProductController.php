@@ -6,6 +6,7 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Pricing\PriceResolver;
+use App\Services\Seo\MetaBuilder;
 use App\Services\Settings\Settings;
 use App\Support\StructuredData;
 use Illuminate\Contracts\View\View;
@@ -23,7 +24,7 @@ class ProductController extends Controller
      */
     private const array INFO_PAGES = ['dostavka', 'oplata', 'garantiya'];
 
-    public function __invoke(Request $request, Product $product, CatalogQuery $catalog, PriceResolver $prices, Settings $settings): View
+    public function __invoke(Request $request, Product $product, CatalogQuery $catalog, PriceResolver $prices, Settings $settings, MetaBuilder $meta): View
     {
         if (! $product->is_visible) {
             throw new NotFoundHttpException;
@@ -46,6 +47,7 @@ class ProductController extends Controller
 
         return view('product.show', [
             'product' => $product,
+            'meta' => $meta->product($product),
             'price' => $price,
             'wholesalePending' => (bool) $user?->hasPendingCompany(),
             'stocks' => $catalog->visibleStocks($product),

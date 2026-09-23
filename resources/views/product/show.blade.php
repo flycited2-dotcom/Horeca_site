@@ -10,7 +10,7 @@
     $facts = new ProductFacts($product);
 @endphp
 
-<x-layouts.app :title="$product->meta_title ?: $product->name" :description="$product->meta_description">
+<x-layouts.app :meta="$meta">
     <x-catalog.breadcrumbs :product="$product" />
 
     <header class="mt-4 flex flex-col gap-2">

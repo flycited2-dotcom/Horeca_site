@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('shop.catalog.title')">
+<x-layouts.app :title="__('shop.catalog.title')" :description="__('shop.seo.catalog_description')">
     <h1 class="text-2xl font-bold md:text-3xl">{{ __('shop.catalog.title') }}</h1>
 
     @if ($categories->isEmpty())

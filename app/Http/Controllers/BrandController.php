@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
+use App\Services\Seo\MetaBuilder;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -24,13 +27,16 @@ class BrandController extends Controller
         ]);
     }
 
-    public function show(Brand $brand): View
+    public function show(Request $request, Brand $brand, MetaBuilder $meta): View
     {
         if (! $brand->is_active) {
             throw new NotFoundHttpException;
         }
 
-        return view('brands.show', ['brand' => $brand]);
+        return view('brands.show', [
+            'brand' => $brand,
+            'meta' => $meta->brand($brand, CatalogFilters::fromQuery($request->query()), max(1, $request->integer('page', 1))),
+        ]);
     }
 
     /**
