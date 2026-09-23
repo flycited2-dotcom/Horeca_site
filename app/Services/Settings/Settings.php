@@ -35,6 +35,15 @@ final class Settings
         }
     }
 
+    /**
+     * Forgets what was read in this request: after the settings page saves, the next read
+     * sees the new values.
+     */
+    public function forget(): void
+    {
+        $this->values = [];
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
         if (! array_key_exists($key, $this->values)) {
