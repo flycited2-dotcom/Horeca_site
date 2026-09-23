@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\PriceTier;
 use App\Models\Product;
 use App\Models\Warehouse;
 use App\Observers\CatalogCacheObserver;
+use App\Observers\PriceTierObserver;
 use App\Observers\SlugRedirectObserver;
 use App\Services\Catalog\CategoryTree;
 use App\Services\Compare\CompareList;
@@ -50,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         Category::observe([SlugRedirectObserver::class, CatalogCacheObserver::class]);
         Brand::observe([SlugRedirectObserver::class, CatalogCacheObserver::class]);
         Warehouse::observe(CatalogCacheObserver::class);
+        PriceTier::observe(PriceTierObserver::class);
 
         View::composer('components.layouts.app', StorefrontLayoutComposer::class);
 
