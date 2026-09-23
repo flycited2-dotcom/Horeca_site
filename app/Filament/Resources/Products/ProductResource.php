@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Products;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Filament\Resources\Products\RelationManagers\AttributeValuesRelationManager;
+use App\Filament\Resources\Products\RelationManagers\RelatedProductsRelationManager;
 use App\Filament\Resources\Products\RelationManagers\StocksRelationManager;
 use App\Filament\Resources\Products\Schemas\ProductForm;
 use App\Filament\Resources\Products\Tables\ProductsTable;
@@ -74,6 +75,7 @@ class ProductResource extends Resource
         return [
             StocksRelationManager::class,
             AttributeValuesRelationManager::class,
+            RelatedProductsRelationManager::class,
         ];
     }
 
