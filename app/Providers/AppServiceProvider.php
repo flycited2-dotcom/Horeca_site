@@ -14,8 +14,13 @@ use App\Services\Search\DatabaseSearchEngine;
 use App\Services\Search\SearchEngineInterface;
 use App\Services\Settings\Settings;
 use App\View\Composers\StorefrontLayoutComposer;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Validation\UncompromisedVerifier;
+use Illuminate\Http\Client\Factory as HttpFactory;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\NotPwnedVerifier;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->scoped(Settings::class);
         $this->app->scoped(CompareList::class);
         $this->app->bind(SearchEngineInterface::class, DatabaseSearchEngine::class);
+
+        // Проверка пароля по базе утечек (ТЗ §15.2) ждёт ответа не дольше 5 секунд: если
+        // сервис не ответит, регистрация не должна висеть полминуты. Без ответа пароль принимается.
+        $this->app->extend(UncompromisedVerifier::class, fn (UncompromisedVerifier $verifier, Application $app): UncompromisedVerifier => new NotPwnedVerifier($app->make(HttpFactory::class), 5));
     }
 
     /**
@@ -43,5 +52,8 @@ class AppServiceProvider extends ServiceProvider
         Warehouse::observe(CatalogCacheObserver::class);
 
         View::composer('components.layouts.app', StorefrontLayoutComposer::class);
+
+        // Пароли клиентов и сотрудников (ТЗ §15.2): не короче 8 символов и не из известных утечек.
+        Password::defaults(fn (): Password => Password::min(8)->uncompromised());
     }
 }

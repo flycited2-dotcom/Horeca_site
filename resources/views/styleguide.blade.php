@@ -125,6 +125,8 @@
                         <x-ui.toggle name="styleguide_in_stock" checked>{{ __('styleguide.fields.in_stock') }}</x-ui.toggle>
                         <x-ui.toggle name="styleguide_with_photo">{{ __('styleguide.fields.with_photo') }}</x-ui.toggle>
                     </div>
+
+                    <x-ui.consent id="styleguide-consent" />
                 </x-styleguide.panel>
             </div>
         </div>
@@ -265,6 +267,21 @@
                 <p class="text-base text-steel-500">{{ __('shop.leads.texts.price_request') }}</p>
                 <x-lead.form id="sample-lead" type="price_request" class="mt-2" />
             </div>
+        </x-styleguide.panel>
+
+        <x-styleguide.panel :title="__('styleguide.auth.title')" :note="__('styleguide.auth.note')">
+            <x-auth.card :heading="__('shop.auth.login.heading')" :intro="__('shop.auth.login.intro')" :level="3" class="mt-0!">
+                <div class="flex flex-col gap-4">
+                    <x-ui.input name="styleguide_login" :label="__('shop.auth.login.login')" value="zakupki@kafe.ru" />
+                    <x-ui.input name="styleguide_password" type="password" :label="__('shop.auth.login.password')" value="secret" :error="trans_choice('shop.auth.login.failed', 3, ['count' => 3])" />
+                    <x-ui.button class="w-full">{{ __('shop.auth.login.submit') }}</x-ui.button>
+                </div>
+
+                <x-slot:footer>
+                    <p class="text-base font-medium">{{ __('shop.auth.login.no_account') }}</p>
+                    <p class="text-sm text-steel-500">{{ __('shop.auth.login.no_account_text') }}</p>
+                </x-slot:footer>
+            </x-auth.card>
         </x-styleguide.panel>
 
         <x-styleguide.panel :title="__('styleguide.breadcrumbs.title')">

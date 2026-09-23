@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CompanyStatus;
 use App\Enums\UserRole;
+use App\Mail\PasswordResetMail;
 use Database\Factories\UserFactory;
 use Filament\Auth\MultiFactor\App\Concerns\InteractsWithAppAuthentication;
 use Filament\Auth\MultiFactor\App\Concerns\InteractsWithAppAuthenticationRecovery;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Role, activity and company membership are not mass assignable:
@@ -104,5 +106,19 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_active && $this->isStaff();
+    }
+
+    /**
+     * The link to a new password goes in the store's own letter (TZ §13), not the framework's English one.
+     *
+     * @param  string  $token
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        Mail::to($this->email)->queue(new PasswordResetMail(
+            name: $this->name,
+            url: route('password.reset', ['token' => $token, 'email' => $this->email]),
+            minutes: (int) config('auth.passwords.users.expire'),
+        ));
     }
 }

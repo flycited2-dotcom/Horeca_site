@@ -4,14 +4,44 @@
     Правая часть шапки (макет, экран 5): плитки «значок над подписью» и корзина — синяя
     кнопка с числом позиций и суммой; на телефоне — значки со счётчиками. «Сравнение»
     видно, пока в нём есть модели. Счётчики после «Сравнить» и «В корзину» обновляет
-    скрипт витрины. Вход и избранное встанут сюда же со своими спринтами.
+    скрипт витрины. Гостю — «Войти», вошедшему — плитка с именем и меню кабинета на
+    <details>: раскрывается без скриптов, скрипт закрывает его по Esc и нажатию мимо.
 --}}
 @php
     $tile = 'relative flex h-control items-center justify-center rounded-control transition-colors duration-150 ease-out hover:bg-bg max-md:w-control md:w-16 md:flex-col md:gap-1';
     $badge = 'absolute top-0.5 right-0.5 min-w-4.5 rounded-full px-1 text-center text-[11px] leading-4.5 font-semibold tabular md:top-0 md:right-2';
+    $menuItem = 'flex h-control w-full items-center rounded-control px-2.5 text-left text-base transition-colors duration-150 ease-out hover:bg-bg';
 @endphp
 
 <div {{ $attributes->class('flex items-center gap-1 md:gap-2') }}>
+    @if ($shell->customerName === null)
+        <a href="{{ route('login') }}" class="{{ $tile }}">
+            <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0"/>
+            </svg>
+            <span class="text-xs leading-none max-md:sr-only">{{ __('shop.auth.login.submit') }}</span>
+        </a>
+    @else
+        <details data-dismissable class="relative">
+            <summary class="{{ $tile }} cursor-pointer list-none [&::-webkit-details-marker]:hidden" aria-label="{{ __('shop.auth.menu', ['name' => $shell->customerName]) }}">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0"/>
+                </svg>
+                <span class="max-w-15 truncate text-xs leading-none max-md:sr-only" aria-hidden="true">{{ $shell->customerFirstName() }}</span>
+            </summary>
+            <div class="absolute top-full right-0 z-40 mt-1 flex w-64 flex-col gap-1 rounded-card border border-line bg-surface p-2 shadow-[0_4px_16px_rgba(0,0,0,0.10)]">
+                <p class="flex flex-col px-2.5 py-1.5">
+                    <span class="truncate text-base font-semibold">{{ $shell->customerName }}</span>
+                    <span class="truncate text-sm text-steel-500">{{ $shell->customerEmail }}</span>
+                </p>
+                <form method="post" action="{{ route('logout') }}" class="border-t border-line-soft pt-1">
+                    @csrf
+                    <button type="submit" class="{{ $menuItem }}">{{ __('shop.auth.logout') }}</button>
+                </form>
+            </div>
+        </details>
+    @endif
+
     <a href="{{ route('compare') }}" data-compare-link @if ($shell->compareCount === 0) hidden @endif class="{{ $tile }}">
         <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M5 20V10M12 20V4M19 20v-7"/>

@@ -64,6 +64,8 @@ final class StorefrontLayoutComposer
             privacyPage: $pages->get(self::PRIVACY_PAGE),
             compareCount: $this->compare->count($this->request->user()),
             cart: $this->cart->headline($this->request->user()),
+            customerName: $this->request->user()?->name,
+            customerEmail: $this->request->user()?->email,
         ));
     }
 

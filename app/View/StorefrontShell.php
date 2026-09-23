@@ -3,6 +3,7 @@
 namespace App\View;
 
 use App\Models\Page;
+use Illuminate\Support\Str;
 
 /**
  * What the storefront layout shows around every page (TZ §8.1, layout — screen 5):
@@ -32,7 +33,21 @@ final readonly class StorefrontShell
         public ?Page $privacyPage,
         public int $compareCount = 0,
         public CartHeadline $cart = new CartHeadline,
+        public ?string $customerName = null,
+        public ?string $customerEmail = null,
     ) {}
+
+    /**
+     * The header tile has room for one word: the first name of the signed-in customer.
+     */
+    public function customerFirstName(): ?string
+    {
+        if ($this->customerName === null) {
+            return null;
+        }
+
+        return Str::before(trim($this->customerName), ' ');
+    }
 
     /**
      * @return array{label: string, href: string}|null
