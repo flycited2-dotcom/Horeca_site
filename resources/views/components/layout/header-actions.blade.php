@@ -2,8 +2,8 @@
 
 {{--
     Правая часть шапки (макет, экран 5): плитки «значок над подписью» и корзина — синяя
-    кнопка с числом позиций и суммой; на телефоне — значки со счётчиками. «Сравнение»
-    видно, пока в нём есть модели. Счётчики после «Сравнить» и «В корзину» обновляет
+    кнопка с числом позиций и суммой; на телефоне — значки со счётчиками. «Избранное» и
+    «Сравнение» видны, пока в них есть модели. Счётчики после «Сравнить», «В избранное» и «В корзину» обновляет
     скрипт витрины. Гостю — «Войти», вошедшему — плитка с именем и меню кабинета на
     <details>: раскрывается без скриптов, скрипт закрывает его по Esc и нажатию мимо.
 --}}
@@ -36,6 +36,7 @@
                 </p>
                 <a href="{{ route('account') }}" class="{{ $menuItem }}">{{ __('shop.account.menu') }}</a>
                 <a href="{{ route('account.orders') }}" class="{{ $menuItem }}">{{ __('shop.account.menu_orders') }}</a>
+                <a href="{{ route('favorites') }}" class="{{ $menuItem }}">{{ __('shop.favorites.title') }}</a>
                 <form method="post" action="{{ route('logout') }}" class="border-t border-line-soft pt-1">
                     @csrf
                     <button type="submit" class="{{ $menuItem }}">{{ __('shop.auth.logout') }}</button>
@@ -43,6 +44,12 @@
             </div>
         </details>
     @endif
+
+    <a href="{{ route('favorites') }}" data-favorite-link @if ($shell->favoritesCount === 0) hidden @endif class="{{ $tile }}">
+        <x-favorites.heart class="size-6" />
+        <span class="text-xs leading-none max-md:sr-only">{{ __('shop.favorites.header') }}</span>
+        <span data-favorite-count class="{{ $badge }} bg-accent-ink text-white">{{ $shell->favoritesCount }}</span>
+    </a>
 
     <a href="{{ route('compare') }}" data-compare-link @if ($shell->compareCount === 0) hidden @endif class="{{ $tile }}">
         <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

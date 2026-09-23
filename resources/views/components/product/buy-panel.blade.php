@@ -90,5 +90,9 @@
         </div>
     @endif
 
-    <x-compare.toggle :product="$product" variant="button" />
+    {{-- «В избранное» и «К сравнению» рядом (макет, экран 3); длинная подпись переносится внутри кнопки. --}}
+    <div class="grid grid-cols-2 gap-2 text-center">
+        <x-favorites.toggle :product="$product" variant="button" />
+        <x-compare.toggle :product="$product" variant="button" />
+    </div>
 </div>

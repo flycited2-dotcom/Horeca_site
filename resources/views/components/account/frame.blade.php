@@ -12,6 +12,7 @@
     $tabs = [
         'summary' => route('account'),
         'orders' => route('account.orders'),
+        'favorites' => route('favorites'),
         'company' => $company !== null ? route('account.company') : null,
     ];
 

@@ -169,24 +169,29 @@ const sendForm = async (form) => {
     return null;
 };
 
-// Сравнение: кнопка меняется на всех карточках этого товара, счётчик в шапке обновляется.
-const onCompared = (form, result) => {
-    for (const toggle of document.querySelectorAll(`[data-compare="${result.product}"]`)) {
-        const [add, remove] = toggle.querySelectorAll('form[data-compare-form]');
-        add.hidden = result.compared;
-        remove.hidden = !result.compared;
+// Переключатель «добавить / убрать» (сравнение, избранное): кнопка меняется на всех карточках
+// этого товара, плитка в шапке показывает новое число и прячется, когда список пуст.
+const toggleList = (name, form, product, active, count) => {
+    for (const toggle of document.querySelectorAll(`[data-${name}="${product}"]`)) {
+        const [add, remove] = toggle.querySelectorAll(`form[data-${name}-form]`);
+        add.hidden = active;
+        remove.hidden = !active;
     }
 
     // Нажатая кнопка спряталась: фокус переходит на ту, что встала на её место.
-    form.closest('[data-compare]')?.querySelector('form[data-compare-form]:not([hidden]) button')?.focus();
+    form.closest(`[data-${name}]`)?.querySelector(`form[data-${name}-form]:not([hidden]) button`)?.focus();
 
-    const link = document.querySelector('[data-compare-link]');
+    const link = document.querySelector(`[data-${name}-link]`);
 
     if (link) {
-        link.hidden = result.count === 0;
-        link.querySelector('[data-compare-count]').textContent = String(result.count);
+        link.hidden = count === 0;
+        link.querySelector(`[data-${name}-count]`).textContent = String(count);
     }
 };
+
+const onCompared = (form, result) => toggleList('compare', form, result.product, result.compared, result.count);
+
+const onFavorited = (form, result) => toggleList('favorite', form, result.product, result.favorite, result.count);
 
 // Корзина в шапке: число позиций и сумма (макет, экран 5).
 const onAddedToCart = (form, result) => {
@@ -233,7 +238,12 @@ const showFieldErrors = (form, errors) => {
     }
 };
 
-const formHandlers = { 'data-compare-form': onCompared, 'data-cart-form': onAddedToCart, 'data-lead-form': onLeadSent };
+const formHandlers = {
+    'data-compare-form': onCompared,
+    'data-favorite-form': onFavorited,
+    'data-cart-form': onAddedToCart,
+    'data-lead-form': onLeadSent,
+};
 
 // Общее окно «Запросить цену» узнаёт товар от кнопки, которая его открыла.
 document.addEventListener('click', (event) => {

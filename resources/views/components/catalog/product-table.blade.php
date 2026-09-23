@@ -48,6 +48,7 @@
                             <x-cart.add :product="$product" :form-id="'cart-add-'.$product->id" button-class="w-full whitespace-nowrap" />
                         @endif
                         <x-compare.toggle :product="$product" class="mt-1" />
+                        <x-favorites.toggle :product="$product" />
                     </td>
                 </tr>
             @endforeach

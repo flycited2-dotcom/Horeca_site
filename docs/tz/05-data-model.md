@@ -136,7 +136,7 @@ timestamps · `deleted_at` (мягкое удаление администрат
 **leads**
 `id` · `type` enum(callback,question,price_request,availability_request,analog_request,one_click,not_found) · `name` string(150) nullable · `phone` string(20) · `email` string(150) nullable · `product_id` bigint nullable FK nullOnDelete · `message` text nullable · `status` enum(new,in_work,done) default new · `manager_id` bigint nullable FK users nullOnDelete · `utm` json nullable · `ip` string(45) nullable · timestamps
 
-**favorites** — `id` · `user_id` bigint nullable FK cascade · `session_id` string(100) nullable · `product_id` FK cascade · timestamps · unique(`user_id`,`product_id`) · unique(`session_id`,`product_id`). Гостевое избранное объединяется при входе так же, как корзина.
+**favorites** — `id` · `user_id` bigint nullable FK cascade · `session_id` string(100) nullable · `product_id` FK cascade · timestamps · unique(`user_id`,`product_id`) · unique(`session_id`,`product_id`). Гостевое избранное объединяется при входе так же, как корзина. `session_id` гостя — его метка, которая хранится в сессии (id сессии меняется при входе); строки гостей удаляются по расписанию через сутки после срока сессии.
 
 **compare_items** — `id` · `user_id` FK cascade · `product_id` FK cascade · timestamps · unique(`user_id`,`product_id`). Сравнение вошедшего клиента (§8.5), не больше 4 моделей; у гостя список живёт в сессии и переносится сюда при входе.
 

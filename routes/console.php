@@ -3,6 +3,7 @@
 use App\Console\Commands\DispatchDueImportsCommand;
 use App\Console\Commands\SendImportDigestCommand;
 use App\Models\Cart;
+use App\Models\Favorite;
 use Illuminate\Support\Facades\Schedule;
 
 /*
@@ -20,6 +21,7 @@ Schedule::command(DispatchDueImportsCommand::class)
 Schedule::command(SendImportDigestCommand::class)
     ->dailyAt('20:00');
 
-// Гостевые корзины живут 30 дней после последнего изменения (ТЗ §10.1).
-Schedule::command('model:prune', ['--model' => [Cart::class]])
+// Гостевые корзины живут 30 дней после последнего изменения (ТЗ §10.1), гостевое
+// избранное — пока жива сессия гостя (§5).
+Schedule::command('model:prune', ['--model' => [Cart::class, Favorite::class]])
     ->dailyAt('03:30');

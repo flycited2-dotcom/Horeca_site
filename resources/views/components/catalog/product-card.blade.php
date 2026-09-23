@@ -41,7 +41,10 @@
                 <x-cart.add :product="$product" class="max-md:hidden" button-class="w-full" />
             @endif
 
-            <x-compare.toggle :product="$product" class="max-md:hidden md:-mt-1.5" />
+            <div class="flex flex-wrap justify-center gap-x-4 max-md:hidden md:-mt-1.5">
+                <x-compare.toggle :product="$product" />
+                <x-favorites.toggle :product="$product" />
+            </div>
         </div>
     </div>
 </article>

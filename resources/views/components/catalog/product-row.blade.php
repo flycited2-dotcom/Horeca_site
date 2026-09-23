@@ -80,5 +80,6 @@
         @endif
 
         <x-compare.toggle :product="$product" />
+        <x-favorites.toggle :product="$product" class="-mt-2" />
     </div>
 </article>

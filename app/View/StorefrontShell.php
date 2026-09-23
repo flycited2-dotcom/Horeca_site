@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 /**
  * What the storefront layout shows around every page (TZ §8.1, layout — screen 5):
  * contacts from the settings, root categories, the pages the manager has switched on and
- * how many models the customer compares, what is in the cart.
+ * how many models the customer compares and keeps in favorites, what is in the cart.
  */
 final readonly class StorefrontShell
 {
@@ -36,6 +36,7 @@ final readonly class StorefrontShell
         public CartHeadline $cart = new CartHeadline,
         public ?string $customerName = null,
         public ?string $customerEmail = null,
+        public int $favoritesCount = 0,
     ) {}
 
     /**

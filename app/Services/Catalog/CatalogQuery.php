@@ -345,6 +345,25 @@ final class CatalogQuery
     }
 
     /**
+     * The customer's favorites in the given order (TZ §11), with everything a card needs.
+     * A discontinued model stays with its status, like its page; a hidden one drops out.
+     *
+     * @param  list<int>  $ids
+     * @return Collection<int, Product>
+     */
+    public function favoriteProducts(array $ids, ?User $user): Collection
+    {
+        if ($ids === []) {
+            return new Collection;
+        }
+
+        return $this->withCardData(Product::query()->whereKey($ids)->where('is_visible', true), $user)
+            ->get()
+            ->sortBy(fn (Product $product): int|false => array_search($product->id, $ids, true))
+            ->values();
+    }
+
+    /**
      * Products a listing or a search may show.
      *
      * @return Builder<Product>

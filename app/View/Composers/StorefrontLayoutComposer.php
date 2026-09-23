@@ -10,6 +10,7 @@ use App\Services\Cart\CartReview;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CategoryTree;
 use App\Services\Compare\CompareList;
+use App\Services\Favorites\FavoriteList;
 use App\Services\Settings\Settings;
 use App\Support\Phone;
 use App\View\StorefrontShell;
@@ -39,6 +40,7 @@ final class StorefrontLayoutComposer
         private readonly Request $request,
         private readonly CompareList $compare,
         private readonly CartReview $cart,
+        private readonly FavoriteList $favorites,
     ) {}
 
     public function compose(View $view): void
@@ -77,6 +79,7 @@ final class StorefrontLayoutComposer
             cart: $this->cart->headline($this->request->user()),
             customerName: $this->request->user()?->name,
             customerEmail: $this->request->user()?->email,
+            favoritesCount: $this->favorites->count($this->request->user()),
         ));
     }
 

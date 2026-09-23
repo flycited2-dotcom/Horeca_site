@@ -13,6 +13,7 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\FallbackController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ProductController;
@@ -75,6 +76,11 @@ Route::get('/compare', [CompareController::class, 'index'])->name('compare');
 Route::delete('/compare', [CompareController::class, 'clear'])->name('compare.clear');
 Route::post('/compare/{product}', [CompareController::class, 'store'])->whereNumber('product')->name('compare.add');
 Route::delete('/compare/{product}', [CompareController::class, 'destroy'])->whereNumber('product')->name('compare.remove');
+
+// Избранное (ТЗ §8, §11): гостю — до конца сессии, клиенту — в кабинете.
+Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites');
+Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->whereNumber('product')->name('favorites.add');
+Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->whereNumber('product')->name('favorites.remove');
 
 // Сверка компонентов с макетами; вне локальной разработки отвечает 404.
 Route::get('/styleguide', StyleguideController::class)->name('styleguide');
