@@ -2,6 +2,7 @@
 
 namespace App\View;
 
+use App\Http\Controllers\CookieConsentController;
 use App\Models\Page;
 use Illuminate\Support\Str;
 
@@ -36,7 +37,17 @@ final readonly class StorefrontShell
         public ?string $customerName = null,
         public ?string $customerEmail = null,
         public int $favoritesCount = 0,
+        public ?string $metrikaId = null,
+        public ?string $cookieConsent = null,
     ) {}
+
+    /**
+     * Yandex Metrica runs only with the visitor's consent to analytics cookies (TZ §15.10).
+     */
+    public function analyticsAllowed(): bool
+    {
+        return $this->metrikaId !== null && $this->cookieConsent === CookieConsentController::ALL;
+    }
 
     /**
      * Where a service page leads: the wholesale page lives on its own route with the application

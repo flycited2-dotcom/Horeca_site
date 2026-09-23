@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Page;
 use App\Models\Product;
+use App\Services\Analytics\Metrika;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Seo\MetaBuilder;
@@ -48,6 +49,7 @@ class ProductController extends Controller
         return view('product.show', [
             'product' => $product,
             'meta' => $meta->product($product),
+            'analytics' => [Metrika::detail($product, $price)],
             'price' => $price,
             'wholesalePending' => (bool) $user?->hasPendingCompany(),
             'stocks' => $catalog->visibleStocks($product),

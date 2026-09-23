@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Storefront\FollowRedirect;
+use App\Http\Controllers\CookieConsentController;
 use App\Http\Middleware\RememberUtm;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -22,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [RememberUtm::class]);
         // A signed-in customer who opens the login or registration page goes to the account (TZ §11).
         $middleware->redirectUsersTo(fn (): string => route('account'));
+        // The storefront script reads the cookie consent too: it is stored without encryption.
+        $middleware->encryptCookies(except: [CookieConsentController::COOKIE]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Any 404 first asks the redirects table: the old address of a product matches the

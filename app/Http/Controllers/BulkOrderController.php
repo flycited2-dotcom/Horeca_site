@@ -8,6 +8,7 @@ use App\Actions\BulkOrder\RequestBulkOrderPrices;
 use App\Http\Middleware\RememberUtm;
 use App\Http\Requests\BulkOrderRequest;
 use App\Models\User;
+use App\Services\Analytics\Metrika;
 use App\Services\BulkOrder\BulkOrderLine;
 use App\Services\BulkOrder\BulkOrderMatcher;
 use Illuminate\Http\RedirectResponse;
@@ -92,6 +93,7 @@ final class BulkOrderController extends Controller
         }
 
         $request->session()->forget(self::SESSION_KEY);
+        Metrika::flash(Metrika::event('bulk_order', ['positions' => $result['added']]));
 
         return redirect()->route('cart')->with('notice', [
             'text' => $result['skipped'] > 0

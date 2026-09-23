@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\WholesaleController;
 use App\Models\Category;
 use App\Models\Page;
@@ -45,7 +46,8 @@ final class StorefrontLayoutComposer
 
     public function compose(View $view): void
     {
-        $this->settings->preload('site.name', 'contacts.phones', 'contacts.email', 'contacts.schedule', 'contacts.address', 'seller.requisites');
+        $this->settings->preload('site.name', 'contacts.phones', 'contacts.email', 'contacts.schedule', 'contacts.address', 'seller.requisites', 'analytics.metrika_id');
+        $consent = $this->request->cookie(CookieConsentController::COOKIE);
 
         $pages = Page::query()
             ->where('is_active', true)
@@ -80,6 +82,8 @@ final class StorefrontLayoutComposer
             customerName: $this->request->user()?->name,
             customerEmail: $this->request->user()?->email,
             favoritesCount: $this->favorites->count($this->request->user()),
+            metrikaId: preg_match('/^\d{5,12}$/', (string) $this->text('analytics.metrika_id')) === 1 ? $this->text('analytics.metrika_id') : null,
+            cookieConsent: in_array($consent, [CookieConsentController::ALL, CookieConsentController::NECESSARY], true) ? $consent : null,
         ));
     }
 

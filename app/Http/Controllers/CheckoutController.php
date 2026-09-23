@@ -6,6 +6,7 @@ use App\Actions\Orders\PlaceOrder;
 use App\Http\Middleware\RememberUtm;
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Order;
+use App\Services\Analytics\Metrika;
 use App\Services\Cart\CartNotReady;
 use App\Services\Cart\CartReview;
 use App\Services\Settings\Settings;
@@ -53,6 +54,7 @@ class CheckoutController extends Controller
             'payments' => CheckoutRequest::paymentMethods($settings),
             'carriers' => __('shop.checkout.carriers'),
             'vat' => $settings->get('seller.vat_mode'),
+            'analytics' => [Metrika::event('checkout_start')],
         ]);
     }
 
@@ -109,6 +111,7 @@ class CheckoutController extends Controller
             'phones' => $settings->get('contacts.phones'),
             'email' => $settings->get('contacts.email'),
             'schedule' => $settings->get('contacts.schedule'),
+            'analytics' => [Metrika::purchase($order->load('items'))],
         ]);
     }
 }

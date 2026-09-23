@@ -23,7 +23,7 @@
     $section = 'flex flex-col gap-4 rounded-card border border-line bg-surface p-4 md:p-6';
 @endphp
 
-<x-layouts.app :title="__('shop.checkout.title')" noindex>
+<x-layouts.app :title="__('shop.checkout.title')" :analytics="$analytics" noindex>
     <x-catalog.breadcrumbs :current="__('shop.checkout.title')" />
 
     <h1 class="mt-3 text-xl font-bold md:text-2xl">{{ __('shop.checkout.title') }}</h1>

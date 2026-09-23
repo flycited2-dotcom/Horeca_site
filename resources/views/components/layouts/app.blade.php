@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'noindex' => false, 'meta' => null])
+@props(['title' => null, 'description' => null, 'noindex' => false, 'meta' => null, 'analytics' => []])
 
 {{--
     Каркас витрины (макет, экраны 5, 10 и 14): служебная полоса, шапка, ряд корневых
@@ -8,7 +8,7 @@
 --}}
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @if ($shell->cookieConsent) data-consent="{{ $shell->cookieConsent }}" @endif>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,6 +27,17 @@
         <link rel="canonical" href="{{ $meta->canonical }}">
     @endif
     @vite(['resources/css/app.css', 'resources/js/storefront.js'])
+    {{--
+        Яндекс Метрика (ТЗ §14): номер счётчика и события страницы — цели и электронная коммерция.
+        Скрипт витрины загружает счётчик и отправляет события только с согласия на аналитику (§15.10).
+    --}}
+    @if ($shell->metrikaId && $shell->cookieConsent !== \App\Http\Controllers\CookieConsentController::NECESSARY)
+        <meta name="metrika" content="{{ $shell->metrikaId }}">
+        @php($metrikaEvents = [...(array) session(\App\Services\Analytics\Metrika::SESSION_KEY, []), ...$analytics])
+        @if ($metrikaEvents !== [])
+            <script type="application/json" data-metrika-events>{!! json_encode($metrikaEvents, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) !!}</script>
+        @endif
+    @endif
     @if (request()->routeIs('home'))
         <script type="application/ld+json">{!! \App\Support\StructuredData::json(\App\Support\StructuredData::organization($shell)) !!}</script>
     @endif
@@ -117,6 +128,10 @@
         <div class="h-18 lg:hidden" aria-hidden="true"></div>
         {{ $bottomBar }}
     @endisset
+
+    @if ($shell->cookieConsent === null)
+        <x-layout.cookie-banner :shell="$shell" />
+    @endif
 
     {{-- Уведомления об итоге действия: с перезагрузкой — из сессии, со скриптами — из шаблона ниже. --}}
     <div

@@ -149,11 +149,12 @@ document.addEventListener('click', (event) => {
 // 422 — отказ с объяснением («цена по запросу») или ошибки полей; при любом другом сбое
 // форма уходит обычным способом. Обработчик на документе: Livewire перерисовывает листинг, формы
 // появляются заново.
-const sendForm = async (form) => {
+const sendForm = async (form, submitter = null) => {
     try {
         const response = await fetch(form.action, {
             method: 'POST',
-            body: new FormData(form),
+            // Нажатая кнопка с именем (cookie-баннер: «Принять все» или «Только необходимые») — часть формы.
+            body: new FormData(form, submitter),
             headers: { Accept: 'application/json' },
         });
 
@@ -164,9 +165,72 @@ const sendForm = async (form) => {
         // Сеть или сервер не ответили — ниже форма уйдёт обычным способом.
     }
 
+    if (submitter?.name) {
+        const choice = document.createElement('input');
+        choice.type = 'hidden';
+        choice.name = submitter.name;
+        choice.value = submitter.value;
+        form.append(choice);
+    }
+
     form.submit();
 
     return null;
+};
+
+// Яндекс Метрика (ТЗ §14): загружается только после согласия на аналитические cookie (§15.10)
+// и когда в настройках задан номер счётчика. Цели и электронная коммерция — события
+// {goal, params, ecommerce} со страницы (data-metrika-events) и из ответов форм.
+window.dataLayer = window.dataLayer || [];
+
+const metrikaId = () => document.querySelector('meta[name="metrika"]')?.content ?? null;
+
+const metrikaAllowed = () => metrikaId() !== null && document.documentElement.dataset.consent === 'all';
+
+const track = (events) => {
+    if (!metrikaAllowed() || !Array.isArray(events)) {
+        return;
+    }
+
+    for (const event of events) {
+        if (event.ecommerce) {
+            window.dataLayer.push({ ecommerce: event.ecommerce });
+        }
+
+        if (event.goal) {
+            window.ym(Number(metrikaId()), 'reachGoal', event.goal, event.params ?? {});
+        }
+    }
+};
+
+const startMetrika = () => {
+    if (!metrikaAllowed() || window.ym) {
+        return;
+    }
+
+    window.ym = function (...args) {
+        (window.ym.a = window.ym.a || []).push(args);
+    };
+    window.ym.l = Date.now();
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://mc.yandex.ru/metrika/tag.js';
+    document.head.append(script);
+
+    window.ym(Number(metrikaId()), 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, ecommerce: 'dataLayer' });
+
+    const events = document.querySelector('script[data-metrika-events]');
+    track(events ? JSON.parse(events.textContent) : []);
+};
+
+startMetrika();
+
+// Выбор в cookie-баннере: баннер прячется, при согласии на аналитику загружается счётчик.
+const onConsent = (form, result) => {
+    document.documentElement.dataset.consent = result.consent;
+    form.closest('[data-cookie-banner]')?.remove();
+    startMetrika();
 };
 
 // Переключатель «добавить / убрать» (сравнение, избранное): кнопка меняется на всех карточках
@@ -243,6 +307,7 @@ const formHandlers = {
     'data-favorite-form': onFavorited,
     'data-cart-form': onAddedToCart,
     'data-lead-form': onLeadSent,
+    'data-consent-form': onConsent,
 };
 
 // Общее окно «Запросить цену» узнаёт товар от кнопки, которая его открыла.
@@ -288,7 +353,7 @@ document.addEventListener('submit', async (event) => {
     }
 
     form.setAttribute('aria-busy', 'true');
-    const answer = await sendForm(form);
+    const answer = await sendForm(form, event.submitter);
     form.removeAttribute('aria-busy');
 
     if (answer === null) {
@@ -297,6 +362,7 @@ document.addEventListener('submit', async (event) => {
 
     if (answer.ok) {
         formHandlers[kind](form, answer.result);
+        track(answer.result.metrika);
     } else if (answer.result.errors) {
         // Ошибки проверки полей (лиды): показываются у полей, уведомление не нужно.
         showFieldErrors(form, answer.result.errors);

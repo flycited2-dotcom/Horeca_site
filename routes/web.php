@@ -13,6 +13,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CompareController;
+use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\FallbackController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
@@ -30,6 +31,9 @@ Route::get('/', HomeController::class)->name('home');
 // Для поисковиков (ТЗ §14).
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+
+// Согласие на cookie: без него Яндекс Метрика не загружается (ТЗ §15.10).
+Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie-consent');
 
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog');
 Route::get('/catalog/{category:slug}', [CatalogController::class, 'show'])->name('category');

@@ -6,6 +6,7 @@ use App\Actions\Leads\CreateLead;
 use App\Enums\LeadType;
 use App\Http\Middleware\RememberUtm;
 use App\Http\Requests\LeadRequest;
+use App\Services\Analytics\Metrika;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\RateLimiter;
@@ -37,8 +38,14 @@ class LeadController extends Controller
 
         $notice = ['text' => __('shop.leads.sent.'.($lead->type === LeadType::NotFound ? 'not_found' : 'default'))];
 
-        return $request->expectsJson()
-            ? response()->json(['notice' => $notice])
-            : redirect()->back()->with('notice', $notice);
+        $metrika = Metrika::event('lead_created', ['type' => $lead->type->value]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['notice' => $notice, 'metrika' => [$metrika]]);
+        }
+
+        Metrika::flash($metrika);
+
+        return redirect()->back()->with('notice', $notice);
     }
 }

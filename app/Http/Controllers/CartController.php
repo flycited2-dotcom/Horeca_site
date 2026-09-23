@@ -6,6 +6,7 @@ use App\Actions\Cart\AddToCart;
 use App\Actions\Cart\ChangeCart;
 use App\Http\Requests\Cart\CartQuantityRequest;
 use App\Models\Product;
+use App\Services\Analytics\Metrika;
 use App\Services\Cart\CannotAddToCart;
 use App\Services\Cart\CartReview;
 use Illuminate\Contracts\View\View;
@@ -44,14 +45,19 @@ class CartController extends Controller
             'link' => __('shop.cart.open'),
         ];
 
+        $metrika = Metrika::addToCart($product, $item->price, max(1, $request->quantity()));
+
         if ($request->expectsJson()) {
             return response()->json([
                 'product' => $product->id,
                 'quantity' => $item->qty,
                 'headline' => $review->headline($request->user())->toArray(),
                 'notice' => $notice,
+                'metrika' => [$metrika],
             ]);
         }
+
+        Metrika::flash($metrika);
 
         return redirect()->back(fallback: route('cart'))->with('notice', $notice);
     }

@@ -9,7 +9,7 @@
     $phones = array_values(array_filter(array_map(fn ($phone) => is_string($phone) ? trim($phone) : '', $phones)));
 @endphp
 
-<x-layouts.app :title="__('shop.checkout.success_title', ['number' => $order->number])" noindex>
+<x-layouts.app :title="__('shop.checkout.success_title', ['number' => $order->number])" :analytics="$analytics" noindex>
     <section class="flex max-w-2xl flex-col items-start gap-4 rounded-card border border-line bg-surface p-4 md:p-8" aria-labelledby="success-heading">
         <p class="rounded-full border border-stock-line bg-stock-bg px-3 py-1 text-sm font-medium text-stock-text">{{ __('shop.checkout.success_badge') }}</p>
 
