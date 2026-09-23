@@ -6,17 +6,21 @@ use App\Jobs\SyncSupplierContentPage;
 use App\Models\Supplier;
 use Database\Seeders\ProductionSeeder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 /**
- * Запускает загрузку фото поставщика в очередь imports (ТЗ §6): страница за страницей, с любой
- * страницы — чтобы продолжить с места, где остановились.
+ * Запускает загрузку фото, описаний и характеристик поставщика в очередь imports (ТЗ §6):
+ * страница за страницей, с любой страницы — чтобы продолжить с места, где остановились. Пока
+ * идёт прежняя загрузка, новая не начинается; --force начинает заново и останавливает прежнюю.
  */
 class SyncSupplierContentCommand extends Command
 {
     /**
      * @var string
      */
-    protected $signature = 'supplier:content {--page=1 : С какой страницы списка поставщика начать}';
+    protected $signature = 'supplier:content
+        {--page=1 : С какой страницы списка поставщика начать}
+        {--force : Начать, даже если загрузка уже идёт, и остановить прежнюю}';
 
     /**
      * @var string
@@ -33,9 +37,19 @@ class SyncSupplierContentCommand extends Command
             return self::FAILURE;
         }
 
-        $page = max(1, (int) $this->option('page'));
+        $running = SyncSupplierContentPage::running($supplier->id);
 
-        SyncSupplierContentPage::dispatch($supplier->id, $page);
+        if ($running !== null && ! $this->option('force')) {
+            $this->warn(__('import.content.running', ['page' => $running['page']]));
+
+            return self::SUCCESS;
+        }
+
+        $page = max(1, (int) $this->option('page'));
+        $run = (string) Str::uuid();
+
+        SyncSupplierContentPage::markRun($supplier->id, $run, $page);
+        SyncSupplierContentPage::dispatch($supplier->id, $page, $run);
 
         $this->info(__('import.content.queued', ['page' => $page]));
 

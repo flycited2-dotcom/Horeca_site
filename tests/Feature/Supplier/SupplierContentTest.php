@@ -134,3 +134,39 @@ it('queues the photos from the page asked for', function () {
 
     Queue::assertPushed(SyncSupplierContentPage::class, 1);
 });
+
+it('does not start a second run over one still going, and --force takes over', function () {
+    Queue::fake();
+
+    $this->artisan('supplier:content')->assertSuccessful();
+    $first = SyncSupplierContentPage::running($this->supplier->id)['run'];
+
+    $this->artisan('supplier:content')->expectsOutputToContain('уже идёт, дошла до страницы 1')->assertSuccessful();
+    Queue::assertPushed(SyncSupplierContentPage::class, 1);
+
+    $this->artisan('supplier:content', ['--page' => 40, '--force' => true])->assertSuccessful();
+    Queue::assertPushed(SyncSupplierContentPage::class, 2);
+
+    // Страница прежней цепочки видит, что её сменили, и ничего не делает.
+    app()->call([new SyncSupplierContentPage($this->supplier->id, 3, $first), 'handle']);
+
+    Http::assertNothingSent();
+    Queue::assertPushed(SyncSupplierContentPage::class, 2);
+    expect(SyncSupplierContentPage::running($this->supplier->id)['page'])->toBe(40);
+});
+
+it('moves the mark of the run along the pages and clears it after the last one', function () {
+    Queue::fake();
+    SyncSupplierContentPage::markRun($this->supplier->id, 'run-1', 1);
+
+    $this->list = supplierPhotoList([], page: 1, pages: 2);
+    app()->call([new SyncSupplierContentPage($this->supplier->id, 1, 'run-1'), 'handle']);
+
+    expect(SyncSupplierContentPage::running($this->supplier->id))->toBe(['run' => 'run-1', 'page' => 2]);
+
+    $this->list = supplierPhotoList([], page: 2, pages: 2);
+    app()->call([new SyncSupplierContentPage($this->supplier->id, 2, 'run-1'), 'handle']);
+
+    expect(SyncSupplierContentPage::running($this->supplier->id))->toBeNull();
+    $this->artisan('supplier:content')->expectsOutputToContain('поставлена в очередь')->assertSuccessful();
+});
