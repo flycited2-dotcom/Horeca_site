@@ -106,18 +106,40 @@ class ProductionSeeder extends Seeder
         }
     }
 
+    /**
+     * Required pages with their starting texts from database/seeders/pages (TZ §5.5). A page
+     * whose text the administrator has written is left alone; an empty one gets the starting
+     * text and is switched on. The legal pages are checked by the customer's lawyer before the
+     * launch (TZ §15.10).
+     */
     private function seedPages(): void
     {
         $sort = 0;
 
         foreach (self::PAGES as $slug => $title) {
-            Page::query()->firstOrCreate(['slug' => $slug], [
+            $page = Page::query()->firstOrCreate(['slug' => $slug], [
                 'title' => $title,
                 'content' => '',
                 'is_active' => false,
                 'sort' => $sort += 10,
             ]);
+
+            $text = self::pageText($slug);
+
+            if ($text !== null && trim((string) $page->content) === '') {
+                $page->forceFill(['content' => $text, 'is_active' => true])->save();
+            }
         }
+    }
+
+    /**
+     * The starting text of a required page, or null when there is none.
+     */
+    public static function pageText(string $slug): ?string
+    {
+        $path = __DIR__.'/pages/'.$slug.'.md';
+
+        return is_file($path) ? trim((string) file_get_contents($path)) : null;
     }
 
     /**

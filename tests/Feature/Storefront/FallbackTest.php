@@ -56,6 +56,20 @@ it('opens a page the manager has switched on and hides one that is off', functio
     $this->get('/garantiya')->assertNotFound();
 });
 
+it('puts the contacts and requisites from the settings under the text of the contacts page', function () {
+    Page::factory()->create(['slug' => 'kontakty', 'title' => 'Контакты', 'content' => 'Позвоните или напишите.']);
+    Page::factory()->create(['slug' => 'o-kompanii', 'title' => 'О компании', 'content' => 'О нас.']);
+    setting('contacts.phones', ['+7 978 000-11-22']);
+    setting('contacts.address', 'Симферополь, ул. Складская, 1');
+    setting('seller.requisites', "ООО «Гастроснаб»\nИНН 9102000000");
+
+    $this->get('/kontakty')
+        ->assertOk()
+        ->assertSeeInOrder(['Позвоните или напишите.', 'Телефоны', 'href="tel:+79780001122"', 'Симферополь, ул. Складская, 1', 'Реквизиты', 'ИНН 9102000000'], false);
+
+    $this->get('/o-kompanii')->assertOk()->assertDontSee('<dt class="text-sm text-steel-500">Телефоны</dt>', false);
+});
+
 it('shows only what Markdown can say in the text of a page', function () {
     Page::factory()->create([
         'slug' => 'oplata',
