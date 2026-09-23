@@ -364,6 +364,7 @@ return [
 
     'seo' => [
         'sitemap_done' => 'Карта сайта собрана: :count адресов.',
+        'popularity_done' => 'Популярность пересчитана: спрос за 90 дней есть у :count товаров.',
         'product_description' => ':name — цена :price, :availability.',
         'product_brand' => 'Бренд :brand.',
         'product_sku' => 'Артикул :sku.',

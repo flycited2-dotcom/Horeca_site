@@ -2,6 +2,7 @@
 
 use App\Console\Commands\DispatchDueImportsCommand;
 use App\Console\Commands\GenerateSitemapCommand;
+use App\Console\Commands\RecalculatePopularityCommand;
 use App\Console\Commands\SendImportDigestCommand;
 use App\Models\Cart;
 use App\Models\Favorite;
@@ -21,6 +22,10 @@ Schedule::command(DispatchDueImportsCommand::class)
 
 Schedule::command(SendImportDigestCommand::class)
     ->dailyAt('20:00');
+
+// Популярность — вторая ступень сортировки после наличия (ТЗ §8.2, §17.5).
+Schedule::command(RecalculatePopularityCommand::class)
+    ->dailyAt('03:00');
 
 // Карта сайта для поисковиков (ТЗ §14).
 Schedule::command(GenerateSitemapCommand::class)
