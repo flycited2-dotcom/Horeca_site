@@ -17,8 +17,8 @@ use App\Services\Favorites\FavoriteList;
 use App\Services\Search\DatabaseSearchEngine;
 use App\Services\Search\SearchEngineInterface;
 use App\Services\Settings\Settings;
-use App\Services\Supplier\Contracts\SupplierPhotoSourceInterface;
-use App\Services\Supplier\Sources\Rosholod\RosholodSitePhotoSource;
+use App\Services\Supplier\Contracts\SupplierContentSourceInterface;
+use App\Services\Supplier\Sources\Rosholod\RosholodSiteSource;
 use App\View\Composers\StorefrontLayoutComposer;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Validation\UncompromisedVerifier;
@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->scoped(FavoriteList::class);
         $this->app->bind(SearchEngineInterface::class, DatabaseSearchEngine::class);
         // Фото поставщика — со списка товаров его сайта, пока нет API (ТЗ §6); API заменит адаптер здесь.
-        $this->app->bind(SupplierPhotoSourceInterface::class, RosholodSitePhotoSource::class);
+        $this->app->bind(SupplierContentSourceInterface::class, RosholodSiteSource::class);
 
         // Проверка пароля по базе утечек (ТЗ §15.2) ждёт ответа не дольше 5 секунд: если
         // сервис не ответит, регистрация не должна висеть полминуты. Без ответа пароль принимается.

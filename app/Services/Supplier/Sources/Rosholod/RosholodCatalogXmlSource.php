@@ -31,8 +31,10 @@ final class RosholodCatalogXmlSource implements SupplierFeedInterface
     {
         return new FeedCapabilities(
             entities: [ImportEntity::Category, ImportEntity::Product],
-            ownedProductFields: ['name', 'model', 'sku', 'supplier_code', 'description', 'brand_id', 'category_id', 'rrp_price'],
+            ownedProductFields: ['name', 'model', 'sku', 'supplier_code', 'brand_id', 'category_id', 'rrp_price'],
             isFullSnapshot: true,
+            // The XML cuts descriptions at 500 characters: the full text comes with the site content (TZ §6).
+            seededProductFields: ['description'],
         );
     }
 

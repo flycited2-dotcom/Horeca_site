@@ -23,7 +23,7 @@ final class SaveProductByManager
      */
     public const array LOCKABLE_FIELDS = [
         'name', 'model', 'sku', 'supplier_code', 'description', 'brand_id', 'category_id',
-        'rrp_price', 'purchase_price', 'unit', 'retail_price',
+        'rrp_price', 'purchase_price', 'unit', 'retail_price', 'weight_kg', 'length_mm', 'width_mm', 'height_mm', 'warranty_months',
     ];
 
     /**

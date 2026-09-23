@@ -176,7 +176,9 @@ final class ProductUpserter
         $locked = $this->locked($product);
 
         foreach (self::FIELDS as $key => $column) {
-            if (! $capabilities->owns($column) || isset($locked[$column]) || ! array_key_exists($key, $payload)) {
+            $writes = $capabilities->owns($column) || (! $product->exists && $capabilities->seeds($column));
+
+            if (! $writes || isset($locked[$column]) || ! array_key_exists($key, $payload)) {
                 continue;
             }
 

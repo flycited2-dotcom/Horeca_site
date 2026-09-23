@@ -4,7 +4,7 @@ namespace App\Actions\Catalog;
 
 use App\Models\Product;
 use App\Models\Supplier;
-use App\Services\Supplier\Contracts\SupplierPhotoSourceInterface;
+use App\Services\Supplier\Contracts\SupplierContentSourceInterface;
 use App\Services\Supplier\Data\SupplierProductPhotos;
 use App\Services\Supplier\Exceptions\FeedReadException;
 use Illuminate\Support\Facades\Log;
@@ -22,12 +22,12 @@ final class SyncSupplierPhotos
 {
     public const string SOURCE = 'supplier';
 
-    public function __construct(private readonly SupplierPhotoSourceInterface $source) {}
+    public function __construct(private readonly SupplierContentSourceInterface $source) {}
 
     /**
      * @throws FeedReadException when a photo could not be downloaded
      */
-    public function handle(Supplier $supplier, SupplierProductPhotos $photos): PhotoSyncResult
+    public function handle(Supplier $supplier, SupplierProductPhotos $photos): ContentSyncResult
     {
         $product = Product::query()
             ->where('supplier_id', $supplier->id)
@@ -35,7 +35,7 @@ final class SyncSupplierPhotos
             ->first();
 
         if ($product === null) {
-            return PhotoSyncResult::NoProduct;
+            return ContentSyncResult::NoProduct;
         }
 
         $current = $product->getMedia(Product::IMAGES)
@@ -43,7 +43,7 @@ final class SyncSupplierPhotos
             ->values();
 
         if ($current->map(fn (Media $media): mixed => $media->getCustomProperty('source_url'))->all() === $photos->urls) {
-            return PhotoSyncResult::Unchanged;
+            return ContentSyncResult::Unchanged;
         }
 
         $files = [];
@@ -75,7 +75,7 @@ final class SyncSupplierPhotos
 
         $current->each(fn (Media $media): ?bool => $media->delete());
 
-        return PhotoSyncResult::Updated;
+        return ContentSyncResult::Updated;
     }
 
     /**

@@ -53,8 +53,8 @@ return [
      * the customer's decision of 23.09.2026 as a Rosholod dealer). Pages of 20 products, one
      * page a second; photos are taken only from the supplier's media folder.
      */
-    'site_photos' => [
-        'url' => env('ROSHOLOD_SITE_PHOTOS_URL', 'https://rosholod.org/api/v1/prices/'),
+    'site_content' => [
+        'url' => env('ROSHOLOD_SITE_CONTENT_URL', 'https://rosholod.org/api/v1/prices/'),
         'media_prefix' => 'https://rosholod.org/media/products_images/',
         'page_pause_ms' => 1000,
         'photo_pause_ms' => 250,

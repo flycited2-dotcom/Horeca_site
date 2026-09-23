@@ -1,13 +1,13 @@
 <?php
 
-use App\Actions\Catalog\PhotoSyncResult;
+use App\Actions\Catalog\ContentSyncResult;
 use App\Actions\Catalog\SyncSupplierPhotos;
-use App\Jobs\SyncSupplierPhotosPage;
+use App\Jobs\SyncSupplierContentPage;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Services\Supplier\Data\SupplierProductPhotos;
 use App\Services\Supplier\Exceptions\FeedReadException;
-use App\Services\Supplier\Sources\Rosholod\RosholodSitePhotoSource;
+use App\Services\Supplier\Sources\Rosholod\RosholodSiteSource;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -56,7 +56,7 @@ it('reads the GUID and the supplier photos from a page of the list', function ()
         ['product_id' => '', 'images' => [PHOTO_B]],
     ], pages: 718);
 
-    $page = app(RosholodSitePhotoSource::class)->page(1);
+    $page = app(RosholodSiteSource::class)->page(1);
 
     expect($page->lastPage)->toBe(718)
         ->and($page->isLast())->toBeFalse()
@@ -71,7 +71,7 @@ it('keeps the photos with their sizes and marks them as the supplier ones, then 
     Queue::fake();
     $this->list = supplierPhotoList([['product_id' => $this->product->external_id, 'images' => [PHOTO_A, PHOTO_B]]], pages: 2);
 
-    app()->call([new SyncSupplierPhotosPage($this->supplier->id, 1), 'handle']);
+    app()->call([new SyncSupplierContentPage($this->supplier->id, 1), 'handle']);
 
     $media = $this->product->refresh()->getMedia(Product::IMAGES);
 
@@ -82,15 +82,15 @@ it('keeps the photos with their sizes and marks them as the supplier ones, then 
         ->and($media[1]->file_name)->toBe('izobr.jpg');
     Storage::disk('public')->assertExists($media[0]->getPathRelativeToRoot('card'));
 
-    Queue::assertPushed(SyncSupplierPhotosPage::class, 1);
+    Queue::assertPushed(SyncSupplierContentPage::class, 1);
 });
 
 it('does not download the same photos twice', function () {
     $sync = app(SyncSupplierPhotos::class);
     $photos = new SupplierProductPhotos($this->product->external_id, [PHOTO_A]);
 
-    expect($sync->handle($this->supplier, $photos))->toBe(PhotoSyncResult::Updated)
-        ->and($sync->handle($this->supplier, $photos))->toBe(PhotoSyncResult::Unchanged);
+    expect($sync->handle($this->supplier, $photos))->toBe(ContentSyncResult::Updated)
+        ->and($sync->handle($this->supplier, $photos))->toBe(ContentSyncResult::Unchanged);
 
     Http::assertSentCount(1);
 });
@@ -123,14 +123,14 @@ it('keeps the old photos when a new one does not download', function () {
 
 it('skips a product the catalog does not have and a photo from elsewhere', function () {
 
-    expect(app(SyncSupplierPhotos::class)->handle($this->supplier, new SupplierProductPhotos('no-such-guid', [PHOTO_A])))->toBe(PhotoSyncResult::NoProduct)
-        ->and(fn () => app(RosholodSitePhotoSource::class)->download('https://evil.example/x.jpg'))->toThrow(FeedReadException::class);
+    expect(app(SyncSupplierPhotos::class)->handle($this->supplier, new SupplierProductPhotos('no-such-guid', [PHOTO_A])))->toBe(ContentSyncResult::NoProduct)
+        ->and(fn () => app(RosholodSiteSource::class)->download('https://evil.example/x.jpg'))->toThrow(FeedReadException::class);
 });
 
 it('queues the photos from the page asked for', function () {
     Queue::fake();
 
-    $this->artisan('supplier:photos', ['--page' => 5])->assertSuccessful();
+    $this->artisan('supplier:content', ['--page' => 5])->assertSuccessful();
 
-    Queue::assertPushed(SyncSupplierPhotosPage::class, 1);
+    Queue::assertPushed(SyncSupplierContentPage::class, 1);
 });

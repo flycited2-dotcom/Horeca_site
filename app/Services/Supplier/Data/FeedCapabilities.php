@@ -17,11 +17,14 @@ final readonly class FeedCapabilities
     /**
      * @param  list<ImportEntity>  $entities
      * @param  list<string>  $ownedProductFields
+     * @param  list<string>  $seededProductFields  fields the source fills only in a product it creates:
+     *                                             another source owns them afterwards
      */
     public function __construct(
         public array $entities,
         public array $ownedProductFields,
         public bool $isFullSnapshot,
+        public array $seededProductFields = [],
     ) {}
 
     public function provides(ImportEntity $entity): bool
@@ -32,5 +35,10 @@ final readonly class FeedCapabilities
     public function owns(string $field): bool
     {
         return in_array($field, $this->ownedProductFields, true);
+    }
+
+    public function seeds(string $field): bool
+    {
+        return in_array($field, $this->seededProductFields, true);
     }
 }

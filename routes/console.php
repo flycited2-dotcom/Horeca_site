@@ -4,6 +4,7 @@ use App\Console\Commands\DispatchDueImportsCommand;
 use App\Console\Commands\GenerateSitemapCommand;
 use App\Console\Commands\RecalculatePopularityCommand;
 use App\Console\Commands\SendImportDigestCommand;
+use App\Console\Commands\SyncSupplierContentCommand;
 use App\Models\Cart;
 use App\Models\Favorite;
 use Illuminate\Support\Facades\Schedule;
@@ -22,6 +23,11 @@ Schedule::command(DispatchDueImportsCommand::class)
 
 Schedule::command(SendImportDigestCommand::class)
     ->dailyAt('20:00');
+
+// Фото, описания, габариты и характеристики с сайта поставщика, пока нет API (ТЗ §6):
+// после вечерних выгрузок, страница в секунду, неизменное не скачивается заново.
+Schedule::command(SyncSupplierContentCommand::class)
+    ->dailyAt('00:30');
 
 // Популярность — вторая ступень сортировки после наличия (ТЗ §8.2, §17.5).
 Schedule::command(RecalculatePopularityCommand::class)

@@ -193,11 +193,11 @@ class ProductForm
     {
         return [
             Grid::make(2)->schema([
-                TextInput::make('warranty_months')->label(__('admin.product.warranty_months'))->integer()->minValue(0)->maxValue(600),
-                TextInput::make('weight_kg')->label(__('admin.product.weight_kg'))->numeric()->minValue(0)->maxValue(99999),
-                TextInput::make('length_mm')->label(__('admin.product.length_mm'))->integer()->minValue(0)->maxValue(100000),
-                TextInput::make('width_mm')->label(__('admin.product.width_mm'))->integer()->minValue(0)->maxValue(100000),
-                TextInput::make('height_mm')->label(__('admin.product.height_mm'))->integer()->minValue(0)->maxValue(100000),
+                self::lockable(TextInput::make('warranty_months')->label(__('admin.product.warranty_months'))->integer()->minValue(0)->maxValue(600)),
+                self::lockable(TextInput::make('weight_kg')->label(__('admin.product.weight_kg'))->numeric()->minValue(0)->maxValue(99999)),
+                self::lockable(TextInput::make('length_mm')->label(__('admin.product.length_mm'))->integer()->minValue(0)->maxValue(100000)),
+                self::lockable(TextInput::make('width_mm')->label(__('admin.product.width_mm'))->integer()->minValue(0)->maxValue(100000)),
+                self::lockable(TextInput::make('height_mm')->label(__('admin.product.height_mm'))->integer()->minValue(0)->maxValue(100000)),
             ]),
         ];
     }
