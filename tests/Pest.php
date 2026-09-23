@@ -1,11 +1,15 @@
 <?php
 
+use App\Enums\CompanyStatus;
 use App\Enums\ImportTrigger;
 use App\Enums\UserRole;
 use App\Models\Cart;
+use App\Models\Company;
 use App\Models\ImportProfile;
 use App\Models\ImportRun;
+use App\Models\PriceTier;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Services\Cart\CartStore;
@@ -112,4 +116,24 @@ function staffUser(UserRole $role = UserRole::Manager): User
         'role' => $role,
         'app_authentication_secret' => app(AppAuthentication::class)->generateSecret(),
     ]);
+}
+
+/**
+ * Sets a shop setting (TZ §5.5) straight in the table.
+ */
+function setting(string $key, mixed $value): void
+{
+    Setting::query()->updateOrCreate(['key' => $key], ['value' => $value]);
+}
+
+/**
+ * A customer whose company has the given status and price tier.
+ */
+function wholesaleCustomer(PriceTier $tier, CompanyStatus $status = CompanyStatus::Approved): User
+{
+    $company = Company::factory()->create(['status' => $status, 'price_tier_id' => $tier->id]);
+    $user = User::factory()->create();
+    $user->forceFill(['company_id' => $company->id])->save();
+
+    return $user->refresh();
 }

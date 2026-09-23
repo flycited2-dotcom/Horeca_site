@@ -1,30 +1,13 @@
 <?php
 
 use App\Enums\CompanyStatus;
-use App\Models\Company;
 use App\Models\PriceTier;
 use App\Models\Product;
 use App\Models\ProductPrice;
-use App\Models\Setting;
-use App\Models\User;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Settings\Settings;
 use App\Support\Money;
 use App\Support\Percent;
-
-function setting(string $key, mixed $value): void
-{
-    Setting::query()->updateOrCreate(['key' => $key], ['value' => $value]);
-}
-
-function wholesaleCustomer(PriceTier $tier, CompanyStatus $status = CompanyStatus::Approved): User
-{
-    $company = Company::factory()->create(['status' => $status, 'price_tier_id' => $tier->id]);
-    $user = User::factory()->create();
-    $user->forceFill(['company_id' => $company->id])->save();
-
-    return $user->refresh();
-}
 
 beforeEach(function () {
     $this->tier = PriceTier::factory()->create([

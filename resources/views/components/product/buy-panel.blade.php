@@ -1,4 +1,4 @@
-@props(['product', 'price' => null, 'stocks', 'facts'])
+@props(['product', 'price' => null, 'stocks', 'facts', 'wholesalePending' => false])
 
 {{--
     Панель покупки (ТЗ §8.3, §6.5, макет — экран 3): цена, счётчик и кнопка по статусу,
@@ -14,6 +14,10 @@
 
 <div data-buy-panel {{ $attributes->class('flex flex-col gap-4 rounded-card border border-line bg-surface p-4 shadow-raised md:p-5') }}>
     <x-ui.price :price="$price" size="page" />
+
+    @if ($wholesalePending && $price !== null)
+        <x-ui.wholesale-pending />
+    @endif
 
     @if ($product->availability === Availability::Discontinued)
         <p class="text-base text-steel-500">{{ __('shop.product.discontinued_note') }}</p>

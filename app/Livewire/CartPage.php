@@ -98,6 +98,7 @@ final class CartPage extends Component
         return view('livewire.cart-page', [
             'summary' => $summary,
             'vat' => $settings->get('seller.vat_mode'),
+            'wholesalePending' => (bool) $user?->hasPendingCompany(),
         ]);
     }
 }

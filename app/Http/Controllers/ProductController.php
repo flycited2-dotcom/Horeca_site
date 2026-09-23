@@ -47,6 +47,7 @@ class ProductController extends Controller
         return view('product.show', [
             'product' => $product,
             'price' => $price,
+            'wholesalePending' => (bool) $user?->hasPendingCompany(),
             'stocks' => $catalog->visibleStocks($product),
             'similar' => $similar,
             'related' => $related,

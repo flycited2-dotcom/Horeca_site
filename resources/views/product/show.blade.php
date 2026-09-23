@@ -33,7 +33,7 @@
         <x-product.gallery :product="$product" class="lg:col-start-1" />
 
         <aside class="lg:sticky lg:top-21 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
-            <x-product.buy-panel :product="$product" :price="$price" :stocks="$stocks" :facts="$facts" />
+            <x-product.buy-panel :product="$product" :price="$price" :stocks="$stocks" :facts="$facts" :wholesale-pending="$wholesalePending" />
         </aside>
 
         <div class="flex min-w-0 flex-col gap-4 lg:col-start-1">

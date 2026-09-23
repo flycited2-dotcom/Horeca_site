@@ -70,7 +70,13 @@
         </form>
 
         <div class="col-start-2 flex items-baseline justify-between gap-3 md:col-start-auto md:flex-col md:items-end md:gap-0.5">
-            <span class="text-sm text-steel-500 tabular">{{ __('shop.cart.per_unit', ['price' => Typography::money($line->unitPrice()), 'unit' => $product->unit]) }}</span>
+            <span class="text-sm text-steel-500 tabular">
+                @if ($line->price?->isWholesale && $line->price->hasDiscount())
+                    {{-- Оптовику — розничная зачёркнутой рядом со своей (ТЗ §7). --}}
+                    <s aria-label="{{ __('shop.price.retail_per_unit') }}">{{ Typography::money($line->price->retail) }}</s>
+                @endif
+                {{ __('shop.cart.per_unit', ['price' => Typography::money($line->unitPrice()), 'unit' => $product->unit]) }}
+            </span>
             <span class="text-lg font-bold whitespace-nowrap tabular">{{ Typography::money($line->sum()) }}</span>
         </div>
     @endif

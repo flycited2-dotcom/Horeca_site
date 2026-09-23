@@ -91,6 +91,10 @@
                     <p class="-mt-2 text-sm text-steel-500">{{ __('shop.cart.vat.'.$vat) }}</p>
                 @endif
 
+                @if ($wholesalePending)
+                    <x-ui.wholesale-pending />
+                @endif
+
                 @if ($left = $summary->freeDeliveryLeft())
                     <p class="text-sm text-steel-500">{{ __('shop.cart.free_delivery_left', ['sum' => Typography::money($left)]) }}</p>
                 @elseif ($summary->freeDeliveryFrom)

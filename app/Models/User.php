@@ -103,6 +103,14 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
         return $this->company?->status === CompanyStatus::Approved;
     }
 
+    /**
+     * The wholesale application waits for a manager: prices stay retail until then (TZ §7).
+     */
+    public function hasPendingCompany(): bool
+    {
+        return $this->company?->status === CompanyStatus::Pending;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_active && $this->isStaff();
