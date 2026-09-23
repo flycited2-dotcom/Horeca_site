@@ -38,6 +38,7 @@ class HomeController extends Controller
 
         return view('home.index', [
             'home' => $catalog->homeSections(),
+            'collections' => $catalog->homeCollections(),
             'sectionsTotal' => count($catalog->navigationCategories()),
             'strips' => $strips,
             'warehouse' => $warehouse,

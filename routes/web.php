@@ -12,6 +12,7 @@ use App\Http\Controllers\BulkOrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\FallbackController;
@@ -41,6 +42,7 @@ Route::get('/product/{product:slug}', ProductController::class)->name('product')
 Route::get('/brands', [BrandController::class, 'index'])->name('brands');
 Route::get('/brands/{brand:slug}', [BrandController::class, 'show'])->name('brand');
 Route::get('/search', SearchController::class)->name('search');
+Route::get('/collections/{collection:slug}', CollectionController::class)->name('collection');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');

@@ -9,6 +9,7 @@ use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductCollection;
 use App\Models\ProductStock;
 use App\Models\User;
 use App\Services\Pricing\PriceResolver;
@@ -362,6 +363,40 @@ final class CatalogQuery
             ->get()
             ->sortBy(fn (Product $product): int|false => array_search($product->id, $ids, true))
             ->values();
+    }
+
+    /**
+     * «Соберём кухню под задачу» on the home page (TZ §8.1): switched-on collections with at
+     * least one product on the storefront, in the manager's order, with how many there are.
+     *
+     * @return Collection<int, ProductCollection>
+     */
+    public function homeCollections(int $limit = 3): Collection
+    {
+        return ProductCollection::query()
+            ->where('is_active', true)
+            ->withCount(['products as listed_count' => fn (Builder $products) => $products->whereIn('products.id', $this->listed()->select('products.id'))])
+            ->orderBy('sort')
+            ->orderBy('name')
+            ->get()
+            ->filter(fn (ProductCollection $collection): bool => $collection->listed_count > 0)
+            ->take($limit)
+            ->values();
+    }
+
+    /**
+     * The products of a collection that are on the storefront, in the manager's order.
+     *
+     * @return Collection<int, Product>
+     */
+    public function collectionProducts(ProductCollection $collection, ?User $user): Collection
+    {
+        return $this->withCardData($this->listed(), $user)
+            ->join('collection_product', 'collection_product.product_id', '=', 'products.id')
+            ->where('collection_product.collection_id', $collection->id)
+            ->orderBy('collection_product.sort')
+            ->select('products.*')
+            ->get();
     }
 
     /**

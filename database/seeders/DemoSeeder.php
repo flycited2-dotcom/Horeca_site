@@ -521,9 +521,9 @@ class DemoSeeder extends Seeder
         $sort = 0;
 
         foreach ($collections as [$name, $slug, $icon, $categoryIcons, $count, $description]) {
-            $collection = ProductCollection::query()->create([
+            // ProductionSeeder has made the starting collections switched off: the demo fills and switches them on.
+            $collection = ProductCollection::query()->updateOrCreate(['slug' => $slug], [
                 'name' => $name,
-                'slug' => $slug,
                 'description' => $description,
                 'icon' => $icon,
                 'is_active' => true,

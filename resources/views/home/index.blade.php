@@ -1,8 +1,7 @@
 {{--
     Главная (ТЗ §8.1, макет — экран 4): плитки корневых разделов с числами вместо баннеров,
-    рядом — «Знаю артикул», ниже — ленты карточек. Панель подбора по задаче на месте
-    «Знаю артикул» появится вместе с подборками (спринт 6), вставка списка артикулов —
-    с заказом списком (спринт 5). Внизу — бренды списком названий (ТЗ §8.1, п. 5).
+    рядом — панель подбора: «Соберём кухню под задачу» (включённые подборки с товарами) и
+    «Знаю артикул», ниже — ленты карточек. Внизу — бренды списком названий (ТЗ §8.1, п. 5).
 --}}
 @php
     use App\Support\Typography;
@@ -60,11 +59,38 @@
             @endif
         </section>
 
-        <section class="flex flex-col gap-3 self-start rounded-card bg-slate p-4 md:p-6" aria-labelledby="sku-heading">
-            <h2 id="sku-heading" class="text-xl font-semibold">{{ __('shop.search.sku_heading') }}</h2>
-            <p class="text-base text-steel-500">{{ __('shop.search.sku_text') }}</p>
-            <livewire:instant-search field-id="sku-search" variant="sku" />
-        </section>
+        <div class="flex flex-col gap-6 self-start rounded-card bg-slate p-4 md:p-6">
+            @if ($collections->isNotEmpty())
+                <section class="flex flex-col gap-3" aria-labelledby="collections-heading">
+                    <h2 id="collections-heading" class="text-xl font-semibold">{{ __('shop.collections.heading') }}</h2>
+                    <ul class="flex flex-col gap-2">
+                        @foreach ($collections as $collection)
+                            <li>
+                                <a
+                                    href="{{ route('collection', $collection) }}"
+                                    class="flex items-start gap-3 rounded-card border border-slate-line bg-surface p-3 transition-[border-color,box-shadow] duration-150 ease-out hover:border-accent-ink hover:shadow-raised"
+                                >
+                                    <x-ui.equipment-icon :icon="$collection->icon" class="mt-0.5 size-6 text-steel-500" />
+                                    <span class="flex min-w-0 flex-col gap-0.5">
+                                        <span class="text-md leading-tight font-semibold">{{ $collection->name }}</span>
+                                        @if (filled($collection->description))
+                                            <span class="line-clamp-2 text-sm text-steel-500">{{ $collection->description }}</span>
+                                        @endif
+                                        <span class="text-sm text-steel-500 tabular">{{ $count('shop.catalog.models', $collection->listed_count) }}</span>
+                                    </span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </section>
+            @endif
+
+            <section class="flex flex-col gap-3" aria-labelledby="sku-heading">
+                <h2 id="sku-heading" class="text-xl font-semibold">{{ __('shop.search.sku_heading') }}</h2>
+                <p class="text-base text-steel-500">{{ __('shop.search.sku_text') }}</p>
+                <livewire:instant-search field-id="sku-search" variant="sku" />
+            </section>
+        </div>
     </div>
 
     @foreach ($strips as $key => $products)

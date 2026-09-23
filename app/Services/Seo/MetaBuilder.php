@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\ProductCollection;
 use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogSort;
 use App\Services\Settings\Settings;
@@ -70,6 +71,15 @@ final class MetaBuilder
             description: $this->limit($this->filled($brand->description) ?? __('shop.seo.brand_description', ['brand' => $brand->name, 'site' => $this->site()])),
             canonical: $this->listingUrl(route('brand', $brand), $filters, $page),
             robots: $this->listingRobots($filters),
+        );
+    }
+
+    public function collection(ProductCollection $collection): Meta
+    {
+        return new Meta(
+            title: $collection->name.' | '.$this->site(),
+            description: $this->limit($this->filled($collection->description) ?? __('shop.collections.description', ['name' => $collection->name, 'site' => $this->site()])),
+            canonical: route('collection', $collection),
         );
     }
 

@@ -5,14 +5,15 @@ namespace App\Actions\Seo;
 use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\ProductCollection;
 use App\Services\Catalog\CatalogQuery;
 use DateTimeInterface;
 use XMLWriter;
 
 /**
  * Карта сайта (ТЗ §14): главная, каталог, бренды, заявка на опт, включённые разделы,
- * товары витрины (видимые, не снятые, из включённых разделов), бренды с товарами и
- * включённые страницы. Пишется потоком во временный файл и подменяет прежний целиком —
+ * товары витрины (видимые, не снятые, из включённых разделов), включённые подборки, бренды
+ * с товарами и включённые страницы. Пишется потоком во временный файл и подменяет прежний целиком —
  * поисковик никогда не получит половину карты. Строится ежедневно в 04:00.
  */
 final class GenerateSitemap
@@ -61,6 +62,9 @@ final class GenerateSitemap
         $this->catalog->listed()->select(['id', 'slug', 'updated_at'])
             ->lazyById(1000)
             ->each(fn (Product $product) => $add(route('product', $product), $product->updated_at));
+
+        ProductCollection::query()->where('is_active', true)->orderBy('sort')->get(['slug', 'updated_at'])
+            ->each(fn (ProductCollection $collection) => $add(route('collection', $collection), $collection->updated_at));
 
         foreach ($this->catalog->brandDirectory() as $brand) {
             $add(route('brand', $brand['slug']));

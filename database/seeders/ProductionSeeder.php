@@ -6,6 +6,7 @@ use App\Enums\PriceKind;
 use App\Models\ImportProfile;
 use App\Models\Page;
 use App\Models\PriceTier;
+use App\Models\ProductCollection;
 use App\Models\Setting;
 use App\Models\Supplier;
 use App\Support\Money;
@@ -63,6 +64,15 @@ class ProductionSeeder extends Seeder
     ];
 
     /**
+     * Starting collections (TZ §8.1): slug => [name, icon, description].
+     */
+    public const array COLLECTIONS = [
+        'kafe-do-50-posadok' => ['Кафе до 50 посадок', 'thermal', 'Тепловое, холодильное и моечное оборудование для кухни небольшого кафе.'],
+        'bar' => ['Бар', 'refrigeration', 'Холодильное оборудование и компактная техника для барной стойки.'],
+        'konditerskiy-tsekh' => ['Кондитерский цех', 'electromechanical', 'Печи, тестомесы и производственные столы для кондитерского производства.'],
+    ];
+
+    /**
      * Required pages (TZ §5.5): slug => title. Created inactive until the customer provides texts.
      */
     public const array PAGES = Page::REQUIRED;
@@ -72,6 +82,7 @@ class ProductionSeeder extends Seeder
         $this->seedPriceTiers();
         $this->seedSettings();
         $this->seedPages();
+        $this->seedCollections();
         $this->seedSupplier();
     }
 
@@ -103,6 +114,25 @@ class ProductionSeeder extends Seeder
             Page::query()->firstOrCreate(['slug' => $slug], [
                 'title' => $title,
                 'content' => '',
+                'is_active' => false,
+                'sort' => $sort += 10,
+            ]);
+        }
+    }
+
+    /**
+     * Starting collections of «Соберём кухню под задачу» (TZ §8.1): switched off and empty —
+     * the manager fills them with products of the real catalogue and switches them on.
+     */
+    private function seedCollections(): void
+    {
+        $sort = 0;
+
+        foreach (self::COLLECTIONS as $slug => [$name, $icon, $description]) {
+            ProductCollection::query()->firstOrCreate(['slug' => $slug], [
+                'name' => $name,
+                'icon' => $icon,
+                'description' => $description,
                 'is_active' => false,
                 'sort' => $sort += 10,
             ]);
