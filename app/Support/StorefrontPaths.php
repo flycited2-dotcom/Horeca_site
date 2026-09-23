@@ -14,6 +14,11 @@ final class StorefrontPaths
 
     public const string BRAND = '/brands/';
 
+    /**
+     * Pages of the CMS live at the root: /dostavka (TZ §8, Route::fallback).
+     */
+    public const string PAGE = '/';
+
     public static function product(string $slug): string
     {
         return self::PRODUCT.$slug;

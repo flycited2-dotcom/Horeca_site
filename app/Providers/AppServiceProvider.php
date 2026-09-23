@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Page;
 use App\Models\PriceTier;
 use App\Models\Product;
 use App\Models\Warehouse;
@@ -57,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
         Product::observe(SlugRedirectObserver::class);
         Category::observe([SlugRedirectObserver::class, CatalogCacheObserver::class]);
         Brand::observe([SlugRedirectObserver::class, CatalogCacheObserver::class]);
+        Page::observe(SlugRedirectObserver::class);
         Warehouse::observe(CatalogCacheObserver::class);
         PriceTier::observe(PriceTierObserver::class);
 

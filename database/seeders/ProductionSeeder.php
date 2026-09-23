@@ -65,17 +65,7 @@ class ProductionSeeder extends Seeder
     /**
      * Required pages (TZ §5.5): slug => title. Created inactive until the customer provides texts.
      */
-    public const array PAGES = [
-        'dostavka' => 'Доставка',
-        'oplata' => 'Оплата',
-        'garantiya' => 'Гарантия',
-        'optovikam' => 'Оптовикам',
-        'o-kompanii' => 'О компании',
-        'kontakty' => 'Контакты',
-        'politika-konfidencialnosti' => 'Политика конфиденциальности',
-        'soglasie-na-obrabotku-personalnyh-dannyh' => 'Согласие на обработку персональных данных',
-        'polzovatelskoe-soglashenie' => 'Пользовательское соглашение',
-    ];
+    public const array PAGES = Page::REQUIRED;
 
     public function run(): void
     {

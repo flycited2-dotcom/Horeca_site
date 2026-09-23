@@ -2,7 +2,6 @@
 
 namespace App\View;
 
-use App\Http\Controllers\WholesaleController;
 use App\Models\Page;
 use Illuminate\Support\Str;
 
@@ -45,7 +44,7 @@ final readonly class StorefrontShell
      */
     public function pageUrl(Page $page): string
     {
-        return $page->slug === WholesaleController::BENEFITS_PAGE ? route('wholesale') : url($page->slug);
+        return $page->url();
     }
 
     /**
