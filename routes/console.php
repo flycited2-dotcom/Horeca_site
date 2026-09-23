@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\DispatchDueImportsCommand;
+use App\Console\Commands\GenerateSitemapCommand;
 use App\Console\Commands\SendImportDigestCommand;
 use App\Models\Cart;
 use App\Models\Favorite;
@@ -20,6 +21,10 @@ Schedule::command(DispatchDueImportsCommand::class)
 
 Schedule::command(SendImportDigestCommand::class)
     ->dailyAt('20:00');
+
+// Карта сайта для поисковиков (ТЗ §14).
+Schedule::command(GenerateSitemapCommand::class)
+    ->dailyAt('04:00');
 
 // Гостевые корзины живут 30 дней после последнего изменения (ТЗ §10.1), гостевое
 // избранное — пока жива сессия гостя (§5).

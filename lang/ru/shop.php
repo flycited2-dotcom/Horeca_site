@@ -355,6 +355,7 @@ return [
     ],
 
     'seo' => [
+        'sitemap_done' => 'Карта сайта собрана: :count адресов.',
         'product_description' => ':name — цена :price, :availability.',
         'product_brand' => 'Бренд :brand.',
         'product_sku' => 'Артикул :sku.',
