@@ -154,5 +154,8 @@
 
     {{-- «Запросить цену» из листингов: одно окно на страницу, товар подставляет нажатая кнопка. --}}
     <x-lead.dialog id="lead-price-shared" type="price_request" shared />
+
+    {{-- Livewire загружает скрипт витрины (resources/js/storefront.js), здесь — только его настройки. --}}
+    @livewireScriptConfig
 </body>
 </html>

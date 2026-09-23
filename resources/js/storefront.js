@@ -427,3 +427,49 @@ if (buyPanel && stickyBuy) {
         stickyBuy.hidden = entry.isIntersecting || entry.boundingClientRect.top > 0;
     }).observe(buyPanel);
 }
+
+// Livewire (ТЗ §14): листинги и корзина запускают его сразу, а страницам, где он нужен только
+// мгновенному поиску в шапке, — карточке товара, главной, статическим страницам — его 98 КБ не
+// мешают показать главное: он загружается при первом касании страницы или вскоре после загрузки.
+// Поиск и без него — обычная форма. Что успели набрать до запуска, уходит в поиск после него.
+let livewireStarted = false;
+
+const startLivewire = async () => {
+    if (livewireStarted) {
+        return;
+    }
+
+    livewireStarted = true;
+
+    const { Livewire } = await import('../../vendor/livewire/livewire/dist/livewire.esm');
+    const typed = [...document.querySelectorAll('[wire\\:name="instant-search"] input[name="q"]')]
+        .map((field) => [field, field.value]);
+
+    Livewire.start();
+
+    for (const [field, value] of typed) {
+        if (value !== '' && field.value !== value) {
+            field.value = value;
+            field.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+};
+
+const onlySearch = [...document.querySelectorAll('[wire\\:name]')]
+    .every((component) => component.getAttribute('wire:name') === 'instant-search');
+
+if (!onlySearch) {
+    startLivewire();
+} else if (document.querySelector('[wire\\:name]')) {
+    for (const type of ['focusin', 'pointerdown', 'keydown', 'touchstart']) {
+        document.addEventListener(type, startLivewire, { once: true, passive: true });
+    }
+
+    const later = () => setTimeout(startLivewire, 3000);
+
+    if (document.readyState === 'complete') {
+        later();
+    } else {
+        window.addEventListener('load', later, { once: true });
+    }
+}
