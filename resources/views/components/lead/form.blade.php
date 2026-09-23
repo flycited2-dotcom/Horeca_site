@@ -57,13 +57,7 @@
     </div>
 
     <div class="flex flex-col gap-1.5">
-        <label for="{{ $id }}-consent" class="flex cursor-pointer items-start gap-2.5 text-sm">
-            <input type="checkbox" id="{{ $id }}-consent" name="consent" value="1" class="mt-0.5 size-4.5 shrink-0 accent-accent-ink">
-            <span>
-                {{ __('shop.checkout.consent_before') }}
-                <a href="{{ url('soglasie-na-obrabotku-personalnyh-dannyh') }}" class="text-accent-ink underline underline-offset-2">{{ __('shop.checkout.consent_link') }}</a>
-            </span>
-        </label>
+        <x-ui.consent :id="$id.'-consent'" />
         <p data-field-error="consent" hidden class="{{ $error }}"></p>
     </div>
 

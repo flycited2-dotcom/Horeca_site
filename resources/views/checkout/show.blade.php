@@ -21,7 +21,6 @@
         'comment' => 'comment', 'consent' => 'consent',
     ];
     $section = 'flex flex-col gap-4 rounded-card border border-line bg-surface p-4 md:p-6';
-    $select = 'h-control w-full rounded-control border bg-surface px-3 text-base text-ink transition-colors duration-150 ease-out focus:border-accent';
 @endphp
 
 <x-layouts.app :title="__('shop.checkout.title')" noindex>
@@ -99,17 +98,7 @@
                 <div class="hidden grid-cols-1 gap-4 group-has-[#delivery-transport-company:checked]/delivery:grid md:grid-cols-2">
                     <x-ui.input name="delivery_city" :label="__('shop.checkout.fields.delivery_city')" :value="old('delivery_city')" autocomplete="address-level2" maxlength="150" />
 
-                    <div class="flex flex-col gap-1.5">
-                        <label for="tk_name" class="text-sm leading-[1.4] font-medium text-steel-500">{{ __('shop.checkout.fields.tk_name') }}</label>
-                        <select id="tk_name" name="tk_name" @error('tk_name') aria-invalid="true" aria-describedby="tk_name-error" @enderror @class([$select, 'border-danger' => $errors->has('tk_name'), 'border-line' => ! $errors->has('tk_name')])>
-                            @foreach ($carriers as $carrier)
-                                <option value="{{ $carrier }}" @selected(old('tk_name') === $carrier)>{{ $carrier }}</option>
-                            @endforeach
-                        </select>
-                        @error('tk_name')
-                            <p id="tk_name-error" class="text-sm text-danger-text">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-ui.select name="tk_name" :label="__('shop.checkout.fields.tk_name')" :options="array_combine($carriers, $carriers)" :selected="old('tk_name')" />
                 </div>
 
                 <div class="hidden group-has-[#delivery-courier-city:checked]/delivery:block">
@@ -183,23 +172,7 @@
             @endif
 
             <div class="flex flex-col gap-1.5">
-                <label for="consent" class="flex cursor-pointer items-start gap-2.5 text-sm">
-                    <input
-                        type="checkbox"
-                        id="consent"
-                        name="consent"
-                        value="1"
-                        @checked(old('consent'))
-                        @error('consent') aria-invalid="true" aria-describedby="consent-error" @enderror
-                        class="mt-0.5 size-4.5 shrink-0 accent-accent-ink"
-                    >
-                    <span>
-                        {{ __('shop.checkout.consent_before') }}
-                        <a href="{{ url('soglasie-na-obrabotku-personalnyh-dannyh') }}" class="text-accent-ink underline underline-offset-2">{{ __('shop.checkout.consent_link') }}</a>
-                        {{ __('shop.checkout.consent_and') }}
-                        <a href="{{ url('politika-konfidencialnosti') }}" class="text-accent-ink underline underline-offset-2">{{ __('shop.checkout.privacy_link') }}</a>
-                    </span>
-                </label>
+                <x-ui.consent :checked="(bool) old('consent')" :error="$errors->first('consent')" />
                 @error('consent')
                     <p id="consent-error" class="text-sm text-danger-text">{{ $message }}</p>
                 @enderror
