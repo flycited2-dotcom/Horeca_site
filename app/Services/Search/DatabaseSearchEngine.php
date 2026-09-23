@@ -76,7 +76,7 @@ final class DatabaseSearchEngine implements SearchEngineInterface
      * The compact form of a code column in SQL, the same as SearchTextBuilder::compact():
      * lower case, «ё» as «е», no spaces, dashes, dots, slashes, commas or underscores.
      */
-    private static function compactSql(string $column): string
+    public static function compactSql(string $column): string
     {
         $sql = "REPLACE(LOWER({$column}), 'ё', 'е')";
 

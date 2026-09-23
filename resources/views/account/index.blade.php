@@ -59,14 +59,18 @@
 
             <section class="{{ $card }}" aria-labelledby="account-actions">
                 <h2 id="account-actions" class="{{ $caption }}">{{ __('shop.account.summary.actions_heading') }}</h2>
+                @php($wholesale = $company?->status === CompanyStatus::Approved)
                 <div class="flex flex-col gap-2">
+                    @if ($wholesale)
+                        <x-ui.button :href="route('account.bulk-order')" class="w-full">{{ __('shop.account.summary.bulk_order') }}</x-ui.button>
+                    @endif
                     @if ($latest)
                         <form method="post" action="{{ route('account.order.repeat', $latest) }}">
                             @csrf
-                            <x-ui.button type="submit" class="w-full">{{ __('shop.account.summary.repeat_last', ['number' => $latest->number]) }}</x-ui.button>
+                            <x-ui.button type="submit" :variant="$wholesale ? 'neutral' : 'primary'" class="w-full">{{ __('shop.account.summary.repeat_last', ['number' => $latest->number]) }}</x-ui.button>
                         </form>
                     @endif
-                    <x-ui.button :href="route('catalog')" :variant="$latest ? 'neutral' : 'primary'" class="w-full">{{ __('shop.account.summary.to_catalog') }}</x-ui.button>
+                    <x-ui.button :href="route('catalog')" :variant="$latest || $wholesale ? 'neutral' : 'primary'" class="w-full">{{ __('shop.account.summary.to_catalog') }}</x-ui.button>
                     @if ($company !== null)
                         <x-ui.button :href="route('account.company')" variant="neutral" class="w-full">{{ __('shop.account.summary.company_link') }}</x-ui.button>
                     @endif

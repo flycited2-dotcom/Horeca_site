@@ -12,6 +12,7 @@
     $tabs = [
         'summary' => route('account'),
         'orders' => route('account.orders'),
+        'bulk' => $company?->status === CompanyStatus::Approved ? route('account.bulk-order') : null,
         'favorites' => route('favorites'),
         'company' => $company !== null ? route('account.company') : null,
     ];

@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\BulkOrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StyleguideController;
 use App\Http\Controllers\WholesaleController;
+use App\Http\Middleware\EnsureWholesaleApproved;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -66,6 +68,16 @@ Route::middleware('auth')->prefix('account')->group(function (): void {
     Route::get('/orders/{order:number}/invoice', [AccountOrderController::class, 'invoice'])->name('account.order.invoice');
     Route::get('/company', [AccountCompanyController::class, 'edit'])->name('account.company');
     Route::put('/company', [AccountCompanyController::class, 'update'])->middleware('throttle:10,1')->name('account.company.update');
+
+    // Заказ списком — только одобренным оптовикам (ТЗ §11).
+    Route::middleware(EnsureWholesaleApproved::class)->group(function (): void {
+        Route::get('/bulk-order', [BulkOrderController::class, 'show'])->name('account.bulk-order');
+        Route::post('/bulk-order', [BulkOrderController::class, 'check'])->middleware('throttle:30,1')->name('account.bulk-order.check');
+        Route::delete('/bulk-order', [BulkOrderController::class, 'reset'])->name('account.bulk-order.reset');
+        Route::post('/bulk-order/cart', [BulkOrderController::class, 'addToCart'])->middleware('throttle:30,1')->name('account.bulk-order.cart');
+        Route::post('/bulk-order/price-request', [BulkOrderController::class, 'requestPrices'])->middleware('throttle:10,60')->name('account.bulk-order.prices');
+        Route::get('/bulk-order/template', [BulkOrderController::class, 'template'])->name('account.bulk-order.template');
+    });
 });
 
 // «Оптовым клиентам»: лендинг, заявка и её статус (ТЗ §11).

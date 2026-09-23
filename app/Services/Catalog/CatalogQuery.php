@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\ProductStock;
 use App\Models\User;
 use App\Services\Pricing\PriceResolver;
+use App\Services\Search\DatabaseSearchEngine;
 use App\Support\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -361,6 +362,32 @@ final class CatalogQuery
             ->get()
             ->sortBy(fn (Product $product): int|false => array_search($product->id, $ids, true))
             ->values();
+    }
+
+    /**
+     * Products whose article or 1C code, compacted, is one of the given codes (TZ §11, «Заказ
+     * списком»): visible products of switched-on sections, discontinued ones included, so the
+     * list can say why a line is not bought. One query for the whole list.
+     *
+     * @param  list<string>  $codes  compact codes, SearchTextBuilder::compact()
+     * @return Collection<int, Product>
+     */
+    public function byCompactCodes(array $codes, ?User $user): Collection
+    {
+        if ($codes === []) {
+            return new Collection;
+        }
+
+        $marks = implode(', ', array_fill(0, count($codes), '?'));
+
+        $products = Product::query()
+            ->where('is_visible', true)
+            ->whereIn('category_id', Category::query()->active()->select('id'))
+            ->where(fn (Builder $where) => $where
+                ->whereRaw(DatabaseSearchEngine::compactSql('sku')." IN ({$marks})", $codes)
+                ->orWhereRaw(DatabaseSearchEngine::compactSql('supplier_code')." IN ({$marks})", $codes));
+
+        return $this->withCardData($products, $user)->orderBy('name')->get();
     }
 
     /**
