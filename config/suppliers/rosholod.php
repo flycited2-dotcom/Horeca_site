@@ -48,4 +48,18 @@ return [
         '0' => 'out',
     ],
 
+    /*
+     * Photos from the product list of the supplier's site until its API is issued (TZ §6,
+     * the customer's decision of 23.09.2026 as a Rosholod dealer). Pages of 20 products, one
+     * page a second; photos are taken only from the supplier's media folder.
+     */
+    'site_photos' => [
+        'url' => env('ROSHOLOD_SITE_PHOTOS_URL', 'https://rosholod.org/api/v1/prices/'),
+        'media_prefix' => 'https://rosholod.org/media/products_images/',
+        'page_pause_ms' => 1000,
+        'photo_pause_ms' => 250,
+        'timeout' => 30,
+        'user_agent' => 'GastrosnabCatalog/1.0 (+https://gastrosnab.ru; photos of a Rosholod dealer)',
+    ],
+
 ];
