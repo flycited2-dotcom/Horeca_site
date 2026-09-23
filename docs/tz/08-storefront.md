@@ -16,6 +16,7 @@ GET  /checkout/success/{number}          «Спасибо» — только д�
 POST /leads                              Лиды всех типов
 GET  /favorites                          Избранное
 GET  /login, /register, /forgot-password, /reset-password/{token}
+POST /logout                             Выход; вход — по почте или телефону (§15.3)
 GET  /wholesale, POST /wholesale         Лендинг «Оптовым клиентам» и заявка
 GET  /account                            ЛК: сводка
 GET  /account/orders, /account/orders/{order}

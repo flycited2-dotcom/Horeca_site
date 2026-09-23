@@ -2,6 +2,7 @@
 
 namespace App\View;
 
+use App\Http\Controllers\WholesaleController;
 use App\Models\Page;
 use Illuminate\Support\Str;
 
@@ -36,6 +37,15 @@ final readonly class StorefrontShell
         public ?string $customerName = null,
         public ?string $customerEmail = null,
     ) {}
+
+    /**
+     * Where a service page leads: the wholesale page lives on its own route with the application
+     * form (TZ §11), every other page — at its slug.
+     */
+    public function pageUrl(Page $page): string
+    {
+        return $page->slug === WholesaleController::BENEFITS_PAGE ? route('wholesale') : url($page->slug);
+    }
 
     /**
      * The header tile has room for one word: the first name of the signed-in customer.

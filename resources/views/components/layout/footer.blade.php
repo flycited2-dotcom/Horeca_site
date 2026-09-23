@@ -55,7 +55,7 @@
                 <ul class="mt-3.5 flex flex-col gap-2.5">
                     @foreach ($shell->footerPages as $page)
                         <li>
-                            <a href="{{ url($page->slug) }}" class="text-base text-steel-500 transition-colors duration-150 ease-out hover:text-accent-ink">{{ $page->title }}</a>
+                            <a href="{{ $shell->pageUrl($page) }}" class="text-base text-steel-500 transition-colors duration-150 ease-out hover:text-accent-ink">{{ $page->title }}</a>
                         </li>
                     @endforeach
                 </ul>

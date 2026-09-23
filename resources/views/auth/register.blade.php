@@ -68,6 +68,10 @@
                 {{ __('shop.auth.register.has_account') }}
                 <a href="{{ route('login') }}" class="text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark">{{ __('shop.auth.register.login_link') }}</a>
             </p>
+            <p class="text-sm text-steel-500">
+                {{ __('shop.auth.login.wholesale_text') }}
+                <a href="{{ route('wholesale') }}" class="text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark">{{ __('shop.auth.login.wholesale_link') }}</a>
+            </p>
         </x-slot:footer>
     </x-auth.card>
 </x-layouts.app>

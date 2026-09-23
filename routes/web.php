@@ -15,6 +15,7 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StyleguideController;
+use App\Http\Controllers\WholesaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -51,6 +52,10 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/reset-password', [ResetPasswordController::class, 'store'])->middleware('throttle:10,1')->name('password.store');
 });
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
+
+// «Оптовым клиентам»: лендинг, заявка и её статус (ТЗ §11).
+Route::get('/wholesale', [WholesaleController::class, 'show'])->name('wholesale');
+Route::post('/wholesale', [WholesaleController::class, 'store'])->middleware('throttle:5,60')->name('wholesale.store');
 
 Route::get('/compare', [CompareController::class, 'index'])->name('compare');
 Route::delete('/compare', [CompareController::class, 'clear'])->name('compare.clear');

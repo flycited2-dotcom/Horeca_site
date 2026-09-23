@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 #[Fillable([
     'legal_name', 'brand_name', 'inn', 'kpp', 'ogrn', 'legal_address', 'delivery_address', 'city',
-    'bank_name', 'bik', 'account', 'corr_account', 'contact_person', 'phone', 'email', 'segment',
+    'bank_name', 'bik', 'account', 'corr_account', 'contact_person', 'phone', 'email', 'segment', 'comment',
 ])]
 class Company extends Model
 {

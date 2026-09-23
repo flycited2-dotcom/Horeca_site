@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use App\Http\Controllers\WholesaleController;
 use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
@@ -48,6 +49,15 @@ final class StorefrontLayoutComposer
             ->whereIn('slug', [...self::STRIP_PAGES, ...self::FOOTER_PAGES, self::PRIVACY_PAGE])
             ->get(['slug', 'title'])
             ->keyBy('slug');
+
+        // «Оптовым клиентам» есть всегда: там заявка на опт (ТЗ §11). Текст страницы
+        // «Оптовикам» — выгоды от заказчика — только дополняет её, когда администратор его включит.
+        if (! $pages->has(WholesaleController::BENEFITS_PAGE)) {
+            $pages->put(WholesaleController::BENEFITS_PAGE, (new Page)->forceFill([
+                'slug' => WholesaleController::BENEFITS_PAGE,
+                'title' => __('shop.wholesale.title'),
+            ]));
+        }
 
         $view->with('shell', new StorefrontShell(
             siteName: $this->text('site.name') ?? (string) config('app.name'),

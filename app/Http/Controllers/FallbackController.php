@@ -26,6 +26,11 @@ class FallbackController extends Controller
 
         $slug = trim($request->path(), '/');
 
+        // Текст «Оптовикам» показывается на странице заявки на опт — одна страница вместо двух (ТЗ §11).
+        if ($slug === WholesaleController::BENEFITS_PAGE) {
+            return redirect()->route('wholesale', status: 301);
+        }
+
         $page = str_contains($slug, '/')
             ? null
             : Page::query()->where('slug', $slug)->where('is_active', true)->first();

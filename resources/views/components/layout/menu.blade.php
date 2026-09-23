@@ -47,7 +47,7 @@
             </li>
             @foreach ($shell->stripPages as $page)
                 <li>
-                    <a href="{{ url($page->slug) }}" class="flex h-control items-center rounded-control border border-line bg-surface px-3 text-base font-medium transition-colors duration-150 ease-out hover:border-accent-ink">
+                    <a href="{{ $shell->pageUrl($page) }}" class="flex h-control items-center rounded-control border border-line bg-surface px-3 text-base font-medium transition-colors duration-150 ease-out hover:border-accent-ink">
                         {{ $page->title }}
                     </a>
                 </li>

@@ -51,7 +51,7 @@
                     <ul class="flex items-center gap-5">
                         @foreach ($shell->stripPages as $page)
                             <li>
-                                <a href="{{ url($page->slug) }}" class="font-medium transition-colors duration-150 ease-out hover:text-accent-ink">{{ $page->title }}</a>
+                                <a href="{{ $shell->pageUrl($page) }}" class="font-medium transition-colors duration-150 ease-out hover:text-accent-ink">{{ $page->title }}</a>
                             </li>
                         @endforeach
                     </ul>
