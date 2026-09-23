@@ -1,6 +1,7 @@
 {{--
     Статическая страница (ТЗ §5.5, §8): «Доставка», «Оплата», «Гарантия» и другие, которые
     менеджер включил в админке. Текст — Markdown, выводится через App\View\RichText.
+    На «Доставке» и «Оплате» заголовки-вопросы с ответами идут в разметку FAQPage (ТЗ §14).
 --}}
 <x-layouts.app :meta="$meta">
     <article class="rounded-card border border-line bg-surface p-4 md:p-8">
@@ -8,4 +9,8 @@
 
         <div class="rich-text mt-5">{{ \App\View\RichText::html($page->content) }}</div>
     </article>
+
+    @if ($faq)
+        <script type="application/ld+json">{!! \App\Support\StructuredData::json($faq) !!}</script>
+    @endif
 </x-layouts.app>

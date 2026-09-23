@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Product;
 use App\Services\Pricing\Price;
 use App\View\StorefrontShell;
+use Illuminate\Support\Str;
 
 /**
  * schema.org markup of the storefront pages (TZ §8.3, §14).
@@ -60,6 +61,55 @@ final class StructuredData
             'email' => $shell->email,
             'address' => $shell->address,
         ], fn (mixed $value): bool => $value !== null && $value !== '');
+    }
+
+    /**
+     * FAQPage (TZ §14) from a page text in Markdown: a heading of the second or third level
+     * that ends with «?» is a question, the text under it up to the next heading — the answer.
+     * null when the text has no question with an answer.
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function faq(?string $markdown): ?array
+    {
+        $questions = [];
+        $current = null;
+
+        foreach (preg_split('/\R/u', (string) $markdown) ?: [] as $line) {
+            if (preg_match('/^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$/u', $line, $heading) === 1) {
+                $current = preg_match('/^\s{0,3}#{2,3}\s/u', $line) === 1 && str_ends_with($heading[1], '?') ? count($questions) : null;
+
+                if ($current !== null) {
+                    $questions[] = ['question' => $heading[1], 'answer' => ''];
+                }
+
+                continue;
+            }
+
+            if ($current !== null) {
+                $questions[$current]['answer'] .= $line."\n";
+            }
+        }
+
+        $entities = [];
+
+        foreach ($questions as $item) {
+            $answer = trim((string) preg_replace('/\s+/u', ' ', strip_tags(Str::markdown($item['answer'], ['html_input' => 'strip']))));
+
+            if ($answer !== '') {
+                $entities[] = [
+                    '@type' => 'Question',
+                    'name' => $item['question'],
+                    'acceptedAnswer' => ['@type' => 'Answer', 'text' => $answer],
+                ];
+            }
+        }
+
+        return $entities === [] ? null : [
+            '@context' => 'https://schema.org',
+            '@type' => 'FAQPage',
+            'mainEntity' => $entities,
+        ];
     }
 
     /**

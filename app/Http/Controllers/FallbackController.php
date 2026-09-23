@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Storefront\FollowRedirect;
 use App\Models\Page;
 use App\Services\Seo\MetaBuilder;
+use App\Support\StructuredData;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,6 +18,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class FallbackController extends Controller
 {
+    /**
+     * Pages whose questions go into FAQPage markup (TZ §14).
+     */
+    public const array FAQ_PAGES = ['dostavka', 'oplata'];
+
     public function __invoke(Request $request, FollowRedirect $redirects, MetaBuilder $meta): RedirectResponse|View
     {
         $redirect = $redirects->handle($request);
@@ -40,6 +46,10 @@ class FallbackController extends Controller
             throw new NotFoundHttpException;
         }
 
-        return view('pages.show', ['page' => $page, 'meta' => $meta->page($page)]);
+        return view('pages.show', [
+            'page' => $page,
+            'meta' => $meta->page($page),
+            'faq' => in_array($page->slug, self::FAQ_PAGES, true) ? StructuredData::faq($page->content) : null,
+        ]);
     }
 }
