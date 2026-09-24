@@ -30,6 +30,20 @@ final class Typography
     }
 
     /**
+     * A value of a characteristic as it is stored: «1300.000» → «1 300», «0.286» → «0,286».
+     * Done on the digits, so no float ever touches it.
+     */
+    public static function decimal(string $value): string
+    {
+        $negative = str_starts_with($value, '-');
+        [$whole, $fraction] = array_pad(explode('.', ltrim($value, '-'), 2), 2, '');
+        $fraction = rtrim($fraction, '0');
+        $whole = ltrim($whole, '0') === '' ? '0' : ltrim($whole, '0');
+
+        return ($negative ? '−' : '').self::groupDigits($whole).($fraction === '' ? '' : ','.$fraction);
+    }
+
+    /**
      * "383995" → "383 995". Done on the digits, so no float ever touches the amount.
      */
     private static function groupDigits(string $digits): string

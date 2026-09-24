@@ -21,7 +21,7 @@
                 <x-ui.button
                     variant="secondary"
                     :href="$suggestion['url']"
-                    wire:click.prevent="removeFilter('{{ $suggestion['filter'] }}', '{{ $suggestion['brand'] }}')"
+                    wire:click.prevent="removeFilter('{{ $suggestion['filter'] }}', '{{ $suggestion['key'] }}')"
                 >{{ trans_choice('shop.catalog.drop_filter', $suggestion['count'], ['filter' => $suggestion['label'], 'count' => \App\Support\Typography::number($suggestion['count'])]) }}</x-ui.button>
             @endforeach
 

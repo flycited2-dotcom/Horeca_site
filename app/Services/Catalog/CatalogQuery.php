@@ -36,11 +36,33 @@ final class CatalogQuery
      */
     public const int MAX_PAGES = 20;
 
+    /**
+     * Characteristics marked as filters, read once per request: a listing applies its
+     * filters five or six times — the list, the counts and the facets.
+     *
+     * @var Collection<int, Attribute>|null
+     */
+    private ?Collection $filterable = null;
+
     public function __construct(
         private readonly CategoryTree $tree,
         private readonly PriceResolver $prices,
         private readonly CatalogCache $cache,
     ) {}
+
+    /**
+     * Characteristics the manager marked as filters, in the manager's order (TZ §8.2).
+     *
+     * @return Collection<int, Attribute>
+     */
+    public function filterableAttributes(): Collection
+    {
+        return $this->filterable ??= Attribute::query()
+            ->where('is_filterable', true)
+            ->orderBy('sort')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'unit', 'type']);
+    }
 
     /**
      * Switched-on root categories with products for the header, the menu and the footer:
@@ -674,10 +696,7 @@ final class CatalogQuery
      */
     private function filterByAttributes(Builder $products, array $conditions): void
     {
-        $attributes = Attribute::query()
-            ->where('is_filterable', true)
-            ->whereIn('slug', array_keys($conditions))
-            ->get(['id', 'slug', 'type']);
+        $attributes = $this->filterableAttributes()->whereIn('slug', array_keys($conditions));
 
         foreach ($attributes as $attribute) {
             $condition = $conditions[$attribute->slug];

@@ -43,20 +43,25 @@ final readonly class CatalogFilters
 
     /**
      * The same state with some filters dropped: facet counts ignore their own filter,
-     * a chip removes one. Names: price, in_stock, brand, attr; a brand slug drops one brand.
+     * a chip removes one. Names: price, in_stock, brand, attr; with a $key — a brand slug
+     * or an attribute slug — only that brand or that characteristic goes.
      */
-    public function without(string $filter, ?string $brand = null): self
+    public function without(string $filter, ?string $key = null): self
     {
         return new self(
             priceFrom: $filter === 'price' ? null : $this->priceFrom,
             priceTo: $filter === 'price' ? null : $this->priceTo,
             inStockOnly: $filter === 'in_stock' ? false : $this->inStockOnly,
             brands: match (true) {
-                $filter === 'brand' && $brand !== null => array_values(array_diff($this->brands, [$brand])),
+                $filter === 'brand' && $key !== null => array_values(array_diff($this->brands, [$key])),
                 $filter === 'brand' => [],
                 default => $this->brands,
             },
-            attributes: $filter === 'attr' ? [] : $this->attributes,
+            attributes: match (true) {
+                $filter === 'attr' && $key !== null => array_diff_key($this->attributes, [$key => true]),
+                $filter === 'attr' => [],
+                default => $this->attributes,
+            },
             sort: $this->sort,
         );
     }
@@ -120,6 +125,20 @@ final readonly class CatalogFilters
     }
 
     /**
+     * A bound of a characteristic as the customer typed it: «1 000», «0,5» or «-18».
+     */
+    private static function decimal(mixed $value): ?string
+    {
+        if (! is_scalar($value)) {
+            return null;
+        }
+
+        $value = str_replace(',', '.', (string) preg_replace('/[\s\x{00A0}]+/u', '', (string) $value));
+
+        return preg_match('/^-?\d{1,12}(\.\d{1,3})?$/', $value) === 1 ? $value : null;
+    }
+
+    /**
      * @return list<string>
      */
     private static function slugs(mixed $value): array
@@ -151,8 +170,10 @@ final readonly class CatalogFilters
             $clean = [];
 
             foreach (['min', 'max'] as $bound) {
-                if (isset($condition[$bound]) && is_numeric($condition[$bound])) {
-                    $clean[$bound] = (string) $condition[$bound];
+                $number = self::decimal($condition[$bound] ?? null);
+
+                if ($number !== null) {
+                    $clean[$bound] = $number;
                 }
             }
 

@@ -64,9 +64,9 @@ class StyleguideController extends Controller
                 'slice' => new ListingSlice(new Collection, 288, 6, 6),
                 'urlFor' => $urlFor,
                 'chips' => [
-                    ['label' => __('shop.catalog.in_stock_only'), 'filter' => 'in_stock', 'brand' => null, 'url' => $urlFor($filters->without('in_stock'))],
-                    ['label' => 'Abat', 'filter' => 'brand', 'brand' => 'abat', 'url' => $urlFor($filters->without('brand', 'abat'))],
-                    ['label' => __('shop.catalog.chip_price_range', ['from' => Typography::number(20_000), 'to' => Typography::number(400_000)]), 'filter' => 'price', 'brand' => null, 'url' => $urlFor($filters->without('price'))],
+                    ['label' => __('shop.catalog.in_stock_only'), 'filter' => 'in_stock', 'key' => null, 'url' => $urlFor($filters->without('in_stock'))],
+                    ['label' => 'Abat', 'filter' => 'brand', 'key' => 'abat', 'url' => $urlFor($filters->without('brand', 'abat'))],
+                    ['label' => __('shop.catalog.chip_price_range', ['from' => Typography::number(20_000), 'to' => Typography::number(400_000)]), 'filter' => 'price', 'key' => null, 'url' => $urlFor($filters->without('price'))],
                 ],
                 'sections' => $sections,
                 'section' => $sections->first(),

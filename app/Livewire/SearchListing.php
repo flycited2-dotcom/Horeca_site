@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Concerns\RefinesBySection;
+use App\Services\Catalog\AttributeFacets;
 use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CatalogSort;
@@ -35,7 +36,7 @@ final class SearchListing extends Component
         $this->query = mb_substr(trim($query), 0, 200);
     }
 
-    public function render(ProductSearch $search, CatalogQuery $catalog, PriceResolver $prices): View
+    public function render(ProductSearch $search, CatalogQuery $catalog, AttributeFacets $facets, PriceResolver $prices): View
     {
         $scope = $search->scope($this->query);
 
@@ -79,7 +80,8 @@ final class SearchListing extends Component
 
         $slice = $catalog->slice($ordered, $user, $this->page, $this->pages);
         $brands = $catalog->brandFacet($catalog->filtered(clone $base, $filters->without('brand')));
-        $chips = $this->withSectionChip($this->chips($filters, $brands), $section, $filters);
+        $attributes = $facets->for($base, $filters);
+        $chips = $this->withSectionChip($this->chips($filters, $brands, $attributes), $section, $filters);
 
         $listed = $exact === null ? $slice->products : $slice->products->concat([$exact]);
 
@@ -96,6 +98,7 @@ final class SearchListing extends Component
             'refine' => $catalog->categoryFacet($scope->matching(), self::REFINE_CATEGORIES),
             'section' => $section,
             'brandOptions' => $brands,
+            'attributeFacets' => $attributes,
             'inStockCount' => $catalog->inStockCount($catalog->filtered(clone $base, $filters->without('in_stock'))),
             'priceRange' => $catalog->priceRange($base),
             'chips' => $chips,

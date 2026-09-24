@@ -11,6 +11,7 @@ use App\Models\Warehouse;
 use App\Observers\CatalogCacheObserver;
 use App\Observers\PriceTierObserver;
 use App\Observers\SlugRedirectObserver;
+use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CategoryTree;
 use App\Services\Compare\CompareList;
 use App\Services\Favorites\FavoriteList;
@@ -36,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->scoped(CategoryTree::class);
+        $this->app->scoped(CatalogQuery::class);
         $this->app->scoped(Settings::class);
         $this->app->scoped(CompareList::class);
         $this->app->scoped(FavoriteList::class);

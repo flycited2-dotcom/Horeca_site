@@ -41,6 +41,11 @@ final class RosholodSiteSource implements SupplierContentSourceInterface
      */
     private const array SKIPPED = ['Бренд'];
 
+    /**
+     * A dash in the supplier's table means "no value", not a value of its own.
+     */
+    private const array BLANK = ['-', '—', '–'];
+
     public const string COUNTRY = 'Страна производства';
 
     public function page(int $page): SupplierContentPage
@@ -128,7 +133,7 @@ final class RosholodSiteSource implements SupplierContentSourceInterface
         $attributes = [];
 
         foreach (is_array($item['characteristics'] ?? null) ? $item['characteristics'] : [] as $key => $value) {
-            if (! is_string($key) || ! is_scalar($value) || trim((string) $value) === '' || in_array(trim($key), self::SKIPPED, true)) {
+            if (! is_string($key) || ! is_scalar($value) || in_array(trim((string) $value), ['', ...self::BLANK], true) || in_array(trim($key), self::SKIPPED, true)) {
                 continue;
             }
 

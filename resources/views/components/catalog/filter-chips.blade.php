@@ -12,8 +12,8 @@
         @foreach ($chips as $chip)
             <x-ui.chip
                 :href="$chip['url']"
-                wire:key="chip-{{ $chip['filter'] }}-{{ $chip['brand'] }}"
-                wire:click.prevent="removeFilter('{{ $chip['filter'] }}', '{{ $chip['brand'] }}')"
+                wire:key="chip-{{ $chip['filter'] }}-{{ $chip['key'] }}"
+                wire:click.prevent="removeFilter('{{ $chip['filter'] }}', '{{ $chip['key'] }}')"
             >{{ $chip['label'] }}</x-ui.chip>
         @endforeach
 

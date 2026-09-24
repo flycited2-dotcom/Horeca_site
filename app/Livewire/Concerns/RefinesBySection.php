@@ -21,7 +21,7 @@ trait RefinesBySection
     #[Url(as: 'category', history: true, except: '')]
     public string $category = '';
 
-    public function removeFilter(string $filter, ?string $brand = null): void
+    public function removeFilter(string $filter, ?string $key = null): void
     {
         if ($filter === 'category') {
             $this->category = '';
@@ -30,7 +30,7 @@ trait RefinesBySection
             return;
         }
 
-        $this->removeListingFilter($filter, $brand);
+        $this->removeListingFilter($filter, $key);
     }
 
     public function resetFilters(): void
@@ -52,8 +52,8 @@ trait RefinesBySection
     /**
      * The chips of the filters with the chosen section in front: it narrows the most.
      *
-     * @param  list<array{label: string, filter: string, brand: ?string, url: string}>  $chips
-     * @return list<array{label: string, filter: string, brand: ?string, url: string}>
+     * @param  list<array{label: string, filter: string, key: ?string, url: string}>  $chips
+     * @return list<array{label: string, filter: string, key: ?string, url: string}>
      */
     protected function withSectionChip(array $chips, ?Category $section, CatalogFilters $filters): array
     {
@@ -64,7 +64,7 @@ trait RefinesBySection
         return [[
             'label' => $section->name,
             'filter' => 'category',
-            'brand' => null,
+            'key' => null,
             'url' => $this->urlFor($filters, ['category' => '']),
         ], ...$chips];
     }
@@ -75,8 +75,8 @@ trait RefinesBySection
      *
      * @param  callable(CatalogFilters): int  $inSection  products left in the section under the given filters
      * @param  callable(CatalogFilters): int  $everywhere  products left without the section
-     * @param  list<array{label: string, filter: string, brand: ?string, url: string}>  $chips
-     * @return list<array{label: string, filter: string, brand: ?string, url: string, count: int}>
+     * @param  list<array{label: string, filter: string, key: ?string, url: string}>  $chips
+     * @return list<array{label: string, filter: string, key: ?string, url: string, count: int}>
      */
     protected function sectionSuggestions(callable $inSection, callable $everywhere, CatalogFilters $filters, array $chips): array
     {

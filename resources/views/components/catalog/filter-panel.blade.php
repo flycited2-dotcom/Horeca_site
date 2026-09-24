@@ -2,6 +2,7 @@
     'id',
     'filters',
     'brands',
+    'characteristics' => [],
     'priceRange' => null,
     'inStockCount' => 0,
     'total' => 0,
@@ -20,6 +21,8 @@
     Без скриптов это обычная GET-форма: те же имена полей, что в адресе ($hidden — запрос
     и раздел на странице поиска), и все бренды;
     со скриптами бренды после шестого свёрнуты в «Ещё N брендов», поиск по ним — на сервере.
+    Под брендами — характеристики-фильтры раздела (App\Services\Catalog\AttributeFacets):
+    число — «от — до» с подсказками раздела, текст — галочки со счётчиками.
 --}}
 @php
     $shownBrands = \App\Livewire\CategoryListing::BRANDS_SHOWN;
@@ -166,6 +169,73 @@
                     @endif
                 </div>
             @endif
+
+            @foreach ($characteristics as $facet)
+                <div
+                    role="group"
+                    aria-labelledby="{{ $id }}-attr-{{ $facet->slug }}"
+                    wire:key="attr-{{ $facet->slug }}"
+                    @class(['flex flex-col gap-3 p-4', 'border-t border-line-soft' => ! $loop->first || $brands->isNotEmpty()])
+                >
+                    <span id="{{ $id }}-attr-{{ $facet->slug }}" class="text-base font-semibold">{{ $facet->label() }}</span>
+
+                    @if ($facet->isRange())
+                        <div class="flex items-center gap-2">
+                            <label for="{{ $id }}-attr-{{ $facet->slug }}-min" class="sr-only">{{ __('shop.catalog.attribute_from', ['name' => $facet->name]) }}</label>
+                            <input
+                                id="{{ $id }}-attr-{{ $facet->slug }}-min"
+                                type="text"
+                                name="attr[{{ $facet->slug }}][min]"
+                                inputmode="decimal"
+                                autocomplete="off"
+                                value="{{ $facet->condition['min'] ?? '' }}"
+                                placeholder="{{ $facet->min !== null ? \App\Support\Typography::decimal($facet->min) : '' }}"
+                                wire:model.live.debounce.600ms="attr.{{ $facet->slug }}.min"
+                                class="h-control w-full min-w-0 rounded-control border border-line bg-surface px-3 text-base tabular placeholder:text-steel-500 focus:border-accent"
+                            >
+                            <span class="text-steel-500" aria-hidden="true">—</span>
+                            <label for="{{ $id }}-attr-{{ $facet->slug }}-max" class="sr-only">{{ __('shop.catalog.attribute_to', ['name' => $facet->name]) }}</label>
+                            <input
+                                id="{{ $id }}-attr-{{ $facet->slug }}-max"
+                                type="text"
+                                name="attr[{{ $facet->slug }}][max]"
+                                inputmode="decimal"
+                                autocomplete="off"
+                                value="{{ $facet->condition['max'] ?? '' }}"
+                                placeholder="{{ $facet->max !== null ? \App\Support\Typography::decimal($facet->max) : '' }}"
+                                wire:model.live.debounce.600ms="attr.{{ $facet->slug }}.max"
+                                class="h-control w-full min-w-0 rounded-control border border-line bg-surface px-3 text-base tabular placeholder:text-steel-500 focus:border-accent"
+                            >
+                        </div>
+
+                        @if ($facet->min !== null && $facet->max !== null)
+                            <span class="text-sm text-steel-500">
+                                {{ __('shop.catalog.attribute_range', [
+                                    'min' => \App\Support\Typography::decimal($facet->min),
+                                    'max' => \App\Support\Typography::decimal($facet->max).($facet->unit ? \App\Support\Typography::NBSP.$facet->unit : ''),
+                                ]) }}
+                            </span>
+                        @endif
+                    @else
+                        <div class="-mx-1 flex flex-col px-1 xl:max-h-80 xl:overflow-y-auto">
+                            @foreach ($facet->options as $option)
+                                <label wire:key="attr-{{ $facet->slug }}-{{ md5($option['value']) }}" class="flex min-h-control cursor-pointer items-center gap-2.5 text-base">
+                                    <input
+                                        type="checkbox"
+                                        name="attr[{{ $facet->slug }}][values][]"
+                                        value="{{ $option['value'] }}"
+                                        @checked($option['selected'])
+                                        wire:change="toggleAttributeValue(@js($facet->slug), @js($option['value']))"
+                                        class="size-4.5 shrink-0 accent-accent"
+                                    >
+                                    <span class="min-w-0 flex-1 truncate">{{ $option['value'] }}</span>
+                                    <span class="font-mono text-sm text-steel-500">{{ \App\Support\Typography::number($option['count']) }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @endforeach
         </div>
 
         <div class="border-t border-line-soft bg-bg p-3 xl:border-0 xl:bg-transparent xl:p-0">

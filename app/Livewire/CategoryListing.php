@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Concerns\ChoosesView;
 use App\Livewire\Concerns\FiltersListing;
 use App\Models\Category;
+use App\Services\Catalog\AttributeFacets;
 use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CatalogSort;
@@ -49,7 +50,7 @@ final class CategoryListing extends Component
         $this->chooseView();
     }
 
-    public function render(CatalogQuery $catalog, PriceResolver $prices): View
+    public function render(CatalogQuery $catalog, AttributeFacets $facets, PriceResolver $prices): View
     {
         $user = request()->user();
         $filters = $this->filters();
@@ -58,13 +59,15 @@ final class CategoryListing extends Component
         $slice = $catalog->categorySlice($this->category, $filters, $user, $this->page, $this->pages);
         // Each facet is counted under the other filters, so a count never promises an empty list.
         $brands = $catalog->brandFacet($catalog->filtered(clone $scope, $filters->without('brand')));
-        $chips = $this->chips($filters, $brands);
+        $attributes = $facets->for($scope, $filters);
+        $chips = $this->chips($filters, $brands, $attributes);
 
         return view('livewire.category-listing', [
             'filters' => $filters,
             'slice' => $slice,
             'prices' => $prices->forMany($slice->products, $user),
             'brandOptions' => $brands,
+            'attributeFacets' => $attributes,
             'inStockCount' => $catalog->inStockCount($catalog->filtered(clone $scope, $filters->without('in_stock'))),
             'priceRange' => $catalog->priceRange($scope),
             'categoryTotal' => $filters->isFiltered() ? $catalog->countInCategory($this->category, $filters->cleared()) : $slice->total,

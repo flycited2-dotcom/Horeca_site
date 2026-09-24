@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Concerns\ChoosesView;
 use App\Livewire\Concerns\RefinesBySection;
 use App\Models\Brand;
+use App\Services\Catalog\AttributeFacets;
 use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CatalogSort;
@@ -40,7 +41,7 @@ final class BrandListing extends Component
         $this->chooseView();
     }
 
-    public function render(CatalogQuery $catalog, PriceResolver $prices): View
+    public function render(CatalogQuery $catalog, AttributeFacets $facets, PriceResolver $prices): View
     {
         $user = request()->user();
         $filters = $this->filters();
@@ -50,7 +51,8 @@ final class BrandListing extends Component
         $base = $section === null ? clone $scope : $catalog->inBranch(clone $scope, $section);
 
         $slice = $catalog->slice($catalog->sorted($catalog->filtered(clone $base, $filters), $filters->sort), $user, $this->page, $this->pages);
-        $chips = $this->withSectionChip($this->chips($filters, new Collection), $section, $filters);
+        $attributes = $facets->for($base, $filters);
+        $chips = $this->withSectionChip($this->chips($filters, new Collection, $attributes), $section, $filters);
         $narrowed = $filters->isFiltered() || $section !== null;
 
         return view('livewire.brand-listing', [
@@ -64,6 +66,7 @@ final class BrandListing extends Component
             'sections' => $catalog->categoryFacet($scope, self::SECTIONS),
             'inStockCount' => $catalog->inStockCount($catalog->filtered(clone $base, $filters->without('in_stock'))),
             'priceRange' => $catalog->priceRange($base),
+            'attributeFacets' => $attributes,
             'chips' => $chips,
             'suggestions' => $slice->total === 0 && $narrowed ? $this->sectionSuggestions(
                 fn (CatalogFilters $state): int => $catalog->filtered(clone $base, $state)->count(),

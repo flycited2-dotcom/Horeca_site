@@ -71,6 +71,7 @@
                     :title="__('shop.search.narrow')"
                     :filters="$filters"
                     :brands="$brandOptions"
+                    :characteristics="$attributeFacets"
                     :price-range="$priceRange"
                     :in-stock-count="$inStockCount"
                     :total="$slice->total"

@@ -51,6 +51,7 @@
                 id="catalog-filters"
                 :filters="$filters"
                 :brands="collect()"
+                :characteristics="$attributeFacets"
                 :price-range="$priceRange"
                 :in-stock-count="$inStockCount"
                 :total="$slice->total"

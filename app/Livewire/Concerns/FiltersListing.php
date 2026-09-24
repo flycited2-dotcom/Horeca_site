@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Concerns;
 
+use App\Models\Attribute;
 use App\Models\Brand;
+use App\Services\Catalog\AttributeFacet;
 use App\Services\Catalog\CatalogFilters;
 use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CatalogSort;
@@ -36,6 +38,15 @@ trait FiltersListing
      */
     #[Url(as: 'brand', history: true, except: [])]
     public array $brands = [];
+
+    /**
+     * Characteristics: slug => ['min' => …, 'max' => …] or ['values' => […]], as typed —
+     * CatalogFilters cleans them, so a half-typed «0,» never empties the field.
+     *
+     * @var array<string, array<string, mixed>>
+     */
+    #[Url(as: 'attr', history: true, except: [])]
+    public array $attr = [];
 
     #[Url(history: true, except: 'popular')]
     public string $sort = 'popular';
@@ -71,8 +82,12 @@ trait FiltersListing
      */
     public function updated(string $property): void
     {
-        if (in_array(strtok($property, '.'), ['priceFrom', 'priceTo', 'inStock', 'brands', 'sort', 'category'], true)) {
+        if (in_array(strtok($property, '.'), ['priceFrom', 'priceTo', 'inStock', 'brands', 'attr', 'sort', 'category'], true)) {
             $this->startOver();
+        }
+
+        if (strtok($property, '.') === 'attr') {
+            $this->attr = self::withoutBlanks($this->attr);
         }
     }
 
@@ -82,7 +97,7 @@ trait FiltersListing
         $this->startOver();
     }
 
-    public function removeFilter(string $filter, ?string $brand = null): void
+    public function removeFilter(string $filter, ?string $key = null): void
     {
         if ($filter === 'price') {
             $this->priceFrom = '';
@@ -90,9 +105,28 @@ trait FiltersListing
         } elseif ($filter === 'in_stock') {
             $this->inStock = false;
         } elseif ($filter === 'brand') {
-            $this->brands = array_values(array_diff($this->brands, [$brand]));
+            $this->brands = array_values(array_diff($this->brands, [$key]));
+        } elseif ($filter === 'attr') {
+            $this->attr = $key === null ? [] : array_diff_key($this->attr, [$key => true]);
         }
 
+        $this->startOver();
+    }
+
+    /**
+     * A ticked or unticked value of a text characteristic. Not wire:model: before the first
+     * tick there is no list to bind a checkbox to, and Livewire would store «true» instead.
+     */
+    public function toggleAttributeValue(string $slug, string $value): void
+    {
+        if (preg_match('/^[a-z0-9-]{1,160}$/', $slug) !== 1) {
+            return;
+        }
+
+        $values = (array) ($this->attr[$slug]['values'] ?? []);
+        $values = in_array($value, $values, true) ? array_values(array_diff($values, [$value])) : [...$values, $value];
+
+        $this->attr = self::withoutBlanks([...$this->attr, $slug => ['values' => $values]]);
         $this->startOver();
     }
 
@@ -102,6 +136,7 @@ trait FiltersListing
         $this->priceTo = '';
         $this->inStock = false;
         $this->brands = [];
+        $this->attr = [];
         $this->startOver();
     }
 
@@ -134,17 +169,44 @@ trait FiltersListing
             'price_to' => $this->priceTo,
             'in_stock' => $this->inStock ? '1' : null,
             'brand' => $this->brands,
+            'attr' => $this->attr,
             'sort' => $this->sort,
         ]);
+    }
+
+    /**
+     * Cleared fields and unticked lists leave the address: no «attr[…][min]=» in a shared link.
+     *
+     * @param  array<string, mixed>  $attr
+     * @return array<string, array<string, mixed>>
+     */
+    private static function withoutBlanks(array $attr): array
+    {
+        $clean = [];
+
+        foreach ($attr as $slug => $condition) {
+            if (! is_array($condition)) {
+                continue;
+            }
+
+            $condition = array_filter($condition, fn (mixed $part): bool => is_array($part) ? $part !== [] : trim((string) $part) !== '');
+
+            if ($condition !== []) {
+                $clean[$slug] = $condition;
+            }
+        }
+
+        return $clean;
     }
 
     /**
      * Applied filters as chips over the list, each with the address that drops it.
      *
      * @param  Collection<int, Brand>  $facet
-     * @return list<array{label: string, filter: string, brand: ?string, url: string}>
+     * @param  list<AttributeFacet>  $attributeFacets
+     * @return list<array{label: string, filter: string, key: ?string, url: string}>
      */
-    protected function chips(CatalogFilters $filters, Collection $facet): array
+    protected function chips(CatalogFilters $filters, Collection $facet, array $attributeFacets = []): array
     {
         $chips = [];
 
@@ -169,6 +231,21 @@ trait FiltersListing
             }
         }
 
+        if ($filters->attributes !== []) {
+            $known = collect($attributeFacets)->keyBy('slug');
+            $missing = array_diff(array_keys($filters->attributes), $known->keys()->all());
+            $stored = $missing === [] ? collect() : Attribute::query()->where('is_filterable', true)->whereIn('slug', $missing)->get(['name', 'slug', 'unit'])->keyBy('slug');
+
+            foreach ($filters->attributes as $slug => $condition) {
+                $attribute = $known->get($slug) ?? $stored->get($slug);
+
+                // A characteristic that is no longer a filter does not narrow the list either.
+                if ($attribute !== null) {
+                    $chips[] = $this->chip(AttributeFacet::chipLabel($attribute->name, $attribute->unit, $condition), $filters, 'attr', $slug);
+                }
+            }
+        }
+
         return $chips;
     }
 
@@ -176,15 +253,15 @@ trait FiltersListing
      * An empty result says which filter to drop and what that gives (layout — screen 2).
      *
      * @param  callable(CatalogFilters): int  $count  products left under the given filters
-     * @param  list<array{label: string, filter: string, brand: ?string, url: string}>  $chips
-     * @return list<array{label: string, filter: string, brand: ?string, url: string, count: int}>
+     * @param  list<array{label: string, filter: string, key: ?string, url: string}>  $chips
+     * @return list<array{label: string, filter: string, key: ?string, url: string, count: int}>
      */
     protected function suggestions(callable $count, CatalogFilters $filters, array $chips): array
     {
         $suggestions = [];
 
         foreach (array_slice($chips, 0, 4) as $chip) {
-            $left = $count($filters->without($chip['filter'], $chip['brand']));
+            $left = $count($filters->without($chip['filter'], $chip['key']));
 
             if ($left > 0) {
                 $suggestions[] = $chip + ['count' => $left];
@@ -195,15 +272,15 @@ trait FiltersListing
     }
 
     /**
-     * @return array{label: string, filter: string, brand: ?string, url: string}
+     * @return array{label: string, filter: string, key: ?string, url: string}
      */
-    private function chip(string $label, CatalogFilters $filters, string $filter, ?string $brand = null): array
+    private function chip(string $label, CatalogFilters $filters, string $filter, ?string $key = null): array
     {
         return [
             'label' => $label,
             'filter' => $filter,
-            'brand' => $brand,
-            'url' => $this->urlFor($filters->without($filter, $brand)),
+            'key' => $key,
+            'url' => $this->urlFor($filters->without($filter, $key)),
         ];
     }
 
