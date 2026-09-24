@@ -7,6 +7,7 @@ use App\Http\Requests\LeadRequest;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PriceTier;
 use App\Models\Product;
 use App\Support\Money;
 use Illuminate\Support\Facades\Crypt;
@@ -126,4 +127,17 @@ it('reports adding to the cart and a lead in the answer to the script and after 
     $events = metrikaEvents($this->withUnencryptedCookie(CookieConsentController::COOKIE, 'all')->get(route('product', $this->product)));
 
     expect(collect($events)->pluck('goal')->all())->toBe(['add_to_cart', null]);
+});
+
+it('reports an order by list on the cart page and the start of checkout', function () {
+    setting('analytics.metrika_id', '98765432');
+    $buyer = wholesaleCustomer(PriceTier::factory()->create());
+
+    $this->actingAs($buyer)->post(route('account.bulk-order.check'), ['list' => '11000018820;2']);
+    $this->actingAs($buyer)->post(route('account.bulk-order.cart'))->assertRedirect(route('cart'));
+
+    $consented = fn () => $this->actingAs($buyer)->withUnencryptedCookie(CookieConsentController::COOKIE, 'all');
+
+    expect(metrikaEvents($consented()->get(route('cart'))))->toBe([['goal' => 'bulk_order', 'params' => ['positions' => 1], 'ecommerce' => null]])
+        ->and(metrikaEvents($consented()->get(route('checkout'))))->toBe([['goal' => 'checkout_start', 'params' => [], 'ecommerce' => null]]);
 });
