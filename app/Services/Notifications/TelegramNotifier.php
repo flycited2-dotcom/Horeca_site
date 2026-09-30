@@ -36,9 +36,9 @@ final class TelegramNotifier
     /**
      * The request itself. A failure throws, so the job retries it.
      */
-    public function deliver(string $message): void
+    public function deliver(string $message, ?int $timeout = null): void
     {
-        Http::timeout((int) config('services.telegram.timeout'))
+        Http::timeout($timeout ?? (int) config('services.telegram.timeout'))
             ->asForm()
             ->post('https://api.telegram.org/bot'.config('services.telegram.token').'/sendMessage', [
                 'chat_id' => config('services.telegram.chat_id'),

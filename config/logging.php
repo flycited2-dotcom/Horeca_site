@@ -1,5 +1,6 @@
 <?php
 
+use App\Logging\TelegramLogHandler;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -71,6 +72,13 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
+        ],
+
+        // Критические записи — в группу менеджеров (ТЗ §15.9). Включается в LOG_STACK=daily,telegram.
+        'telegram' => [
+            'driver' => 'monolog',
+            'handler' => TelegramLogHandler::class,
+            'level' => 'critical',
         ],
 
         'slack' => [

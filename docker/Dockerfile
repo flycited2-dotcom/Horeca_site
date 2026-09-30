@@ -26,6 +26,10 @@ RUN apk add --no-cache icu-libs icu-data-full libzip libpng libjpeg-turbo libweb
     && docker-php-source delete \
     && apk del .build-deps
 
+# Клиент MariaDB: mariadb-dump для ежедневной копии базы (ТЗ §17.5). Отдельным слоем — чтобы
+# правка не пересобирала модули PHP.
+RUN apk add --no-cache mariadb-client
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/zz-gastrosnab.ini
 COPY docker/php/fpm.conf /usr/local/etc/php-fpm.d/zz-gastrosnab.conf

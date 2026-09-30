@@ -198,3 +198,26 @@ git archive --format=tar.gz -o /tmp/gastrosnab.tar.gz HEAD && scp /tmp/gastrosna
    - `nginx -t && systemctl reload nginx`;
    - `certbot --nginx -d test.gastrosnab.ru`.
 6. **Администратор.** Заказчик запускает `/opt/gastrosnab/src/docker/dc exec app php artisan make:filament-user` и вводит имя, почту и пароль. Затем роль повышается: `dc exec app php artisan tinker --execute="App\Models\User::where('email', '<почта>')->update(['role' => 'admin'])"`. При первом входе в `/manage` админка попросит настроить двухфакторную аутентификацию.
+
+### Резервные копии базы
+
+Каждую ночь в 03:30 планировщик запускает `php artisan backup:database` (ТЗ §17.5): `mariadb-dump` одной транзакцией, сжатый файл `horeca-ГГГГММДД-ЧЧММСС.sql.gz` в `storage/app/backups` (том Docker `gastrosnab_storage`), 14 последних копий. Копия появляется в папке целой или не появляется: дамп без финальной строки «Dump completed» отвергается, прежние копии остаются. Сбой — критическая запись в журнале, она уходит в Telegram.
+
+- **Сделать копию сейчас:** `/opt/gastrosnab/src/docker/dc exec app php artisan backup:database`.
+- **Копия вне сервера — обязательна** (ТЗ §17.9, §19), пока её нет, каждая ночь пишет предупреждение в журнал. Хранилище — любое S3-совместимое с **закрытым** бакетом (в дампе данные клиентов; бакет с фото Спринтхост отдаёт всем целиком, ему нельзя). Ключи вводит заказчик на сервере, не в чате: `/opt/gastrosnab/src/docker/set-backup-storage.sh` — скрипт спрашивает адрес, регион, бакет и ключи, записывает `BACKUP_*` в `.env`, перезапускает магазин и делает пробную копию с отправкой. Хранится 30 копий (`BACKUP_OFFSITE_KEEP`).
+- **Проверка восстановления** (ТЗ §17.8, раз в месяц и один раз до запуска): `/opt/gastrosnab/src/docker/restore-check.sh [файл]`. Последняя копия разворачивается в одноразовой MariaDB (отдельный контейнер, рабочая база не затрагивается), таблицы сверяются с рабочей базой, итог дописывается в `/opt/gastrosnab/restore-check.log`.
+- **Восстановить рабочую базу** (только после решения заказчика, сайт остановить): `gunzip -c storage/app/backups/<файл> | docker compose … exec -T mariadb sh -c 'mariadb -u"$MARIADB_USER" -p"$MARIADB_PASSWORD" "$MARIADB_DATABASE"'`. Дамп содержит `DROP TABLE IF EXISTS` — таблицы заменяются целиком.
+
+### Почта
+
+Письма магазина уходят через Postfix самого сервера (ТЗ §17.6): контейнер `app` обращается к `172.22.0.1:25` — адресу сервера в закреплённой подсети Docker `172.22.0.0/16` (`docker/compose.yml`), Postfix принимает оттуда без пароля (`mynetworks`), OpenDKIM подписывает письма ключом домена (селектор `mail`).
+
+`.env` боевого сайта: `MAIL_MAILER=smtp`, `MAIL_HOST=172.22.0.1`, `MAIL_PORT=25`, `MAIL_AUTO_TLS=false` (сертификат Postfix самоподписанный, а трафик не выходит за пределы сервера), `MAIL_FROM_ADDRESS=shop@gastrosnab.ru`. На тестовом сайте — `MAIL_MAILER=log`.
+
+**Проверка:** `dc exec app php artisan mail:test <адрес>` отправляет письмо сразу, не через очередь, и называет способ отправки. С `MAIL_MAILER=log` команда честно говорит, что в почту письмо не уходило.
+
+**DNS домена `gastrosnab.ru`** (у Спринтхоста): `MX 10 mail.climat-simf.ru.`; TXT `v=spf1 ip4:212.116.115.150 ~all`; TXT `mail._domainkey` — публичный ключ из `/etc/opendkim/keys/gastrosnab.ru/mail.txt` на сервере; TXT `_dmarc` — `v=DMARC1; p=none; rua=mailto:shop@gastrosnab.ru` (через неделю без замечаний — `p=quarantine`).
+
+### Мониторинг ошибок
+
+Каждая необработанная ошибка сайта (не 404, не проверка формы) пишется с уровнем `critical`. Канал журнала `telegram` (`App\Logging\TelegramLogHandler`) отправляет `critical` в группу менеджеров сразу, без очереди: когда падает Redis или база, очередью не воспользоваться. То же сообщение — не чаще раза в десять минут. Включается в `.env`: `LOG_STACK=daily,telegram` плюс `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`; пока бот не задан, ничего не отправляется.

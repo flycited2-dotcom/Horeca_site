@@ -99,6 +99,15 @@ services:
       - redis:/data
     logging: *logging
 
+# Подсеть закреплена: Postfix сервера принимает почту магазина только из неё (mynetworks,
+# ТЗ §17.6), и она не должна меняться при пересоздании сети. 172.22.0.0/16 свободна.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+          gateway: 172.22.0.1
+
 volumes:
   storage:
   db:

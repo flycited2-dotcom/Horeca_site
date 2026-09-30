@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\BackupDatabaseCommand;
 use App\Console\Commands\DispatchDueImportsCommand;
 use App\Console\Commands\GenerateSitemapCommand;
 use App\Console\Commands\RecalculatePopularityCommand;
@@ -36,6 +37,12 @@ Schedule::command(RecalculatePopularityCommand::class)
 // Карта сайта для поисковиков (ТЗ §14).
 Schedule::command(GenerateSitemapCommand::class)
     ->dailyAt('04:00');
+
+// Копия базы: 14 на сервере и одна вне сервера (ТЗ §17.5, §17.9). Сбой уходит в Telegram.
+Schedule::command(BackupDatabaseCommand::class)
+    ->dailyAt('03:30')
+    ->withoutOverlapping()
+    ->runInBackground();
 
 // Гостевые корзины живут 30 дней после последнего изменения (ТЗ §10.1), гостевое
 // избранное — пока жива сессия гостя (§5).

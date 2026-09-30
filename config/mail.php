@@ -46,6 +46,10 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
+            // Магазин отправляет через Postfix своего сервера по частной сети Docker (ТЗ §17.6):
+            // сертификат там самоподписанный, а трафик не выходит за пределы сервера.
+            'auto_tls' => filter_var(env('MAIL_AUTO_TLS', true), FILTER_VALIDATE_BOOL),
+            'verify_peer' => filter_var(env('MAIL_VERIFY_PEER', true), FILTER_VALIDATE_BOOL),
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 

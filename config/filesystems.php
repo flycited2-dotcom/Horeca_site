@@ -85,6 +85,20 @@ return [
             'visibility' => 'private',
         ] + $s3,
 
+        // Внешняя копия базы (config/backup.php): отдельные ключи и закрытый бакет, не тот,
+        // где лежат фото. Пока BACKUP_DISK пуст, диск не используется.
+        'backups' => [
+            'key' => env('BACKUP_S3_KEY'),
+            'secret' => env('BACKUP_S3_SECRET'),
+            'region' => env('BACKUP_S3_REGION', 'ru-central1'),
+            'bucket' => env('BACKUP_S3_BUCKET'),
+            'root' => env('BACKUP_S3_ROOT', ''),
+            'url' => null,
+            'endpoint' => env('BACKUP_S3_ENDPOINT'),
+            'use_path_style_endpoint' => filter_var(env('BACKUP_S3_PATH_STYLE', true), FILTER_VALIDATE_BOOL),
+            'visibility' => 'private',
+        ] + $s3,
+
     ],
 
     /*
