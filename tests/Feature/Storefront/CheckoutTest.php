@@ -153,6 +153,30 @@ it('takes a real INN of an organization and of a sole trader', function (string 
     expect(Order::query()->sole()->inn)->toBe($inn);
 })->with(['organization' => '7707083893', 'sole trader' => '500100732259']);
 
+it('ignores the INN and the company name of a buyer who switched «юрлицо» off', function () {
+    putInCart(orderedProduct());
+
+    // The buyer switched the toggle on, typed a wrong INN, then switched it off: the fields keep
+    // their values and are sent, but they belong to nobody now.
+    $this->post(route('checkout.store'), checkoutForm(['is_legal_entity' => '0', 'inn' => '1234567890', 'company_name' => 'ООО «Не моя»']))
+        ->assertSessionHasNoErrors();
+
+    $order = Order::query()->sole();
+
+    expect($order->is_legal_entity)->toBeFalse()
+        ->and($order->inn)->toBeNull()
+        ->and($order->company_name)->toBeNull();
+});
+
+it('still checks the INN of a legal entity', function () {
+    putInCart(orderedProduct());
+
+    $this->post(route('checkout.store'), checkoutForm(['is_legal_entity' => '1', 'inn' => '1234567890', 'company_name' => 'ООО «Вкусный дом»']))
+        ->assertSessionHasErrors('inn');
+
+    expect(Order::query()->count())->toBe(0);
+});
+
 it('refuses a form sent faster than a person can or with the trap filled', function (array $overrides) {
     putInCart(orderedProduct());
 

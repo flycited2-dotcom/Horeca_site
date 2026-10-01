@@ -94,10 +94,16 @@ class CheckoutRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $legal = $this->boolean('is_legal_entity');
+
+        // «Я представляю юрлицо» выключено: поля скрыты, но сохраняют, что в них набрали, и уходят
+        // вместе с формой. Они уже ничьи — не проверяются и не попадают в заявку, иначе опечатка
+        // в ИНН, оставшаяся после выключения, не даёт оформить заявку как физлицу.
         $this->merge([
             'name' => is_string($this->input('name')) ? trim($this->input('name')) : $this->input('name'),
-            'inn' => is_string($this->input('inn')) ? preg_replace('/\s+/', '', $this->input('inn')) : $this->input('inn'),
-            'is_legal_entity' => $this->boolean('is_legal_entity'),
+            'inn' => $legal && is_string($this->input('inn')) ? preg_replace('/\s+/', '', $this->input('inn')) : ($legal ? $this->input('inn') : null),
+            'company_name' => $legal ? $this->input('company_name') : null,
+            'is_legal_entity' => $legal,
         ]);
     }
 }
