@@ -26,6 +26,21 @@
     @if ($meta?->canonical)
         <link rel="canonical" href="{{ $meta->canonical }}">
     @endif
+    {{-- Значок вкладки и превью ссылки в мессенджерах и соцсетях; у карточки товара в превью — его фото. --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    @php($shareTitle = $meta?->title ?? ($title ? $title.' | '.$shell->siteName : $shell->siteName))
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ $shell->siteName }}">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:title" content="{{ $shareTitle }}">
+    @if ($meta?->description ?? $description)
+        <meta property="og:description" content="{{ $meta?->description ?? $description }}">
+    @endif
+    <meta property="og:url" content="{{ $meta?->canonical ?? url()->current() }}">
+    <meta property="og:image" content="{{ $meta?->image ?? asset('og-image.png') }}">
+    <meta name="twitter:card" content="summary_large_image">
     @vite(['resources/css/app.css', 'resources/js/storefront.js'])
     {{--
         Яндекс Метрика (ТЗ §14): номер счётчика и события страницы — цели и электронная коммерция.

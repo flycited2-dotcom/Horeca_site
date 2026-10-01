@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
 use App\Support\Money;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     setting('site.name', 'Гастроснаб');
@@ -87,4 +89,33 @@ it('describes a brand and a page', function () {
     expect(titleOf($html))->toBe('Доставка | Гастроснаб')
         ->and($html)->toContain('<meta name="description" content="По городу В день заказа, бесплатно от 15 000 ₽.">')
         ->and($html)->toContain('<link rel="canonical" href="'.url('dostavka').'">');
+});
+
+it('gives every page an icon and a preview of the link, with the photo of the product on its card', function () {
+    Storage::fake('public');
+    config(['media-library.disk_name' => 'public']);
+
+    $home = $this->get('/')->assertOk()->getContent();
+
+    expect($home)->toContain('<link rel="icon" href="'.asset('favicon.ico').'" sizes="any">', '<link rel="icon" href="'.asset('favicon.svg').'" type="image/svg+xml">', '<link rel="apple-touch-icon" href="'.asset('apple-touch-icon.png').'">')
+        ->and($home)->toContain('<meta property="og:site_name" content="Гастроснаб">', '<meta property="og:image" content="'.asset('og-image.png').'">', '<meta name="twitter:card" content="summary_large_image">');
+
+    $product = Product::factory()->create(['name' => 'Шкаф с фото', 'slug' => 'shkaf-s-foto-og', 'category_id' => $this->category->id]);
+    $product->addMedia(UploadedFile::fake()->image('shkaf.jpg', 800, 600))->toMediaCollection(Product::IMAGES);
+
+    $card = $this->get(route('product', $product))->assertOk()->getContent();
+
+    expect($card)->toContain('<meta property="og:image" content="'.$product->getFirstMediaUrl(Product::IMAGES, 'full').'">')
+        ->and($card)->toContain('<meta property="og:url" content="'.route('product', $product).'">')
+        ->and($card)->not->toContain('content="'.asset('og-image.png').'"');
+});
+
+it('has the files that the page head points to', function () {
+    foreach (['favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'og-image.png'] as $file) {
+        expect(filesize(public_path($file)))->toBeGreaterThan(300);
+    }
+
+    [$width, $height] = getimagesize(public_path('og-image.png'));
+
+    expect([$width, $height])->toBe([1200, 630]);
 });

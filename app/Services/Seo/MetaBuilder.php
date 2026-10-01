@@ -47,6 +47,7 @@ final class MetaBuilder
                 filled($product->sku) ? __('shop.seo.product_sku', ['sku' => $product->sku]) : null,
             ]))),
             canonical: route('product', $product),
+            image: $product->getFirstMediaUrl(Product::IMAGES, 'full') ?: null,
         );
     }
 

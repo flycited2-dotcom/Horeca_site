@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Для iOS: квадрат без скруглений и прозрачности, углы закруглит сама система -->
+  <rect width="512" height="512" fill="#0072B0"/>
+  <path fill="#FFFFFF" d="M150 130h212v82h-130v178h-82z"/>
+</svg>
