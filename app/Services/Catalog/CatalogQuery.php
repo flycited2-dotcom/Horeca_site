@@ -93,7 +93,8 @@ final class CatalogQuery
     }
 
     /**
-     * Active root categories marked for the home page.
+     * Every switched-on root category with products: the home page shows the whole catalog,
+     * so a visitor sees every section by scrolling (the manager hides a section by switching it off).
      *
      * @return Collection<int, Category>
      */
@@ -102,7 +103,7 @@ final class CatalogQuery
         return Category::query()
             ->active()
             ->roots()
-            ->where('show_on_home', true)
+            ->where('products_count', '>', 0)
             ->orderBy('sort')
             ->orderBy('name')
             ->get(['id', 'name', 'slug', 'icon', 'products_count']);
@@ -122,8 +123,8 @@ final class CatalogQuery
     }
 
     /**
-     * The tiles of the home page (TZ §8.1, layout — screen 4): the root sections marked for
-     * the home page with the number of products, how many of them are in stock and the
+     * The tiles of the home page (TZ §8.1, layout — screen 4): all the root sections
+     * with the number of products, how many of them are in stock and the
      * biggest subsections. Cached until the catalog changes, like the navigation.
      *
      * @return array{products: int, brands: int, sections: list<array{id: int, name: string, slug: string, icon: ?string, products_count: int, in_stock: int, children: list<string>}>}

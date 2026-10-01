@@ -61,9 +61,9 @@ it('keeps the query of the search page in the header field', function () {
         ->assertSee('value="шкаф"', false);
 });
 
-it('offers the «Знаю артикул» field on the home page', function () {
+it('offers the field for a known article in the footer of every page', function () {
     $this->get('/')
         ->assertOk()
-        ->assertSee('Знаю артикул')
-        ->assertSee('id="sku-search"', false);
+        ->assertSee('Знаете артикул?')
+        ->assertSee('id="footer-search"', false);
 });

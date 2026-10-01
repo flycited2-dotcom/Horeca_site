@@ -41,7 +41,6 @@ return [
         'positions' => ':count позиция|:count позиции|:count позиций',
         'makers' => ':count производителя|:count производителей|:count производителей',
         'tile_counts' => ':products · :in_stock в наличии',
-        'all_catalog' => 'Весь каталог — :count раздел|Весь каталог — :count раздела|Весь каталог — :count разделов',
     ],
 
     'catalog' => [

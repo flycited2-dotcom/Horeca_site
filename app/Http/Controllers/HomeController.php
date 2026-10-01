@@ -10,8 +10,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 /**
- * Главная (ТЗ §8.1, макет — экран 4): плитки корневых разделов вместо баннеров, «Знаю
- * артикул», ленты «В наличии», «Часто заказывают», «Новинки» и местного склада — пустая
+ * Главная (ТЗ §8.1, макет — экран 4): плитки всех корневых разделов вместо баннеров,
+ * подборки, ленты «В наличии», «Часто заказывают», «Новинки» и местного склада — пустая
  * лента не показывается, — и бренды списком названий.
  */
 class HomeController extends Controller
@@ -42,7 +42,6 @@ class HomeController extends Controller
             'home' => $home,
             'images' => $images->for(array_column($home['sections'], 'id')),
             'collections' => $catalog->homeCollections(),
-            'sectionsTotal' => count($catalog->navigationCategories()),
             'strips' => $strips,
             'warehouse' => $warehouse,
             'prices' => $prices->forMany(collect($strips)->flatten(1), $user),

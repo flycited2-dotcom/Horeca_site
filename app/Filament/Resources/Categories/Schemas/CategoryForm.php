@@ -64,7 +64,7 @@ class CategoryForm
 
                     Grid::make(2)->schema([
                         Toggle::make('is_active')->label(__('admin.category.is_active')),
-                        Toggle::make('show_on_home')->label(__('admin.category.show_on_home')),
+                        Toggle::make('show_on_home')->label(__('admin.category.show_on_home'))->helperText(__('admin.category.show_on_home_hint')),
                     ]),
 
                     SpatieMediaLibraryFileUpload::make('image')

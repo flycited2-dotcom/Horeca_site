@@ -84,6 +84,22 @@ it('offers every section under «Ещё» when scripts are off', function () {
         ->and(substr_count($row, 'data-priority-extra'))->toBe(3);
 });
 
+it('shows the main sections as plates and keeps the rest under «Ещё»', function () {
+    Category::factory()->create(['name' => 'Холодильное', 'products_count' => 5, 'show_on_home' => true]);
+    Category::factory()->create(['name' => 'Весовое', 'products_count' => 5, 'show_on_home' => true]);
+    Category::factory()->create(['name' => 'Прочее неликвид', 'products_count' => 5, 'show_on_home' => false]);
+    Category::factory()->create(['name' => 'Аксессуары', 'products_count' => 5, 'show_on_home' => false]);
+
+    $row = sectionsRow($this->get('/catalog')->assertOk());
+    preg_match('/<ul class="flex h-22.*?<\/ul>/s', $row, $plates);
+
+    // Only the main ones are plates; the others are in the list of «Ещё», which is always there.
+    expect($plates[0])->toContain('Холодильное', 'Весовое')->not->toContain('Прочее неликвид')->not->toContain('Аксессуары')
+        ->and($row)->toContain('data-priority-always', 'Прочее неликвид', 'Аксессуары')
+        ->and(substr_count($row, 'data-priority-item'))->toBe(2)
+        ->and(substr_count($row, 'data-priority-extra'))->toBe(2);
+});
+
 it('links only the pages the manager has switched on', function () {
     Page::factory()->create(['slug' => 'dostavka', 'title' => 'Доставка и самовывоз']);
     Page::factory()->create(['slug' => 'oplata', 'title' => 'Оплата по счёту', 'is_active' => false]);

@@ -9,25 +9,27 @@ use App\Models\Setting;
 use App\Models\Warehouse;
 use Illuminate\Support\Facades\DB;
 
-it('shows active root categories marked for the home page', function () {
+it('shows every active root category with products, marked for the home page or not', function () {
     $refrigeration = Category::factory()->create([
         'name' => 'Холодильное оборудование',
         'show_on_home' => true,
         'products_count' => 7021,
     ]);
-    Category::factory()->inactive()->create(['name' => 'Скрытая категория', 'show_on_home' => true]);
-    Category::factory()->create(['name' => 'Не для главной', 'show_on_home' => false]);
-    Category::factory()->childOf($refrigeration)->create(['name' => 'Холодильный шкаф', 'show_on_home' => true]);
+    Category::factory()->create(['name' => 'Аксессуары', 'show_on_home' => false, 'products_count' => 5]);
+    Category::factory()->inactive()->create(['name' => 'Скрытая категория', 'show_on_home' => true, 'products_count' => 9]);
+    Category::factory()->create(['name' => 'Пустой раздел', 'products_count' => 0]);
+    Category::factory()->childOf($refrigeration)->create(['name' => 'Холодильный шкаф', 'products_count' => 3]);
 
     $response = $this->get('/')->assertOk()->assertDontSee('Скрытая категория');
 
-    // The layout lists every switched-on root section; the home panel only the marked ones.
+    // The whole catalog is on the home page: the tiles of the page, not only the bar above.
     preg_match('/<main.*?<\/main>/s', $response->getContent(), $main);
 
     expect($main[0])
-        ->toContain('Холодильное оборудование', "7\u{00A0}021 позиция")
-        ->not->toContain('Не для главной')
-        ->not->toContain('Холодильный шкаф');
+        ->toContain('Холодильное оборудование', "7\u{00A0}021 позиция", 'Аксессуары', '5 позиций')
+        ->not->toContain('Пустой раздел')
+        ->not->toContain('Скрытая категория')
+        ->not->toContain('Знаю артикул');
 });
 
 it('explains an empty catalog instead of showing a blank page', function () {
@@ -56,8 +58,7 @@ it('counts the stock of a section with its subsections and names the biggest of 
     $this->get('/')
         ->assertOk()
         ->assertSee('3 позиции · 2 в наличии')
-        ->assertSee('Шкафы холодильные, Лари морозильные')
-        ->assertSee('Весь каталог — 1 раздел');
+        ->assertSee('Шкафы холодильные, Лари морозильные');
 });
 
 it('shows the hits, the new products and the local warehouse only when there are any', function () {

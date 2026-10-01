@@ -79,14 +79,35 @@ final readonly class StorefrontShell
     }
 
     /**
-     * The footer lists the sections marked for the home page; without such marks — the first eight.
+     * The main sections the manager marked: they are the plates of the bar under the header
+     * and the list in the footer; without marks — the first eight. The rest wait under «Ещё».
      *
      * @return list<array{id: int, name: string, slug: string, icon: ?string, show_on_home: bool, products_count: int}>
      */
-    public function footerCategories(): array
+    public function featuredCategories(): array
     {
         $featured = array_values(array_filter($this->categories, fn (array $category): bool => $category['show_on_home']));
 
         return $featured !== [] ? $featured : array_slice($this->categories, 0, 8);
+    }
+
+    /**
+     * The sections that are not main ones: only the «Ещё» of the bar lists them.
+     *
+     * @return list<array{id: int, name: string, slug: string, icon: ?string, show_on_home: bool, products_count: int}>
+     */
+    public function otherCategories(): array
+    {
+        $featured = array_column($this->featuredCategories(), 'id');
+
+        return array_values(array_filter($this->categories, fn (array $category): bool => ! in_array($category['id'], $featured, true)));
+    }
+
+    /**
+     * @return list<array{id: int, name: string, slug: string, icon: ?string, show_on_home: bool, products_count: int}>
+     */
+    public function footerCategories(): array
+    {
+        return $this->featuredCategories();
     }
 }

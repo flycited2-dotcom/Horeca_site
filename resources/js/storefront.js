@@ -26,8 +26,10 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// Ряд категорий (макет, экран 5): разделы, которые не поместились в строку, уходят на
-// скрытую вторую строку; в «Ещё» остаются только они. Без скрипта «Ещё» показывает все.
+// Ряд категорий (макет, экран 5): главные разделы — не больше двух строк плашек; те, что не
+// поместились, уходят в «Ещё» к остальным разделам. Без скрипта «Ещё» показывает все.
+const NAV_ROWS = 2;
+
 for (const nav of document.querySelectorAll('[data-priority-nav]')) {
     const items = [...nav.querySelectorAll('[data-priority-item]')];
     const extras = [...nav.querySelectorAll('[data-priority-extra]')];
@@ -37,18 +39,22 @@ for (const nav of document.querySelectorAll('[data-priority-nav]')) {
         continue;
     }
 
+    // Есть разделы, которых в ряду нет совсем: «Ещё» нужно всегда.
+    const always = more.hasAttribute('data-priority-always');
+
     const update = () => {
-        // «Ещё» занимает место в строке, поэтому считаем при показанном «Ещё».
+        // «Ещё» занимает место в ряду, поэтому считаем при показанном «Ещё».
         more.hidden = false;
 
         const firstRow = items[0].offsetTop;
-        const overflow = items.map((item) => item.offsetTop > firstRow);
+        const rowHeight = items[0].offsetHeight;
+        const overflow = items.map((item) => item.offsetTop - firstRow >= rowHeight * NAV_ROWS);
 
         extras.forEach((extra, index) => {
             extra.hidden = !overflow[index];
         });
 
-        more.hidden = !overflow.includes(true);
+        more.hidden = !always && !overflow.includes(true);
     };
 
     new ResizeObserver(update).observe(nav);

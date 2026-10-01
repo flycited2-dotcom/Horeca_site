@@ -20,7 +20,7 @@ MariaDB 11.8 / MySQL 8.4, `utf8mb4_unicode_ci`, InnoDB. Типы указаны 
 ## 5.2 Каталог
 
 **categories** — витринное дерево, им управляет менеджер
-`id` · `parent_id` bigint nullable FK self nullOnDelete · `name` string(255) · `slug` string(160) unique · `description` text nullable · `icon` string(64) nullable (имя SVG-иконки) · `show_on_home` bool default false · `meta_title` string(255) nullable · `meta_description` string(500) nullable · `h1` string(255) nullable · `seo_text` longtext nullable · `sort` int default 0 · `is_active` bool default false · `products_count` int default 0 (денормализация, пересчёт после импорта) · timestamps
+`id` · `parent_id` bigint nullable FK self nullOnDelete · `name` string(255) · `slug` string(160) unique · `description` text nullable · `icon` string(64) nullable (имя SVG-иконки) · `show_on_home` bool default false (в админке «Главный раздел»: плашка в полосе под шапкой и строка подвала) · `meta_title` string(255) nullable · `meta_description` string(500) nullable · `h1` string(255) nullable · `seo_text` longtext nullable · `sort` int default 0 · `is_active` bool default false · `products_count` int default 0 (денормализация, пересчёт после импорта) · timestamps
 Индексы: `parent_id`, (`is_active`,`sort`).
 
 **brands**

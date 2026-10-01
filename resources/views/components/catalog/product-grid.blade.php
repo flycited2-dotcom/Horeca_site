@@ -12,7 +12,7 @@
     <x-catalog.product-table :products="$products" :prices="$prices" class="max-md:hidden" />
 @endif
 
-<div {{ $attributes->class(['grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3', 'md:hidden' => $view === 'list']) }}>
+<div {{ $attributes->class(['grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3 2xl:grid-cols-4', 'md:hidden' => $view === 'list']) }}>
     @foreach ($products as $product)
         <x-catalog.product-card wire:key="card-{{ $product->id }}" :product="$product" :price="$prices[$product->id] ?? null" />
     @endforeach
