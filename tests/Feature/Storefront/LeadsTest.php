@@ -7,6 +7,7 @@ use App\Jobs\SendTelegramMessage;
 use App\Models\Category;
 use App\Models\Lead;
 use App\Models\Product;
+use App\Models\Setting;
 use App\Support\Money;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Queue;
@@ -80,13 +81,51 @@ it('keeps the lead with its product and tells the managers without the contacts'
         ->and($lead->message)->toBe('Нужно две штуки')
         ->and($lead->utm)->toBe(['utm_source' => 'avito']);
 
-    Queue::assertPushed(SendTelegramMessage::class, function (SendTelegramMessage $job): bool {
+    Queue::assertPushed(SendTelegramMessage::class, function (SendTelegramMessage $job) use ($product): bool {
         $message = (fn () => $this->message)->call($job);
 
         return str_contains($message, 'Лид: запрос цены')
-            && str_contains($message, 'Шкаф холодильный (11000018820)')
+            && str_contains($message, 'Время: '.now()->format('d.m.Y H:i'))
+            && str_contains($message, 'Товар: Шкаф холодильный')
+            && str_contains($message, 'Артикул: 11000018820')
+            && str_contains($message, 'Цена: ')
+            && str_contains($message, 'Страница: '.route('product', $product))
+            && str_contains($message, 'Сообщение: Нужно две штуки')
+            && str_contains($message, 'Источник: avito')
             && ! str_contains($message, 'Ирина')
             && ! str_contains($message, '978');
+    });
+});
+
+it('puts the name, the phone and the e-mail into the lead message when the shop switched the contacts on', function () {
+    Setting::query()->create(['key' => 'notify.telegram_include_contacts', 'value' => true]);
+    $product = Product::factory()->create(['category_id' => $this->category->id, 'retail_price' => null]);
+
+    $this->postJson(route('leads.store'), leadForm(['product_id' => $product->id, 'email' => 'irina@example.ru']))->assertOk();
+
+    Queue::assertPushed(SendTelegramMessage::class, function (SendTelegramMessage $job): bool {
+        $message = (fn () => $this->message)->call($job);
+
+        return str_contains($message, 'Имя: Ирина')
+            && str_contains($message, 'Телефон: +7 978 123-45-67')
+            && str_contains($message, 'Почта: irina@example.ru')
+            && str_contains($message, 'Цена: по запросу');
+    });
+});
+
+it('tells a lead without a product and without a name by the phone only', function () {
+    Setting::query()->create(['key' => 'notify.telegram_include_contacts', 'value' => true]);
+
+    $this->postJson(route('leads.store'), leadForm(['type' => LeadType::Callback->value, 'name' => '', 'message' => '']))->assertOk();
+
+    Queue::assertPushed(SendTelegramMessage::class, function (SendTelegramMessage $job): bool {
+        $message = (fn () => $this->message)->call($job);
+
+        return str_contains($message, 'Лид: перезвонить')
+            && str_contains($message, 'Имя: —')
+            && str_contains($message, 'Телефон: +7 978 123-45-67')
+            && ! str_contains($message, 'Товар:')
+            && ! str_contains($message, 'Сообщение:');
     });
 });
 

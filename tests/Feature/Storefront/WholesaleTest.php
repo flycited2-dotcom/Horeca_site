@@ -107,6 +107,7 @@ it('tells the managers without the contacts in Telegram and confirms to the cust
         $message = (fn () => $this->message)->call($job);
 
         return str_contains($message, 'Заявка на опт: ООО «Вкусный дом»')
+            && str_contains($message, 'Время: '.now()->format('d.m.Y H:i'))
             && str_contains($message, 'ИНН 7714365426 · Кафе, Симферополь')
             && str_contains($message, '/manage/companies/'.$company->id)
             && ! str_contains($message, 'Крылова')

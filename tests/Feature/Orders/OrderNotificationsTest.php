@@ -3,6 +3,7 @@
 use App\Actions\Orders\ChangeOrderStatus;
 use App\Enums\DeliveryMethod;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use App\Enums\UserRole;
 use App\Events\OrderCreated;
 use App\Jobs\SendTelegramMessage;
@@ -77,6 +78,36 @@ it('keeps the name and the phone out of Telegram unless the shop switched them o
         ->not->toContain('978');
 
     expect(OrderTelegramMessage::for($order, $url, true))->toContain('Клиент: Алексей, +7 978 123-45-67');
+});
+
+it('tells the time, the payment and the source of the order without the contacts', function () {
+    $order = placedOrder(['payment_method' => PaymentMethod::Cash, 'utm' => ['utm_source' => 'yandex', 'utm_medium' => 'cpc']]);
+
+    $message = OrderTelegramMessage::for($order, 'https://shop.test/manage/orders/1', false);
+
+    expect($message)
+        ->toContain('Время: '.$order->created_at->format('d.m.Y H:i'), 'Оплата: '.PaymentMethod::Cash->getLabel(), 'Источник: yandex / cpc')
+        ->toMatch('/— Пароконвектомат 1 × 2 · [\d\x{00A0}]+\x{00A0}₽/u')
+        ->not->toContain('buyer@example.ru')
+        ->not->toContain('Клиент:');
+});
+
+it('adds the e-mail, the organization, the address and the comment when the contacts are on', function () {
+    $order = placedOrder([
+        'is_legal_entity' => true,
+        'company_name' => 'ООО «Вкусный дом»',
+        'inn' => '7714365426',
+        'delivery_address' => 'Симферополь, ул. Глинки, 61А',
+        'comment' => 'Позвоните после обеда',
+    ]);
+
+    expect(OrderTelegramMessage::for($order, '', true))->toContain(
+        'Клиент: Алексей, +7 978 123-45-67',
+        'Почта: buyer@example.ru',
+        'Организация: ООО «Вкусный дом», ИНН 7714365426',
+        'Адрес доставки: Симферополь, ул. Глинки, 61А',
+        'Комментарий: Позвоните после обеда',
+    );
 });
 
 it('takes the contacts into Telegram when the setting says so', function () {

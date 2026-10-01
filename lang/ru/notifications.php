@@ -8,10 +8,17 @@ return [
 
     'order' => [
         'telegram_title' => 'Новая заявка :number · :type',
+        'telegram_time' => 'Время: :time',
         'telegram_total' => 'Сумма: :total, :positions',
         'telegram_more' => '…и ещё :count позиция|…и ещё :count позиции|…и ещё :count позиций',
         'telegram_delivery' => 'Получение: :delivery',
+        'telegram_payment' => 'Оплата: :payment',
         'telegram_contacts' => 'Клиент: :name, :phone',
+        'telegram_email' => 'Почта: :email',
+        'telegram_company' => 'Организация: :company, ИНН :inn',
+        'telegram_address' => 'Адрес доставки: :address',
+        'telegram_comment' => 'Комментарий: :comment',
+        'telegram_source' => 'Источник: :source',
 
         'manager_subject' => 'Новая заявка :number · :total',
         'manager_heading' => 'Новая заявка :number',
@@ -50,14 +57,25 @@ return [
 
     'lead' => [
         'title' => 'Лид: :type',
-        'product' => 'Товар: :name:sku',
+        'time' => 'Время: :time',
+        'product' => 'Товар: :name',
+        'sku' => 'Артикул: :sku',
+        'price' => 'Цена: :price',
+        'on_request' => 'по запросу',
+        'link' => 'Страница: :url',
         'message' => 'Сообщение: :message',
+        'name' => 'Имя: :name',
+        'phone' => 'Телефон: :phone',
+        'email' => 'Почта: :email',
+        'source' => 'Источник: :source',
     ],
 
     'wholesale' => [
         'telegram_title' => 'Заявка на опт: :company',
+        'telegram_time' => 'Время: :time',
         'telegram_details' => 'ИНН :inn · :segment:city',
         'telegram_contacts' => 'Контакт: :name, :phone',
+        'telegram_email' => 'Почта: :email',
         'managers_subject' => 'Заявка на опт: :company',
         'managers_heading' => 'Заявка на опт',
         'managers_intro' => 'Проверьте реквизиты, назначьте ценовую группу и одобрите компанию в админке — клиенту уйдёт письмо «Оптовые цены открыты».',
