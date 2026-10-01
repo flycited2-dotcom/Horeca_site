@@ -34,13 +34,13 @@ final class CategoryListing extends Component
     /**
      * Switched-on subcategories as plain data: they do not change with the filters.
      *
-     * @var list<array{name: string, slug: string, products_count: int}>
+     * @var list<array{name: string, slug: string, products_count: int, icon: ?string, image: ?string, tile: bool}>
      */
     #[Locked]
     public array $subcategories = [];
 
     /**
-     * @param  list<array{name: string, slug: string, products_count: int}>  $subcategories
+     * @param  list<array{name: string, slug: string, products_count: int, icon: ?string, image: ?string, tile: bool}>  $subcategories
      */
     public function mount(Category $category, string $title, array $subcategories = []): void
     {

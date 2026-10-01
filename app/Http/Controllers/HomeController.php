@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Catalog\CatalogQuery;
+use App\Services\Catalog\CategoryImages;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Settings\Settings;
 use Illuminate\Contracts\View\View;
@@ -22,10 +23,11 @@ class HomeController extends Controller
      */
     private const int BRANDS = 24;
 
-    public function __invoke(Request $request, CatalogQuery $catalog, PriceResolver $prices, Settings $settings): View
+    public function __invoke(Request $request, CatalogQuery $catalog, CategoryImages $images, PriceResolver $prices, Settings $settings): View
     {
         $user = $request->user();
         $warehouse = (string) $settings->get('catalog.local_warehouse_name', '');
+        $home = $catalog->homeSections();
 
         $strips = array_filter([
             'in_stock' => $catalog->inStockStrip($user, self::STRIP),
@@ -37,7 +39,8 @@ class HomeController extends Controller
         ], fn ($strip) => $strip !== null && $strip->isNotEmpty());
 
         return view('home.index', [
-            'home' => $catalog->homeSections(),
+            'home' => $home,
+            'images' => $images->for(array_column($home['sections'], 'id')),
             'collections' => $catalog->homeCollections(),
             'sectionsTotal' => count($catalog->navigationCategories()),
             'strips' => $strips,

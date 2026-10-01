@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * A storefront category. The supplier tree is mirrored into it by the import,
@@ -19,10 +23,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'parent_id', 'name', 'slug', 'description', 'icon', 'show_on_home',
     'meta_title', 'meta_description', 'h1', 'seo_text', 'sort', 'is_active',
 ])]
-class Category extends Model
+class Category extends Model implements HasMedia
 {
     /** @use HasFactory<CategoryFactory> */
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
+
+    /**
+     * Картинка плитки раздела, загруженная менеджером; без неё плитка берёт фото товара.
+     */
+    public const string IMAGE = 'image';
 
     /**
      * @return array<string, string>
@@ -77,5 +86,26 @@ class Category extends Model
     protected function roots(Builder $query): void
     {
         $query->whereNull('parent_id');
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::IMAGE)
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+    /**
+     * Плитка раздела должна показаться сразу после загрузки, поэтому уменьшенная копия
+     * делается не в очереди; внешние оптимизаторы не нужны — WebP уже сжат (как у фото товара).
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('tile')
+            ->fit(Fit::Max, 600, 600)
+            ->format('webp')
+            ->nonOptimized()
+            ->nonQueued()
+            ->performOnCollections(self::IMAGE);
     }
 }

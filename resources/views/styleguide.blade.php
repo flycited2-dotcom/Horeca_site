@@ -213,6 +213,36 @@
             </div>
         </x-styleguide.panel>
 
+        <x-styleguide.panel :title="__('styleguide.tiles.title')" :note="__('styleguide.tiles.note')" tone="canvas">
+            @php
+                // Образец «фото»: контур шкафа, чтобы плитка с картинкой не зависела от каталога.
+                $sample = 'data:image/svg+xml;utf8,'.rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120"><g fill="none" stroke="#8A959E" stroke-width="2"><rect x="52" y="8" width="56" height="104" rx="4"/><path d="M52 44h56M64 24v10M64 62v18"/></g></svg>');
+            @endphp
+
+            <ul class="grid grid-cols-2 gap-3 md:grid-cols-4">
+                <li>
+                    <x-catalog.category-tile :name="$crumbCategory->name" url="#" :image="$sample" :icon="$crumbCategory->icon">
+                        <span class="text-sm text-steel-500 tabular">{{ __('styleguide.tiles.counts') }}</span>
+                    </x-catalog.category-tile>
+                </li>
+                <li>
+                    <x-catalog.category-tile :name="__('styleguide.tiles.no_photo')" url="#" icon="refrigeration">
+                        <span class="text-sm text-steel-500 tabular">{{ __('styleguide.tiles.counts') }}</span>
+                    </x-catalog.category-tile>
+                </li>
+                <li>
+                    <x-catalog.category-tile :name="$crumbCategory->name" url="#" :image="$sample" compact>
+                        <span class="text-sm text-steel-500 tabular">{{ __('styleguide.tiles.models') }}</span>
+                    </x-catalog.category-tile>
+                </li>
+                <li>
+                    <x-catalog.category-tile :name="__('styleguide.tiles.no_photo')" url="#" icon="thermal" compact>
+                        <span class="text-sm text-steel-500 tabular">{{ __('styleguide.tiles.models') }}</span>
+                    </x-catalog.category-tile>
+                </li>
+            </ul>
+        </x-styleguide.panel>
+
         <x-styleguide.panel :title="__('styleguide.cards.title')" :note="__('styleguide.cards.note')" tone="canvas">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                 @foreach ($cards as $card)

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Services\Catalog\CategoryTree;
 use App\Support\Slugger;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -65,6 +66,16 @@ class CategoryForm
                         Toggle::make('is_active')->label(__('admin.category.is_active')),
                         Toggle::make('show_on_home')->label(__('admin.category.show_on_home')),
                     ]),
+
+                    SpatieMediaLibraryFileUpload::make('image')
+                        ->label(__('admin.category.image'))
+                        ->helperText(__('admin.category.image_hint'))
+                        ->collection(Category::IMAGE)
+                        ->conversion('tile')
+                        ->image()
+                        ->maxSize(10 * 1024)
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                        ->columnSpanFull(),
 
                     Textarea::make('description')
                         ->label(__('admin.category.description'))

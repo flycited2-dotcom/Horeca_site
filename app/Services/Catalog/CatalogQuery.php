@@ -278,7 +278,7 @@ final class CatalogQuery
             ->where('products_count', '>', 0)
             ->orderBy('sort')
             ->orderBy('name')
-            ->get(['id', 'parent_id', 'name', 'slug', 'products_count']);
+            ->get(['id', 'parent_id', 'name', 'slug', 'icon', 'products_count']);
     }
 
     /**

@@ -34,12 +34,7 @@
                     <ul class="grid grid-cols-2 gap-3 md:grid-cols-3">
                         @foreach ($home['sections'] as $section)
                             <li>
-                                <a
-                                    href="{{ route('category', $section['slug']) }}"
-                                    class="flex h-full flex-col gap-2.5 rounded-card border border-line bg-surface p-3.5 transition-[border-color,box-shadow] duration-150 ease-out hover:border-accent-ink hover:shadow-raised"
-                                >
-                                    <x-ui.equipment-icon :icon="$section['icon']" class="size-6 text-steel-500 md:size-8" />
-                                    <span class="text-md leading-tight font-semibold hyphens-auto wrap-break-word">{{ $section['name'] }}</span>
+                                <x-catalog.category-tile :name="$section['name']" :url="route('category', $section['slug'])" :image="$images[$section['id']] ?? null" :icon="$section['icon']">
                                     <span class="text-sm text-steel-500 tabular">
                                         <span class="md:hidden">{{ $count('shop.home.positions', $section['products_count']) }}</span>
                                         <span class="max-md:hidden">{{ __('shop.home.tile_counts', ['products' => $count('shop.home.positions', $section['products_count']), 'in_stock' => Typography::number($section['in_stock'])]) }}</span>
@@ -47,7 +42,7 @@
                                     @if ($section['children'] !== [])
                                         <span class="text-xs text-steel-500 max-md:hidden">{{ implode(', ', $section['children']) }}</span>
                                     @endif
-                                </a>
+                                </x-catalog.category-tile>
                             </li>
                         @endforeach
                     </ul>
