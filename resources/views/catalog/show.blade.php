@@ -11,7 +11,8 @@
 
     @if ($category->seo_text)
         <section class="mt-10 rounded-card border border-line bg-surface p-6">
-            <div class="max-w-prose text-base">{!! nl2br(e($category->seo_text)) !!}</div>
+            {{-- Текст из админки — Markdown (ТЗ §5.5): заголовки и списки, как на статических страницах. --}}
+            <div class="rich-text max-w-prose text-base">{{ \App\View\RichText::html($category->seo_text) }}</div>
         </section>
     @endif
 </x-layouts.app>
