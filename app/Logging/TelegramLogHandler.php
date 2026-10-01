@@ -40,9 +40,11 @@ final class TelegramLogHandler extends AbstractProcessingHandler
                 return;
             }
 
-            $text = $this->text($record);
+            $text = TelegramNotifier::withoutToken($this->text($record));
 
-            if (! $this->isNew($text)) {
+            // Сбой самой отправки в Telegram в Telegram не отправляется: она заведомо не дойдёт,
+            // а когда связь вернётся, сообщение о прошлой поломке только шумит.
+            if (str_contains($text, 'api.telegram.org') || ! $this->isNew($text)) {
                 return;
             }
 

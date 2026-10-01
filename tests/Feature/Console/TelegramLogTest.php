@@ -1,7 +1,9 @@
 <?php
 
 use App\Logging\TelegramLogHandler;
+use App\Services\Notifications\TelegramNotifier;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -31,6 +33,38 @@ it('sends a critical record to the managers group at once, without the queue', f
         && $request['chat_id'] === '-100500'
         && str_contains($request['text'], 'Ошибка на сайте «Гастроснаб» (production)')
         && str_contains($request['text'], 'диск полон'));
+});
+
+it('never puts the token of the bot into a message to the group', function () {
+    telegramConfigured();
+
+    Log::channel('alarm')->critical('Сбой настройки: токен 123:abc и адрес bot9999999999:AAHV66lQlTOnsH8lp7sZ_55et3gqBJxioJ8');
+
+    Http::assertSent(fn ($request): bool => str_contains($request['text'], 'Сбой настройки')
+        && ! str_contains($request['text'], '123:abc')
+        && ! str_contains($request['text'], 'AAHV66lQlTOnsH8lp7sZ')
+        && str_contains($request['text'], '<токен>'));
+});
+
+it('does not report a failed delivery to Telegram through Telegram', function () {
+    telegramConfigured();
+
+    Log::channel('alarm')->critical('cURL error 28: Connection timed out for https://api.telegram.org/bot<токен>/sendMessage');
+
+    Http::assertNothingSent();
+});
+
+it('throws a failed delivery without the token in its text and without the original exception', function () {
+    telegramConfigured();
+    Http::fake(['api.telegram.org/*' => fn () => throw new ConnectionException('cURL error 28 for https://api.telegram.org/bot123:abc/sendMessage')]);
+
+    try {
+        app(TelegramNotifier::class)->deliver('Привет');
+        $this->fail('The delivery should have thrown.');
+    } catch (RuntimeException $exception) {
+        expect($exception->getMessage())->toContain('cURL error 28')->not->toContain('123:abc')
+            ->and($exception->getPrevious())->toBeNull();
+    }
 });
 
 it('ignores anything below critical', function () {
