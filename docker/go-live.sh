@@ -67,7 +67,7 @@ set_var MAIL_MAILER smtp
 set_var MAIL_HOST 172.22.0.1
 set_var MAIL_PORT 25
 set_var MAIL_AUTO_TLS false
-set_var MAIL_FROM_ADDRESS "\"shop@$main\""
+set_var MAIL_FROM_ADDRESS "\"info@$main\""
 # Оповещения об ошибках — в Telegram, если бот уже настроен.
 if grep -Eq '^TELEGRAM_BOT_TOKEN=.+' "$env_file" && grep -Eq '^TELEGRAM_CHAT_ID=.+' "$env_file"; then
     set_var LOG_STACK daily,telegram

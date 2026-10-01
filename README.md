@@ -212,11 +212,11 @@ git archive --format=tar.gz -o /tmp/gastrosnab.tar.gz HEAD && scp /tmp/gastrosna
 
 Письма магазина уходят через Postfix самого сервера (ТЗ §17.6): контейнер `app` обращается к `172.22.0.1:25` — адресу сервера в закреплённой подсети Docker `172.22.0.0/16` (`docker/compose.yml`), Postfix принимает оттуда без пароля (`mynetworks`), OpenDKIM подписывает письма ключом домена (селектор `mail`).
 
-`.env` боевого сайта: `MAIL_MAILER=smtp`, `MAIL_HOST=172.22.0.1`, `MAIL_PORT=25`, `MAIL_AUTO_TLS=false` (сертификат Postfix самоподписанный, а трафик не выходит за пределы сервера), `MAIL_FROM_ADDRESS=shop@gastrosnab.ru`. На тестовом сайте — `MAIL_MAILER=log`.
+`.env` боевого сайта: `MAIL_MAILER=smtp`, `MAIL_HOST=172.22.0.1`, `MAIL_PORT=25`, `MAIL_AUTO_TLS=false` (сертификат Postfix самоподписанный, а трафик не выходит за пределы сервера), `MAIL_FROM_ADDRESS=info@gastrosnab.ru` (единственный ящик магазина: он же контактный на сайте). На тестовом сайте — `MAIL_MAILER=log`.
 
 **Проверка:** `dc exec app php artisan mail:test <адрес>` отправляет письмо сразу, не через очередь, и называет способ отправки. С `MAIL_MAILER=log` команда честно говорит, что в почту письмо не уходило.
 
-**DNS домена `gastrosnab.ru`** (у Спринтхоста): `MX 10 mail.climat-simf.ru.`; TXT `v=spf1 ip4:212.116.115.150 ~all`; TXT `mail._domainkey` — публичный ключ из `/etc/opendkim/keys/gastrosnab.ru/mail.txt` на сервере; TXT `_dmarc` — `v=DMARC1; p=none; rua=mailto:shop@gastrosnab.ru` (через неделю без замечаний — `p=quarantine`).
+**DNS домена `gastrosnab.ru`** (у Спринтхоста): `MX 10 mail.climat-simf.ru.`; TXT `v=spf1 ip4:212.116.115.150 ~all`; TXT `mail._domainkey` — публичный ключ из `/etc/opendkim/keys/gastrosnab.ru/mail.txt` на сервере; TXT `_dmarc` — `v=DMARC1; p=none; rua=mailto:info@gastrosnab.ru` (через неделю без замечаний — `p=quarantine`).
 
 ### Мониторинг ошибок
 
