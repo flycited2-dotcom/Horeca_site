@@ -26,6 +26,85 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+// Кнопка «Назад» закрывает открытое окно — просмотр фото, шторку подбора, форму запроса,
+// меню, — а не уводит со страницы. Открытое окно кладёт в историю свою запись, закрытие
+// крестиком или нажатием мимо снимает её. Запись, на которую вернулись, когда окна уже нет
+// (после перехода по ссылке из окна или шага «Вперёд»), пропускается одним нажатием.
+const pushOverlay = (key) => history.pushState({ overlay: key }, '');
+
+// Окно, закрытое самой кнопкой «Назад», запись в истории уже сняло: событие закрытия
+// приходит позже и второй раз назад идти не должно.
+let closedByHistory = false;
+
+const dropOverlay = (key) => {
+    if (!closedByHistory && history.state?.overlay === key) {
+        history.back();
+    }
+};
+
+const overlayIsOpen = (key) => {
+    if (key === 'gallery') {
+        return document.querySelector('dialog[data-gallery-viewer][open]') !== null;
+    }
+
+    if (key === 'menu') {
+        return document.querySelector('details[data-history-overlay][open]') !== null;
+    }
+
+    return document.getElementById(key)?.matches(':popover-open') ?? false;
+};
+
+const skipStaleOverlay = () => {
+    const key = history.state?.overlay;
+
+    if (key && !overlayIsOpen(key)) {
+        history.back();
+    }
+};
+
+for (const popover of document.querySelectorAll('[popover]')) {
+    popover.addEventListener('toggle', (event) => {
+        if (event.newState === 'open') {
+            pushOverlay(popover.id);
+        } else {
+            dropOverlay(popover.id);
+        }
+    });
+}
+
+for (const menu of document.querySelectorAll('details[data-history-overlay]')) {
+    menu.addEventListener('toggle', () => {
+        if (menu.open) {
+            pushOverlay('menu');
+        } else {
+            dropOverlay('menu');
+        }
+    });
+}
+
+window.addEventListener('popstate', () => {
+    closedByHistory = true;
+    setTimeout(() => {
+        closedByHistory = false;
+    }, 150);
+
+    for (const popover of document.querySelectorAll('[popover]:popover-open')) {
+        popover.hidePopover();
+    }
+
+    for (const menu of document.querySelectorAll('details[data-history-overlay][open]')) {
+        menu.open = false;
+    }
+
+    for (const viewer of document.querySelectorAll('dialog[data-gallery-viewer][open]')) {
+        viewer.close();
+    }
+
+    skipStaleOverlay();
+});
+
+window.addEventListener('pageshow', skipStaleOverlay);
+
 // Ряд категорий (макет, экран 5): главные разделы — не больше двух строк плашек; те, что не
 // поместились, уходят в «Ещё» к остальным разделам. Без скрипта «Ещё» показывает все.
 const NAV_ROWS = 2;
@@ -102,21 +181,118 @@ for (const tabs of document.querySelectorAll('[data-tabs]')) {
     }
 }
 
-// Галерея: миниатюра меняет главное фото на месте; без скрипта открывает фото целиком.
-for (const gallery of document.querySelectorAll('[data-gallery]')) {
-    const main = gallery.querySelector('[data-gallery-main]');
-    const image = main?.querySelector('img');
-    const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+// Галерея карточки товара: главное фото листается свайпом (прокрутка с привязкой — HTML),
+// скрипт ведёт счётчик и миниатюры, а нажатие открывает фото на весь экран. Просмотр —
+// <dialog>: фото вписано в экран, листается так же, закрывается крестиком, Esc и «Назад».
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    for (const thumb of thumbs) {
+const slideTo = (track, index, smooth) => {
+    track.scrollTo({ left: index * track.clientWidth, behavior: smooth && !reducedMotion.matches ? 'smooth' : 'auto' });
+};
+
+const currentSlide = (track) => Math.round(track.scrollLeft / track.clientWidth);
+
+const onSlide = (track, callback) => {
+    track.addEventListener('scroll', () => {
+        // Скрытое окно просмотра ширины не имеет: считать номер по нему нельзя.
+        if (track.clientWidth > 0) {
+            callback(currentSlide(track));
+        }
+    }, { passive: true });
+};
+
+const fillCounter = (counter, index) => {
+    if (counter) {
+        counter.textContent = counter.dataset.format.replace('{current}', index + 1).replace('{total}', counter.dataset.total);
+    }
+};
+
+for (const gallery of document.querySelectorAll('[data-gallery]')) {
+    const track = gallery.querySelector('[data-gallery-track]');
+    const viewer = gallery.querySelector('[data-gallery-viewer]');
+    const viewerTrack = viewer.querySelector('[data-viewer-track]');
+    const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+    const counter = gallery.querySelector('[data-gallery-counter]');
+    const viewerCounter = viewer.querySelector('[data-viewer-counter]');
+
+    const showCurrent = (index) => {
+        thumbs.forEach((thumb, position) => {
+            if (position === index) {
+                thumb.setAttribute('aria-current', 'true');
+            } else {
+                thumb.removeAttribute('aria-current');
+            }
+        });
+
+        fillCounter(counter, index);
+    };
+
+    // Номер фото в просмотре помним сами: после закрытия окна его ширина — ноль.
+    let viewerIndex = 0;
+
+    onSlide(track, showCurrent);
+    onSlide(viewerTrack, (index) => {
+        viewerIndex = index;
+        fillCounter(viewerCounter, index);
+    });
+
+    thumbs.forEach((thumb, index) => {
         thumb.addEventListener('click', (event) => {
             event.preventDefault();
-            image.src = thumb.dataset.full;
-            main.href = thumb.href;
-            thumbs.forEach((other) => other.toggleAttribute('aria-current', other === thumb));
-            thumb.setAttribute('aria-current', 'true');
+            slideTo(track, index, true);
+        });
+    });
+
+    const requestClose = () => {
+        if (history.state?.overlay === 'gallery') {
+            history.back();
+        } else if (viewer.open) {
+            viewer.close();
+        }
+    };
+
+    for (const open of gallery.querySelectorAll('[data-gallery-open]')) {
+        open.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            viewerIndex = Number(open.dataset.galleryOpen);
+
+            viewer.showModal();
+            document.documentElement.classList.add('overflow-hidden');
+            slideTo(viewerTrack, viewerIndex, false);
+            fillCounter(viewerCounter, viewerIndex);
+            pushOverlay('gallery');
         });
     }
+
+    // Закрытие любым путём возвращает главное фото к тому, на котором остановился просмотр.
+    viewer.addEventListener('close', () => {
+        document.documentElement.classList.remove('overflow-hidden');
+        slideTo(track, viewerIndex, false);
+        showCurrent(viewerIndex);
+    });
+
+    viewer.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        requestClose();
+    });
+
+    viewer.querySelector('[data-viewer-close]').addEventListener('click', requestClose);
+
+    for (const step of viewer.querySelectorAll('[data-viewer-step]')) {
+        step.addEventListener('click', () => {
+            viewerTrack.scrollBy({ left: Number(step.dataset.viewerStep) * viewerTrack.clientWidth, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+        });
+    }
+
+    viewer.addEventListener('keydown', (event) => {
+        const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+
+        if (step !== undefined) {
+            event.preventDefault();
+            viewerTrack.scrollBy({ left: step * viewerTrack.clientWidth, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+        }
+    });
 }
 
 // Уведомления об итоге действия (шаблон — в каркасе): новое заменяет прежнее, закрывается

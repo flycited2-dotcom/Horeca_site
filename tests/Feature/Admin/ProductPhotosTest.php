@@ -59,3 +59,41 @@ it('shows the uploaded photo on the storefront instead of the placeholder', func
         ->assertDontSee(__('shop.product.no_photo'))
         ->assertSee('<img', false);
 });
+
+it('lets the customer swipe through the photos and open them fitted to the screen', function () {
+    $product = Product::factory()->create([
+        'slug' => 'shkaf-s-tremya-foto',
+        'category_id' => Category::factory()->create(['is_active' => true])->id,
+    ]);
+
+    foreach (['a', 'b', 'c'] as $name) {
+        $product->addMedia(UploadedFile::fake()->image("{$name}.jpg", 4000, 3000))->toMediaCollection(Product::IMAGES);
+    }
+
+    $content = $this->get('/product/shkaf-s-tremya-foto')->assertOk()->getContent();
+
+    // Swipe: a track of three slides with a counter; the viewer shows the same photos in the «full» size,
+    // not the original of four thousand pixels, and can be closed.
+    expect(substr_count($content, 'data-gallery-open='))->toBe(3)
+        ->and($content)->toContain('data-gallery-track', 'snap-x snap-mandatory', 'data-gallery-counter', '1 из 3', 'data-gallery-viewer', 'data-viewer-close')
+        ->and(substr_count($content, 'data-gallery-thumb='))->toBe(3);
+
+    foreach ($product->refresh()->getMedia(Product::IMAGES) as $image) {
+        expect($content)->toContain($image->getUrl('full'));
+    }
+});
+
+it('keeps a single photo without a counter and thumbnails', function () {
+    $product = Product::factory()->create([
+        'slug' => 'shkaf-s-odnim-foto',
+        'category_id' => Category::factory()->create(['is_active' => true])->id,
+    ]);
+    $product->addMedia(UploadedFile::fake()->image('a.jpg', 800, 600))->toMediaCollection(Product::IMAGES);
+
+    $this->get('/product/shkaf-s-odnim-foto')
+        ->assertOk()
+        ->assertSee('data-gallery-open="0"', false)
+        ->assertDontSee('data-gallery-counter', false)
+        ->assertDontSee('data-gallery-thumb', false)
+        ->assertDontSee('data-viewer-step', false);
+});

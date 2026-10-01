@@ -4,9 +4,9 @@
     Меню каталога на планшете и телефоне (макет, экраны 5, 10 и 14): бургер раскрывает под
     шапкой корневые разделы со счётчиками и служебные страницы. Это <details>: открывается
     и закрывается без скриптов, бургер в открытом меню становится крестиком. Скрипт витрины
-    добавляет закрытие по Esc и по нажатию мимо.
+    добавляет закрытие по Esc, по нажатию мимо и кнопкой «Назад».
 --}}
-<details data-dismissable {{ $attributes->class('group') }}>
+<details data-dismissable data-history-overlay {{ $attributes->class('group') }}>
     <summary class="flex size-control cursor-pointer list-none items-center justify-center rounded-control border border-line bg-surface transition-colors duration-150 ease-out hover:border-accent-ink [&::-webkit-details-marker]:hidden">
         <span class="sr-only">{{ __('shop.layout.menu') }}</span>
         <svg class="size-6 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
