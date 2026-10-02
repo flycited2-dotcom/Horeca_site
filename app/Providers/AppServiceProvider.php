@@ -19,6 +19,8 @@ use App\Services\Search\DatabaseSearchEngine;
 use App\Services\Search\SearchEngineInterface;
 use App\Services\Settings\Settings;
 use App\Services\Supplier\Contracts\SupplierContentSourceInterface;
+use App\Services\Supplier\Sources\Rosholod\Api\RosholodApiClient;
+use App\Services\Supplier\Sources\Rosholod\Api\RosholodApiContentSource;
 use App\Services\Supplier\Sources\Rosholod\RosholodSiteSource;
 use App\View\Composers\StorefrontLayoutComposer;
 use Illuminate\Contracts\Foundation\Application;
@@ -42,8 +44,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->scoped(CompareList::class);
         $this->app->scoped(FavoriteList::class);
         $this->app->bind(SearchEngineInterface::class, DatabaseSearchEngine::class);
-        // Фото поставщика — со списка товаров его сайта, пока нет API (ТЗ §6); API заменит адаптер здесь.
-        $this->app->bind(SupplierContentSourceInterface::class, RosholodSiteSource::class);
+        // Фото, описания и характеристики поставщика — со списка товаров его сайта или из его API
+        // (ТЗ §6): SUPPLIER_CONTENT_SOURCE=site|api, меняется без выкладки.
+        $this->app->bind(SupplierContentSourceInterface::class, fn (Application $app): SupplierContentSourceInterface => config('suppliers.rosholod.content_source') === 'api'
+            ? $app->make(RosholodApiContentSource::class)
+            : $app->make(RosholodSiteSource::class));
+        $this->app->scoped(RosholodApiClient::class);
 
         // Проверка пароля по базе утечек (ТЗ §15.2) ждёт ответа не дольше 5 секунд: если
         // сервис не ответит, регистрация не должна висеть полминуты. Без ответа пароль принимается.

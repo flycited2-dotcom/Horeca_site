@@ -112,6 +112,15 @@ php artisan supplier:import rosholod.stock_xml
 - **Telegram.** Пока `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` в `.env` пустые, сообщения о сбоях и итоги дня пишутся в журнал `storage/logs`.
 - **Журналы прогонов:** `storage/logs/imports/{номер}.log`, скачанные файлы — `storage/app/private/imports`.
 
+#### Dealer API Росхолода
+
+Содержимое товаров — описания, характеристики, страна, фото — можно брать из API поставщика вместо его сайта (ТЗ §6, `docs/supplier-api-2026-10-02.md`). Остатки и цены остаются в XML.
+
+- **Токен** вводит заказчик на сервере: `/opt/gastrosnab/src/docker/set-rosholod.sh` (на рабочем столе — «Подключить API Росхолода»). В git и в чат токен не попадает.
+- **Проверка (только чтение, около минуты):** `docker/dc exec app php artisan supplier:api-check`, с `--prices` и `--stocks` — ещё и полный обход цен и остатков. Сводка печатается и лежит в `storage/app/private/rosholod-api-check.txt`: доступ по правам, связь товаров API с нашими (`source_id`, `id`, код, артикул), виды номенклатуры, склады, ключи характеристик.
+- **Включение:** `SUPPLIER_CONTENT_SOURCE=api` в `.env` сервера и перезапуск; обратно — `site`. Ночная загрузка (`supplier:content`, 00:30) пойдёт через API; с API её нельзя продолжить с середины — только с начала.
+- **Настройки:** `ROSHOLOD_API_URL`, `ROSHOLOD_API_EXTERNAL_ID` (`source_id` или `id` — каким полем API связывается с нашим `external_id`), `ROSHOLOD_API_MEDIA_HOSTS` (с каких хостов брать фото).
+
 ### Посмотреть витрину
 
 ```powershell

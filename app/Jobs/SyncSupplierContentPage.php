@@ -43,12 +43,20 @@ final class SyncSupplierContentPage implements ShouldQueue
      */
     private ?string $run = null;
 
+    /**
+     * Where the supplier API continues: the cursor the previous page returned. A plain property
+     * with a default, like the run: jobs queued before the cursor came without it.
+     */
+    private ?string $cursor = null;
+
     public function __construct(
         private readonly int $supplierId,
         private readonly int $page = 1,
         ?string $run = null,
+        ?string $cursor = null,
     ) {
         $this->run = $run;
+        $this->cursor = $cursor;
         $this->onConnection(config('import.queue_connection'));
         $this->onQueue(config('import.queue'));
     }
@@ -90,7 +98,7 @@ final class SyncSupplierContentPage implements ShouldQueue
 
         config()->set('media-library.queue_conversions_by_default', false);
 
-        $page = $source->page($this->page);
+        $page = $source->page($this->page, $this->cursor);
         $counts = ['details_updated' => 0, 'updated' => 0, 'unchanged' => 0, 'no_product' => 0, 'failed' => 0];
 
         foreach ($page->details as $product) {
@@ -125,8 +133,8 @@ final class SyncSupplierContentPage implements ShouldQueue
             self::markRun($this->supplierId, $this->run, $page->page + 1);
         }
 
-        self::dispatch($this->supplierId, $page->page + 1, $this->run)
-            ->delay(now()->addMilliseconds((int) config('suppliers.rosholod.site_content.page_pause_ms')));
+        self::dispatch($this->supplierId, $page->page + 1, $this->run, $page->nextCursor)
+            ->delay(now()->addMilliseconds($this->pagePauseMs()));
     }
 
     /**
@@ -135,6 +143,16 @@ final class SyncSupplierContentPage implements ShouldQueue
     public function failed(): void
     {
         $this->forgetRun();
+    }
+
+    /**
+     * How long to wait before the next page: each source has its own limit of requests.
+     */
+    private function pagePauseMs(): int
+    {
+        return (int) config(config('suppliers.rosholod.content_source') === 'api'
+            ? 'suppliers.rosholod.api.page_pause_ms'
+            : 'suppliers.rosholod.site_content.page_pause_ms');
     }
 
     private function forgetRun(): void

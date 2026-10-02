@@ -62,4 +62,36 @@ return [
         'user_agent' => 'GastrosnabCatalog/1.0 (+https://gastrosnab.ru; photos of a Rosholod dealer)',
     ],
 
+    /*
+     * Откуда берутся фото, описания и характеристики: «site» — список товаров на сайте Росхолода
+     * (до API), «api» — Dealer API (ТЗ §6). Переключается без выкладки: SUPPLIER_CONTENT_SOURCE.
+     */
+    'content_source' => env('SUPPLIER_CONTENT_SOURCE', 'site'),
+
+    /*
+     * Dealer API Росхолода, только чтение (ответ поставщика от 02.10.2026, docs/supplier-api-2026-10-02.md):
+     * на токен пять запросов в секунду, списки — по курсору next_cursor, фото скачиваются без токена
+     * и хранятся у нас. Токен выдан на 14 дней для проверки; вводит его заказчик на сервере
+     * (docker/set-rosholod.sh), в git его нет.
+     */
+    'api' => [
+        'base_url' => env('ROSHOLOD_API_URL', 'https://api.rosholod.org'),
+        'token' => env('ROSHOLOD_API_TOKEN'),
+        'requests_per_second' => 4,
+        'timeout' => 30,
+        'user_agent' => 'GastrosnabCatalog/1.0 (+https://gastrosnab.ru; Rosholod dealer)',
+
+        // Каким полем товара API связывается с нашим `external_id` (GUID из XML): `source_id` —
+        // исходный идентификатор из учётной системы, `id` — идентификатор самого API. Проверяется
+        // командой supplier:api-check.
+        'external_id_field' => env('ROSHOLOD_API_EXTERNAL_ID', 'source_id'),
+
+        // Фото берутся только с этих хостов (и их поддоменов); пауза между скачиваниями — как
+        // просит поставщик, «ограничивать число одновременных скачиваний».
+        'media_hosts' => array_values(array_filter(array_map('trim', explode(',', (string) env('ROSHOLOD_API_MEDIA_HOSTS', 'rosholod.org'))))),
+        'photo_pause_ms' => 250,
+        'page_pause_ms' => 1000,
+        'export_limit' => 20,
+    ],
+
 ];

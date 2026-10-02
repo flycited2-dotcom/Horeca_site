@@ -25,7 +25,7 @@ class SyncSupplierContentCommand extends Command
     /**
      * @var string
      */
-    protected $description = 'Загрузить с сайта поставщика фото, описания, габариты и характеристики товаров (фоновой очередью)';
+    protected $description = 'Загрузить у поставщика (с его сайта или из API) фото, описания, габариты и характеристики товаров (фоновой очередью)';
 
     public function handle(): int
     {
@@ -46,6 +46,13 @@ class SyncSupplierContentCommand extends Command
         }
 
         $page = max(1, (int) $this->option('page'));
+
+        // The API is walked by the cursor of the previous page: there is no way into the middle.
+        if ($page > 1 && config('suppliers.rosholod.content_source') === 'api') {
+            $this->warn(__('import.content.api_from_start'));
+            $page = 1;
+        }
+
         $run = (string) Str::uuid();
 
         SyncSupplierContentPage::markRun($supplier->id, $run, $page);
