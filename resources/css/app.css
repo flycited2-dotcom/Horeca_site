@@ -17,55 +17,55 @@
  * где он ограничивает применение цвета.
  */
 @theme {
-    --color-ink: #15191d;          /* основной текст, 13,8:1 на slate */
-    --color-steel-500: #5d686f;    /* подписи 12–13 px, ключи таблиц (5,1:1) */
-    --color-steel-400: #8a959e;    /* иконки, заглушки, разделители — не текст (2,6:1) */
-    --color-accent: #0098ea;       /* рамки, чипы, фокус, hover — не под белый текст (3,1:1) */
-    --color-accent-ink: #0072b0;   /* заливка основной кнопки и ссылки (белый текст 5,2:1) */
-    --color-accent-dark: #005c8c;  /* hover основной кнопки */
-    --color-accent-soft: #e5f5fd;  /* hover вторичной кнопки */
-    --color-accent-line: #a8def7;  /* рамка плашки «Ваша цена» на accent-soft */
-    --color-slate: #e3e8ec;        /* служебная полоса, футер, панель подбора */
-    --color-slate-line: #c3cbd1;   /* границы на slate */
-    --color-bg: #f4f6f7;           /* полотно страницы, заглушки */
-    --color-line: #d3d9de;         /* внешние рамки карточек и полей */
-    --color-line-soft: #e7ebee;    /* внутренние разделители */
-    --color-surface: #ffffff;      /* карточки */
+    --color-ink: #eef1f3;          /* основной текст на графите, 15:1 на bg */
+    --color-steel-500: #9ba7af;    /* подписи 12–13 px, ключи таблиц (6,5:1 на surface) */
+    --color-steel-400: #66727b;    /* иконки, заглушки, разделители — не текст */
+    --color-accent: #ff6a13;       /* огонь: рамки, чипы, фокус, hover — не под белый текст */
+    --color-accent-ink: #ff8a47;   /* ссылки и текст вторичных кнопок на тёмном (7,4:1 на surface) */
+    --color-accent-dark: #ffa06b;  /* hover ссылок: на тёмном фоне светлеет */
+    --color-accent-soft: #2b1a0f;  /* hover вторичной кнопки, плашка «Ваша цена» */
+    --color-accent-line: #7a3a14;  /* рамка плашки на accent-soft */
+    --color-slate: #0b0f12;        /* служебная полоса, футер, панель подбора */
+    --color-slate-line: #262e35;   /* границы на slate */
+    --color-bg: #12171b;           /* полотно страницы, шапки таблиц */
+    --color-line: #2b343b;         /* внешние рамки карточек и полей */
+    --color-line-soft: #222a30;    /* внутренние разделители */
+    --color-surface: #1a2126;      /* карточки и поля */
+    --color-stage: #ffffff;        /* подложка под фото товара: снимки поставщика на белом фоне */
 
     /*
-     * Облик «Холод и жар» (выбран заказчиком 08.10.2026): тёмная шапка, сигнальный оранжевый
-     * у главного действия и разделы, окрашенные по «температуре» оборудования.
+     * Облик «Премиум-кухня» (выбран заказчиком 08.10.2026): графит и нержавейка, оранжевый
+     * огонь у действий, разделы, окрашенные по «температуре» оборудования, фото на белой подложке.
      */
-    --color-night: #0f1418;        /* служебная полоса, шапка и первый экран главной */
-    --color-night-line: #2a333a;   /* рамки и разделители на night */
-    --color-night-soft: #1b2329;   /* hover на night */
+    --color-night: #0b0f12;        /* служебная полоса, шапка и первый экран главной */
+    --color-night-line: #262e35;   /* рамки и разделители на night */
+    --color-night-soft: #1a2329;   /* hover на night */
     --color-night-text: #b9c3ca;   /* вторичный текст на night (10,3:1) */
     --color-signal: #cc4a00;       /* заливка главной кнопки: «В корзину», «Найти» (белый текст 4,6:1) */
     --color-signal-dark: #a83d00;  /* hover главной кнопки */
     --color-signal-bright: #ff6a13; /* акцент на night — не под белый текст (2,9:1) */
     --color-cold-bright: #6cc8ff;  /* «холодные» цифры на night (10:1) */
     --color-hot-bright: #ff9a62;   /* «горячие» цифры на night (8,9:1) */
-    --color-cold-bg: #e3f2fb;      /* плитка холодильного раздела */
-    --color-cold-line: #b7dcf1;
-    --color-cold-ink: #08486d;     /* название на cold-bg (8,5:1) */
-    --color-hot-bg: #fdeee6;       /* плитка теплового раздела */
-    --color-hot-line: #f5c9b1;
-    --color-hot-ink: #8d2f09;      /* название на hot-bg (7,3:1) */
+    --color-cold-bg: #0e2533;      /* плитка холодильного раздела */
+    --color-cold-line: #1f4a66;
+    --color-cold-ink: #8fd2ff;     /* название на cold-bg (9:1) */
+    --color-hot-bg: #2e150a;       /* плитка теплового раздела */
+    --color-hot-line: #6b2f14;
+    --color-hot-ink: #ffa36b;      /* название на hot-bg (8,6:1) */
 
     /* Статусы наличия различаются не только цветом, но и формой маркера. */
-    --color-stock-text: #166b49;   /* «В наличии» (5,4:1) */
-    --color-stock-bg: #e6f2ec;
-    --color-stock-line: #bfdfd0;
-    --color-stock-dot: #1f8a5f;    /* круглая точка */
-    --color-incoming: #8f4207;     /* «Ожидается <дата>» (6,2:1) */
-    --color-incoming-bg: #fdf4e7;
-    --color-incoming-line: #e3b473;
-    --color-incoming-dot: #b45309; /* ромб */
-    --color-on-order: #a3350b;     /* «Под заказ» (6,1:1) */
-    --color-on-order-line: #c2410c; /* пунктирная рамка и квадратный маркер */
-    --color-danger: #c2410c;       /* рамка поля с ошибкой */
-    --color-danger-text: #a3350b;  /* текст ошибки */
-
+    --color-stock-text: #5fd3a0;   /* «В наличии» (8:1 на stock-bg) */
+    --color-stock-bg: #11261d;
+    --color-stock-line: #1e4b39;
+    --color-stock-dot: #3ec18a;    /* круглая точка */
+    --color-incoming: #f2b867;     /* «Ожидается <дата>» (9:1 на incoming-bg) */
+    --color-incoming-bg: #2a1f10;
+    --color-incoming-line: #6b4a1c;
+    --color-incoming-dot: #e19a3c; /* ромб */
+    --color-on-order: #ff8f66;     /* «Под заказ» (7:1 на surface) */
+    --color-on-order-line: #e0562a; /* пунктирная рамка и квадратный маркер */
+    --color-danger: #ef6a3a;       /* рамка поля с ошибкой */
+    --color-danger-text: #ff8f66;  /* текст ошибки */
     --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
     --font-display: 'Unbounded Variable', 'Manrope Variable', ui-sans-serif, system-ui, sans-serif; /* логотип и первый экран главной */
@@ -92,7 +92,7 @@
     --radius-control: 6px;       /* кнопки и поля */
     --radius-card: 4px;          /* карточки и плашки */
 
-    --shadow-raised: 0 4px 16px rgb(0 0 0 / 0.1); /* только hover карточки и выпадающие меню */
+    --shadow-raised: 0 4px 20px rgb(0 0 0 / 0.55); /* только hover карточки и выпадающие меню */
 
     --spacing-control: 44px;     /* высота кнопок, полей и тач-целей на всех диапазонах */
     --spacing-section: 56px;     /* внешние поля секций на десктопе */
@@ -103,7 +103,7 @@
 
 @layer base {
     html {
-        color-scheme: light;
+        color-scheme: dark;
         -webkit-text-size-adjust: 100%;
     }
 

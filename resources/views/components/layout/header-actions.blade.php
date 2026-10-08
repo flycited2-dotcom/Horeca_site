@@ -48,7 +48,7 @@
     <a href="{{ route('favorites') }}" data-favorite-link @if ($shell->favoritesCount === 0) hidden @endif class="{{ $tile }}">
         <x-favorites.heart class="size-6" />
         <span class="text-xs leading-none max-md:sr-only">{{ __('shop.favorites.header') }}</span>
-        <span data-favorite-count class="{{ $badge }} bg-accent-ink text-white">{{ $shell->favoritesCount }}</span>
+        <span data-favorite-count class="{{ $badge }} bg-signal text-white">{{ $shell->favoritesCount }}</span>
     </a>
 
     <a href="{{ route('compare') }}" data-compare-link @if ($shell->compareCount === 0) hidden @endif class="{{ $tile }}">
@@ -56,7 +56,7 @@
             <path d="M5 20V10M12 20V4M19 20v-7"/>
         </svg>
         <span class="text-xs leading-none max-md:sr-only">{{ __('shop.compare.header') }}</span>
-        <span data-compare-count class="{{ $badge }} bg-accent-ink text-white">{{ $shell->compareCount }}</span>
+        <span data-compare-count class="{{ $badge }} bg-signal text-white">{{ $shell->compareCount }}</span>
     </a>
 
     <a

@@ -30,7 +30,7 @@
 @else
     <div data-gallery {{ $attributes->class(['grid gap-3', 'md:grid-cols-[88px_minmax(0,1fr)]' => $total > 1]) }}>
         <div class="relative min-w-0 md:order-last">
-            <ul data-gallery-track class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-card border border-line bg-surface [scrollbar-width:none]">
+            <ul data-gallery-track class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-card border border-line bg-stage [scrollbar-width:none]">
                 @foreach ($media as $image)
                     <li class="aspect-[4/3] w-full shrink-0 snap-center snap-always">
                         <a
@@ -53,7 +53,7 @@
             </ul>
 
             @if ($total > 1)
-                <p data-gallery-counter data-format="{{ $format }}" data-total="{{ $total }}" class="pointer-events-none absolute right-3 bottom-3 rounded-full bg-ink px-2.5 py-1 text-xs leading-none font-medium text-white tabular" aria-live="polite">{{ $counter(1) }}</p>
+                <p data-gallery-counter data-format="{{ $format }}" data-total="{{ $total }}" class="pointer-events-none absolute right-3 bottom-3 rounded-full bg-night px-2.5 py-1 text-xs leading-none font-medium text-white tabular" aria-live="polite">{{ $counter(1) }}</p>
             @endif
         </div>
 
@@ -65,7 +65,7 @@
                             href="{{ $image->getUrl() }}"
                             data-gallery-thumb="{{ $loop->index }}"
                             @if ($loop->first) aria-current="true" @endif
-                            class="block size-18 overflow-hidden rounded-card border border-line bg-surface aria-[current=true]:border-2 aria-[current=true]:border-accent md:size-22"
+                            class="block size-18 overflow-hidden rounded-card border border-line bg-stage aria-[current=true]:border-2 aria-[current=true]:border-accent md:size-22"
                         >
                             <img src="{{ $image->getUrl('thumb') }}" alt="{{ __('shop.product.photo', ['number' => $loop->iteration]) }}" loading="lazy" class="size-full object-contain">
                         </a>
@@ -75,7 +75,7 @@
         @endif
 
         {{-- Просмотр на весь экран: открывает скрипт витрины, без него нажатие ведёт на исходное фото. --}}
-        <dialog data-gallery-viewer aria-label="{{ $product->name }}" class="fixed inset-0 m-0 size-full max-h-none max-w-none border-0 bg-ink p-0 text-white open:flex open:flex-col">
+        <dialog data-gallery-viewer aria-label="{{ $product->name }}" class="fixed inset-0 m-0 size-full max-h-none max-w-none border-0 bg-night p-0 text-white open:flex open:flex-col">
             <div class="flex shrink-0 items-center justify-between gap-3 px-3 py-2 md:px-6">
                 <p data-viewer-counter data-format="{{ $format }}" data-total="{{ $total }}" class="text-base tabular">{{ $counter(1) }}</p>
                 <button type="button" data-viewer-close class="flex size-control items-center justify-center rounded-control border border-white/40 transition-colors duration-150 ease-out hover:border-white" aria-label="{{ __('shop.product.photo_close') }}">

@@ -47,7 +47,7 @@
                         @if ($page === null)
                             <span class="flex size-control items-center justify-center text-base text-steel-500" aria-hidden="true">…</span>
                         @elseif ($slice->isOnScreen($page))
-                            <span aria-current="page" class="flex size-control items-center justify-center rounded-control border border-accent-ink bg-accent-ink text-base font-medium text-white tabular">
+                            <span aria-current="page" class="flex size-control items-center justify-center rounded-control border border-signal bg-signal text-base font-medium text-white tabular">
                                 <span class="sr-only">{{ __('shop.catalog.page', ['page' => $page]) }}</span><span aria-hidden="true">{{ $page }}</span>
                             </span>
                         @else

@@ -17,7 +17,7 @@
     $type = $withType && $icon !== null && \Illuminate\Support\Facades\Lang::has("shop.equipment.{$icon}") ? __("shop.equipment.{$icon}") : null;
 @endphp
 
-<div {{ $attributes->class(['relative flex items-center justify-center overflow-hidden bg-bg', $ratio]) }}>
+<div {{ $attributes->class(['relative flex items-center justify-center overflow-hidden', $url ? 'bg-stage' : 'bg-bg', $ratio]) }}>
     @if ($url)
         <img src="{{ $url }}" alt="{{ $product->name }}" loading="lazy" class="h-full w-full object-contain">
     @else
