@@ -1,4 +1,4 @@
-@props(['image' => null, 'icon' => null, 'ratio' => 'aspect-[4/3]', 'iconClass' => 'size-11', 'eager' => false, 'tint' => null])
+@props(['image' => null, 'icon' => null, 'ratio' => 'aspect-[4/3]', 'iconClass' => 'size-11', 'eager' => false, 'tint' => null, 'inset' => 'p-3'])
 
 {{--
     Картинка раздела (ТЗ §9, макет — экраны 2 и 4): загруженная менеджером или фото ходового
@@ -7,8 +7,9 @@
     $eager — картинка в первом экране: грузится сразу, иначе она поздно становится самым крупным элементом страницы.
     $tint — цвет плитки «холодного» или «горячего» раздела: фото умножается на него, и белый фон снимка
     становится цветом плитки, а сам товар не меняется.
+    $inset — поле вокруг фото: у витринной плитки главной оно шире.
 --}}
-<span {{ $attributes->class(['flex items-center justify-center overflow-hidden', $ratio, ($tint ?? 'bg-surface').' p-3' => $image, ($tint ?? 'bg-bg') => ! $image]) }}>
+<span {{ $attributes->class(['flex items-center justify-center overflow-hidden', $ratio, ($tint ?? 'bg-surface').' '.$inset => $image, ($tint ?? 'bg-bg') => ! $image]) }}>
     @if ($image)
         <img src="{{ $image }}" alt="" loading="{{ $eager ? 'eager' : 'lazy' }}" decoding="async" @class(['h-full w-full object-contain', 'mix-blend-multiply' => $tint !== null])>
     @else

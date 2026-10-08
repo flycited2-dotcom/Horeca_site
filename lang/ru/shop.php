@@ -51,6 +51,10 @@ return [
         'local' => 'Готово к отгрузке: :warehouse',
         'positions' => ':count позиция|:count позиции|:count позиций',
         'tile_counts' => ':products · :in_stock в наличии',
+        'zones' => [
+            'cold' => 'Холод',
+            'hot' => 'Жар',
+        ],
     ],
 
     'catalog' => [

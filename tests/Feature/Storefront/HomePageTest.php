@@ -79,6 +79,24 @@ it('opens with the catalog in figures and colours the sections by temperature', 
         ->and($html)->toContain('id="lead-not-found"');
 });
 
+it('opens the catalog with the cold and the hot section as big tiles', function () {
+    $accessories = Category::factory()->create(['name' => 'Аксессуары для оборудования', 'show_on_home' => true, 'products_count' => 1]);
+    $hot = Category::factory()->create(['name' => 'Тепловое оборудование', 'show_on_home' => true, 'products_count' => 1]);
+    $cold = Category::factory()->create(['name' => 'Холодильное оборудование', 'show_on_home' => true, 'products_count' => 2]);
+    Product::factory()->create(['category_id' => $accessories->id]);
+    Product::factory()->create(['category_id' => $hot->id]);
+    Product::factory()->count(2)->create(['category_id' => $cold->id]);
+
+    preg_match('/aria-labelledby="home-sections".*?<\/section>/s', $this->get('/')->assertOk()->getContent(), $catalog);
+    $at = fn (string $text): int|false => mb_strpos($catalog[0], $text);
+
+    expect(substr_count($catalog[0], 'data-featured'))->toBe(2)
+        ->and($at('>Холод<'))->toBeLessThan($at('Холодильное оборудование'))
+        ->and($at('Холодильное оборудование'))->toBeLessThan($at('>Жар<'))
+        ->and($at('>Жар<'))->toBeLessThan($at('Тепловое оборудование'))
+        ->and($at('Тепловое оборудование'))->toBeLessThan($at('Аксессуары для оборудования'));
+});
+
 it('leaves out a figure the catalog has nothing for', function () {
     $neutral = Category::factory()->create(['name' => 'Нейтральное оборудование', 'show_on_home' => true, 'products_count' => 1]);
     Product::factory()->create(['category_id' => $neutral->id]);

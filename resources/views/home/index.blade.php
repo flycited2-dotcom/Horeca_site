@@ -1,8 +1,9 @@
 {{--
     Главная (ТЗ §8.1, макет — экран 4, облик «Холод и жар»): тёмный первый экран с заголовком,
     кнопками «Открыть каталог» и «Найдём за вас» и цифрами каталога, ниже — плитки всех
-    корневых разделов, окрашенные по «температуре» (App\Support\CategoryZone): покупатель
-    прокручивает страницу и видит весь каталог целиком. Ниже — подборки «Соберём кухню
+    корневых разделов, окрашенные по «температуре» (App\Support\CategoryZone): крупнейшие
+    «холодный» и «горячий» разделы открывают их большими плитками (App\View\HomeCatalog),
+    покупатель прокручивает страницу и видит весь каталог целиком. Ниже — подборки «Соберём кухню
     под задачу» (если они включены) и ленты карточек. Внизу — бренды списком названий
     (ТЗ §8.1, п. 5). Поле «Знаю артикул» осталось в шапке и подвале.
 --}}
@@ -64,17 +65,18 @@
             <p class="text-steel-500">{{ __('shop.home.catalog_empty') }}</p>
         @else
             <nav aria-label="{{ __('shop.home.catalog') }}">
+                {{-- Витринные плитки «Холод» и «Жар» идут первыми: на телефоне — во всю ширину, с ноутбука — на 2×2 ячейки. --}}
                 <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-                    @foreach ($home['sections'] as $section)
-                        <li>
-                            <x-catalog.category-tile :name="$section['name']" :url="route('category', $section['slug'])" :image="$images[$section['id']] ?? null" :icon="$section['icon']" :zone="\App\Support\CategoryZone::of($section['icon'], $section['name'])" :eager="$loop->index < 4">
-                                <span class="text-sm text-steel-500 tabular">
+                    @foreach ($sections->tiles as $section)
+                        <li @class(['col-span-2 lg:row-span-2' => $section['featured']])>
+                            <x-catalog.category-tile :name="$section['name']" :url="route('category', $section['slug'])" :image="$images[$section['id']] ?? null" :icon="$section['icon']" :zone="$section['zone']" :featured="$section['featured']" :eager="$loop->index < 4">
+                                <span @class(['text-steel-500 tabular', 'text-sm' => ! $section['featured'], 'text-base' => $section['featured']])>
                                     <span class="md:hidden">{{ $count('shop.home.positions', $section['products_count']) }}</span>
                                     {{-- «0 в наличии» звучит как «ничего нет»: без товаров на складах — только число позиций. --}}
                                     <span class="max-md:hidden">{{ $section['in_stock'] > 0 ? __('shop.home.tile_counts', ['products' => $count('shop.home.positions', $section['products_count']), 'in_stock' => Typography::number($section['in_stock'])]) : $count('shop.home.positions', $section['products_count']) }}</span>
                                 </span>
                                 @if ($section['children'] !== [])
-                                    <span class="text-xs text-steel-500 max-md:hidden">{{ implode(', ', $section['children']) }}</span>
+                                    <span @class(['text-steel-500', 'text-xs max-md:hidden' => ! $section['featured'], 'text-sm' => $section['featured']])>{{ implode(', ', $section['children']) }}</span>
                                 @endif
                             </x-catalog.category-tile>
                         </li>

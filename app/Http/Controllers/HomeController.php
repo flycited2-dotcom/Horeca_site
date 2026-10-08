@@ -6,6 +6,7 @@ use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CategoryImages;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Settings\Settings;
+use App\View\HomeCatalog;
 use App\View\HomeHero;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class HomeController extends Controller
         return view('home.index', [
             'home' => $home,
             'hero' => HomeHero::from($home),
+            'sections' => HomeCatalog::from($home['sections']),
             'images' => $images->for(array_column($home['sections'], 'id')),
             'collections' => $catalog->homeCollections(),
             'strips' => $strips,
