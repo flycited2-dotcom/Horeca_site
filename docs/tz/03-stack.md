@@ -32,7 +32,7 @@ MariaDB 11.8 LTS (до 04.06.2028) или MySQL 8.4 LTS
 Redis 7+
 Node 24 LTS (только сборка), vite ^8.3, laravel-vite-plugin ^3.2
 tailwindcss ^4.3, @tailwindcss/vite ^4.3
-@fontsource-variable/manrope ^5.3, @fontsource-variable/jetbrains-mono ^5.3, @fontsource-variable/unbounded ^5.3 (логотип и первый экран главной, с 08.10.2026)
+@fontsource-variable/manrope ^5.3, @fontsource-variable/jetbrains-mono ^5.3, @fontsource-variable/unbounded ^5.3 (логотип, крупные заголовки, цифры и цены облика «Свечение», с 08.10.2026, §9.3)
 ```
 
 **Не используем** (были в v1.0):
