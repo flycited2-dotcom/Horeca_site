@@ -81,6 +81,23 @@ final readonly class StorefrontShell
     }
 
     /**
+     * The link to one messenger of the store (App\Support\Messengers keys), or null while the
+     * settings do not give a valid one: the bottom bar of the phone offers Telegram only then.
+     *
+     * @return array{key: string, label: string, href: string}|null
+     */
+    public function messenger(string $key): ?array
+    {
+        foreach ($this->messengers as $messenger) {
+            if ($messenger['key'] === $key) {
+                return $messenger;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * The main sections the manager marked: they are the plates of the bar under the header
      * and the list in the footer; without marks — the first eight. The rest wait under «Ещё».
      *

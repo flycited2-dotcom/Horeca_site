@@ -1,77 +1,63 @@
 @props(['shell'])
 
 {{--
-    Правая часть шапки (макет, экран 5): плитки «значок над подписью» на тёмной шапке и корзина —
-    оранжевая кнопка с числом позиций и суммой; на телефоне — значки со счётчиками. «Избранное» и
-    «Сравнение» видны, пока в них есть модели. Счётчики после «Сравнить», «В избранное» и «В корзину» обновляет
-    скрипт витрины. Гостю — «Войти», вошедшему — плитка с именем и меню кабинета на
-    <details>: раскрывается без скриптов, скрипт закрывает его по Esc и нажатию мимо.
+    Правая часть шапки-таблетки (облик «Свечение»). Не оборачивается в общий блок: «Войти» и
+    «Корзина» — прямые потомки .gl-pill, чтобы на телефоне встать в нужные строки (glow.css,
+    правила order). «Избранное» и «Сравнение» видны, пока в них есть модели, — круглые кнопки
+    с числом. «Корзина» — оранжевая кнопка: «Корзина» или число позиций, на широкой шапке и сумма,
+    на телефоне — значок с числом. Счётчики после «Сравнить», «В избранное» и «В корзину» обновляет
+    скрипт витрины (data-*-link, data-*-count, data-cart-*). Гостю — «Войти», вошедшему — кнопка
+    с именем и меню кабинета на <details>: раскрывается без скриптов, скрипт закрывает его по
+    Esc и нажатию мимо.
 --}}
 @php
-    $tile = 'relative flex h-control items-center justify-center rounded-control transition-colors duration-150 ease-out hover:bg-night-soft max-md:w-control md:w-16 md:flex-col md:gap-1';
-    $badge = 'absolute top-0.5 right-0.5 min-w-4.5 rounded-full px-1 text-center text-[11px] leading-4.5 font-semibold tabular md:top-0 md:right-2';
-    $menuItem = 'flex h-control w-full items-center rounded-control px-2.5 text-left text-base transition-colors duration-150 ease-out hover:bg-bg';
+    $user = '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.9-3.9 4-6 7.5-6s6.6 2.1 7.5 6"/>';
 @endphp
 
-<div {{ $attributes->class('flex items-center gap-1 md:gap-2') }}>
-    @if ($shell->customerName === null)
-        <a href="{{ route('login') }}" class="{{ $tile }}">
-            <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0"/>
-            </svg>
-            <span class="text-xs leading-none max-md:sr-only">{{ __('shop.auth.login.submit') }}</span>
-        </a>
-    @else
-        <details data-dismissable class="relative">
-            <summary class="{{ $tile }} cursor-pointer list-none [&::-webkit-details-marker]:hidden" aria-label="{{ __('shop.auth.menu', ['name' => $shell->customerName]) }}">
-                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0"/>
-                </svg>
-                <span class="max-w-15 truncate text-xs leading-none max-md:sr-only" aria-hidden="true">{{ $shell->customerFirstName() }}</span>
-            </summary>
-            <div class="absolute top-full right-0 z-40 mt-1 flex w-64 flex-col gap-1 rounded-card border border-line bg-surface p-2 text-ink shadow-[0_4px_16px_rgba(0,0,0,0.10)]">
-                <p class="flex flex-col px-2.5 py-1.5">
-                    <span class="truncate text-base font-semibold">{{ $shell->customerName }}</span>
-                    <span class="truncate text-sm text-steel-500">{{ $shell->customerEmail }}</span>
-                </p>
-                <a href="{{ route('account') }}" class="{{ $menuItem }}">{{ __('shop.account.menu') }}</a>
-                <a href="{{ route('account.orders') }}" class="{{ $menuItem }}">{{ __('shop.account.menu_orders') }}</a>
-                <a href="{{ route('favorites') }}" class="{{ $menuItem }}">{{ __('shop.favorites.title') }}</a>
-                <form method="post" action="{{ route('logout') }}" class="border-t border-line-soft pt-1">
-                    @csrf
-                    <button type="submit" class="{{ $menuItem }}">{{ __('shop.auth.logout') }}</button>
-                </form>
-            </div>
-        </details>
-    @endif
-
-    <a href="{{ route('favorites') }}" data-favorite-link @if ($shell->favoritesCount === 0) hidden @endif class="{{ $tile }}">
-        <x-favorites.heart class="size-6" />
-        <span class="text-xs leading-none max-md:sr-only">{{ __('shop.favorites.header') }}</span>
-        <span data-favorite-count class="{{ $badge }} bg-signal text-white">{{ $shell->favoritesCount }}</span>
+@if ($shell->customerName === null)
+    <a href="{{ route('login') }}" class="gl-login" aria-label="{{ __('shop.layout.login_aria') }}">
+        <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true">{!! $user !!}</svg>
+        <span>{{ __('shop.auth.login.submit') }}</span>
     </a>
+@else
+    <details data-dismissable class="gl-acct">
+        <summary class="gl-login [&::-webkit-details-marker]:hidden" aria-label="{{ __('shop.auth.menu', ['name' => $shell->customerName]) }}">
+            <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true">{!! $user !!}</svg>
+            <span class="max-w-28 truncate" aria-hidden="true">{{ $shell->customerFirstName() }}</span>
+        </summary>
 
-    <a href="{{ route('compare') }}" data-compare-link @if ($shell->compareCount === 0) hidden @endif class="{{ $tile }}">
-        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 20V10M12 20V4M19 20v-7"/>
-        </svg>
-        <span class="text-xs leading-none max-md:sr-only">{{ __('shop.compare.header') }}</span>
-        <span data-compare-count class="{{ $badge }} bg-signal text-white">{{ $shell->compareCount }}</span>
-    </a>
+        <div class="gl-sheet absolute top-full right-0 z-40 mt-2 flex w-72 max-w-full flex-col gap-1 p-2">
+            <p class="flex flex-col px-3.5 py-2">
+                <span class="truncate text-base font-bold text-white">{{ $shell->customerName }}</span>
+                <span class="truncate text-sm text-steel-500">{{ $shell->customerEmail }}</span>
+            </p>
+            <a href="{{ route('account') }}" class="gl-row">{{ __('shop.account.menu') }}</a>
+            <a href="{{ route('account.orders') }}" class="gl-row">{{ __('shop.account.menu_orders') }}</a>
+            <a href="{{ route('favorites') }}" class="gl-row">{{ __('shop.favorites.title') }}</a>
+            <form method="post" action="{{ route('logout') }}" class="mt-1 border-t border-white/10 pt-1">
+                @csrf
+                <button type="submit" class="gl-row">{{ __('shop.auth.logout') }}</button>
+            </form>
+        </div>
+    </details>
+@endif
 
-    <a
-        href="{{ route('cart') }}"
-        data-cart-link
-        class="relative flex h-control items-center gap-2.5 rounded-control bg-signal text-white transition-colors duration-150 ease-out hover:bg-signal-dark max-md:w-control max-md:justify-center md:px-3.5"
-    >
-        <svg class="size-6 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 5h2.5l2 10h9l2-7H7M9 19.5a1 1 0 1 0 0 .01M17 19.5a1 1 0 1 0 0 .01"/>
-        </svg>
-        <span class="flex flex-col max-md:sr-only">
-            <span class="sr-only" data-cart-caption @if ($shell->cart->isEmpty()) hidden @endif>{{ __('shop.cart.title') }}:</span>
-            <span data-cart-positions class="text-sm leading-tight font-medium">{{ $shell->cart->label() }}</span>
-            <span data-cart-total @if ($shell->cart->isEmpty()) hidden @endif class="text-base leading-tight font-semibold whitespace-nowrap tabular">{{ $shell->cart->totalLabel() }}</span>
-        </span>
-        <span data-cart-badge @if ($shell->cart->isEmpty()) hidden @endif class="{{ $badge }} border border-signal bg-surface text-signal md:hidden" aria-hidden="true">{{ $shell->cart->positions }}</span>
-    </a>
-</div>
+<a href="{{ route('favorites') }}" data-favorite-link @if ($shell->favoritesCount === 0) hidden @endif class="gl-round gl-iconlink">
+    <x-favorites.heart class="size-5" />
+    <span class="sr-only">{{ __('shop.favorites.header') }}</span>
+    <span data-favorite-count class="gl-count">{{ $shell->favoritesCount }}</span>
+</a>
+
+<a href="{{ route('compare') }}" data-compare-link @if ($shell->compareCount === 0) hidden @endif class="gl-round gl-iconlink">
+    <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>
+    <span class="sr-only">{{ __('shop.compare.header') }}</span>
+    <span data-compare-count class="gl-count">{{ $shell->compareCount }}</span>
+</a>
+
+<a href="{{ route('cart') }}" data-cart-link class="gl-btn gl-btn--gl-hot gl-btn--gl-sm gl-cartbtn">
+    <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3.5h2.8l2.3 11.2h10.4l2-8.2H6.2"/></svg>
+    <span class="sr-only" data-cart-caption @if ($shell->cart->isEmpty()) hidden @endif>{{ __('shop.cart.title') }}:</span>
+    <span data-cart-positions class="gl-cartbtn__pos">{{ $shell->cart->label() }}</span>
+    <span data-cart-total @if ($shell->cart->isEmpty()) hidden @endif class="gl-cartbtn__sum gl-num">{{ $shell->cart->totalLabel() }}</span>
+    <span data-cart-badge @if ($shell->cart->isEmpty()) hidden @endif class="gl-count" aria-hidden="true">{{ $shell->cart->positions }}</span>
+</a>

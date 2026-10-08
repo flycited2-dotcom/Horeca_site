@@ -8,22 +8,29 @@ use App\Services\Pricing\PriceResolver;
 use App\Services\Settings\Settings;
 use App\View\HomeCatalog;
 use App\View\HomeHero;
+use App\View\HomeShelf;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 /**
- * Главная (ТЗ §8.1, макет — экран 4): тёмный первый экран с цифрами каталога, плитки всех корневых разделов вместо баннеров,
- * подборки, ленты «В наличии», «Часто заказывают», «Новинки» и местного склада — пустая
- * лента не показывается, — и бренды списком названий.
+ * Главная (ТЗ §8.1, облик «Свечение»): первый экран с цифрами каталога, плитки всех корневых разделов,
+ * гармошка «В наличии», ленты местного склада, хитов и новинок, подборки и бренды. Пустая
+ * лента не показывается. Строка поиска по артикулу живёт в самой странице, а не в подвале.
  */
 class HomeController extends Controller
 {
     private const int STRIP = 4;
 
     /**
-     * Brands listed on the home page; the rest are one click away on «Бренды».
+     * Моделей в гармошке «В наличии»: шесть колонок — больше не умещаются в ряд, даже на широком экране.
      */
-    private const int BRANDS = 24;
+    private const int IN_STOCK = 6;
+
+    /**
+     * Brands listed on the home page: two rows of tiles; the rest are one click away on «Бренды».
+     */
+    private const int BRANDS = 10;
 
     public function __invoke(Request $request, CatalogQuery $catalog, CategoryImages $images, PriceResolver $prices, Settings $settings): View
     {
@@ -32,23 +39,23 @@ class HomeController extends Controller
         $home = $catalog->homeSections();
 
         $strips = array_filter([
-            'in_stock' => $catalog->inStockStrip($user, self::STRIP),
+            'in_stock' => $catalog->inStockStrip($user, self::IN_STOCK),
             'local' => $warehouse === ''
                 ? null
                 : $catalog->localStockStrip($user, $warehouse, $settings->integer('catalog.local_strip_min_products', 12), self::STRIP),
             'hits' => $catalog->hitsStrip($user, self::STRIP),
             'new' => $catalog->newStrip($user, self::STRIP),
-        ], fn ($strip) => $strip !== null && $strip->isNotEmpty());
+        ], fn (?Collection $strip): bool => $strip !== null && $strip->isNotEmpty());
+
+        $resolved = $prices->forMany(collect($strips)->flatten(1), $user);
 
         return view('home.index', [
-            'home' => $home,
-            'hero' => HomeHero::from($home),
+            'hero' => HomeHero::from($home, $resolved),
             'sections' => HomeCatalog::from($home['sections']),
             'images' => $images->for(array_column($home['sections'], 'id')),
+            'shelves' => array_map(fn (Collection $strip): HomeShelf => HomeShelf::from($strip, $resolved), $strips),
             'collections' => $catalog->homeCollections(),
-            'strips' => $strips,
             'warehouse' => $warehouse,
-            'prices' => $prices->forMany(collect($strips)->flatten(1), $user),
             'brands' => $catalog->leadingBrands(self::BRANDS),
             'brandsTotal' => count($catalog->brandDirectory()),
         ]);

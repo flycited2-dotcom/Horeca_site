@@ -1,10 +1,11 @@
 @props(['id', 'variant' => 'header', 'placeholder' => null, 'live' => false])
 
 {{--
-    Поиск (ТЗ §8.4, макет — экран 5): обычная GET-форма на /search, работает без скриптов.
-    В шапке поле и кнопка слиты в одну группу, на телефоне кнопка — квадрат с лупой;
-    в футере поле и кнопка раздельно. Кегль поля 16 px: телефон не увеличивает страницу
-    при фокусе. В режиме live поле ведёт мгновенную выдачу (App\Livewire\InstantSearch).
+    Поиск (ТЗ §8.4, облик «Свечение»): обычная GET-форма на /search, работает без скриптов.
+    В шапке — стеклянная таблетка gl-sf: лупа-кнопка отправки слева и поле; Enter отправляет форму
+    и на телефоне («Найти» на клавиатуре). В подвале и на странице «404» — таблетка gl-find
+    с отдельной кнопкой «Найти». Кегль поля 16 px: телефон не увеличивает страницу при фокусе.
+    В режиме live поле ведёт мгновенную выдачу (App\Livewire\InstantSearch).
 --}}
 @php
     $header = $variant === 'header';
@@ -12,7 +13,15 @@
     $placeholder ??= $header ? __('shop.layout.search_placeholder') : __('shop.layout.footer.sku_placeholder');
 @endphp
 
-<form action="{{ route('search') }}" method="get" role="search" {{ $attributes->class(['flex gap-2', 'md:gap-0' => $header]) }}>
+<form action="{{ route('search') }}" method="get" role="search" {{ $attributes->class([$header ? 'gl-sf' : 'gl-find']) }}>
+    @if ($header)
+        <button type="submit" class="gl-sf__go tap-target" aria-label="{{ __('shop.layout.search') }}">
+            <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+        </button>
+    @else
+        <svg class="gl-ic gl-ic--gl-lead" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+    @endif
+
     <label for="{{ $id }}" class="sr-only">{{ __('shop.layout.search') }}</label>
     <input
         id="{{ $id }}"
@@ -20,6 +29,7 @@
         name="q"
         value="{{ $value }}"
         placeholder="{{ $placeholder }}"
+        enterkeyhint="search"
         @if ($live)
             autocomplete="off"
             aria-describedby="{{ $id }}-status"
@@ -27,29 +37,9 @@
             x-on:focus="open = true"
             x-on:input="open = true"
         @endif
-        @class([
-            'h-control min-w-0 flex-1 rounded-control border bg-surface px-3 text-lg leading-none text-ink placeholder:text-steel-500',
-            'transition-colors duration-150 ease-out focus:border-accent',
-            'border-line md:rounded-r-none' => $header,
-            'border-steel-500' => ! $header,
-        ])
     >
-    <button
-        type="submit"
-        @class([
-            'inline-flex h-control shrink-0 items-center justify-center rounded-control bg-signal text-base leading-none font-medium text-white',
-            'transition-colors duration-150 ease-out hover:bg-signal-dark',
-            'w-control md:w-auto md:rounded-l-none md:px-5.5' => $header,
-            'px-4' => ! $header,
-        ])
-    >
-        @if ($header)
-            <svg class="size-5.5 md:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-                <path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14M16 16l4 4"/>
-            </svg>
-            <span class="sr-only md:not-sr-only">{{ __('shop.layout.search') }}</span>
-        @else
-            {{ __('shop.layout.search') }}
-        @endif
-    </button>
+
+    @unless ($header)
+        <button type="submit" class="gl-btn gl-btn--gl-hot gl-btn--gl-sm">{{ __('shop.layout.search') }}</button>
+    @endunless
 </form>

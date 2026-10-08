@@ -1,29 +1,34 @@
-@props(['shell'])
+@props(['shell', 'wrap' => 'gl-wrap container-page'])
 
 {{--
-    Ряд корневых категорий на десктопе (макет, экран 5): «Каталог» и главные разделы плашками
-    с контуром — видно, что это кнопки, — не больше двух строк. Остальные разделы и те главные,
-    что не поместились, лежат под «Ещё»: скрипт витрины оставляет там только их, а без скриптов
-    «Ещё» показывает все. Главные разделы отмечает менеджер (категория → «Главный раздел»).
+    Корневые разделы под шапкой (облик «Свечение»): чипы со стеклом и цветной точкой «температуры»
+    раздела (App\Support\CategoryZone). С 1024 px — ряд плашек: «Каталог» и главные разделы, не
+    больше двух строк. Остальные разделы и те главные, что не поместились, лежат под «Ещё»: скрипт
+    витрины оставляет там только их, а без скриптов «Ещё» показывает все. Главные разделы отмечает
+    менеджер (категория → «Главный раздел»). Ниже 1024 px — одна лента чипов с прокруткой.
 --}}
 @php
+    use App\Support\CategoryZone;
+
     // Без отметок «Главный раздел» плашками идут первые восемь, остальные — под «Ещё».
-    $plate = 'tap-target inline-flex h-9 items-center rounded-control border px-3.5 text-sm leading-none font-medium whitespace-nowrap transition-colors duration-150 ease-out';
-    $idle = 'border-line bg-surface hover:border-accent-ink hover:text-accent-ink';
-    $current = 'border-accent bg-accent-soft text-accent-ink';
-    $catalog = 'gap-2 border-night bg-night font-semibold text-white hover:border-night-soft hover:bg-night-soft';
+    $chip = 'gl-navchip tap-target';
     $featured = $shell->featuredCategories();
     $others = $shell->otherCategories();
+    $zoneClass = fn (array $category): string => match (CategoryZone::of($category['icon'], $category['name'])) {
+        CategoryZone::COLD => 'gl-cold',
+        CategoryZone::HOT => 'gl-hot',
+        default => '',
+    };
 @endphp
 
-<nav aria-label="{{ __('shop.layout.sections') }}" data-priority-nav {{ $attributes->class('border-b border-line bg-bg') }}>
-    <div class="container-page flex items-start gap-2">
+<nav aria-label="{{ __('shop.layout.sections') }}" data-priority-nav {{ $attributes->class('gl-chips max-lg:hidden') }}>
+    <div class="{{ $wrap }} flex items-start gap-2">
         <a
             href="{{ route('catalog') }}"
             @if ($shell->inCatalog) aria-current="page" @endif
-            class="mt-1.25 shrink-0 {{ $plate }} {{ $catalog }}"
+            class="mt-0.5 shrink-0 {{ $chip }} gl-hot gl-navchip--gl-main"
         >
-            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <svg class="gl-ic size-5" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M4 17h16"/>
             </svg>
             {{ __('shop.layout.catalog') }}
@@ -35,42 +40,36 @@
                     <a
                         href="{{ route('category', $category['slug']) }}"
                         @if ($category['id'] === $shell->currentRootId) aria-current="true" @endif
-                        class="{{ $plate }} {{ $category['id'] === $shell->currentRootId ? $current : $idle }}"
-                    >{{ $category['name'] }}</a>
+                        class="{{ $chip }} {{ $zoneClass($category) }}"
+                    ><i class="gl-navchip__dot" aria-hidden="true"></i>{{ $category['name'] }}</a>
                 </li>
             @endforeach
         </ul>
 
         @if ($shell->categories !== [])
-            <details data-dismissable data-priority-more @if ($others !== []) data-priority-always @endif class="group relative mt-1.25 shrink-0">
-                <summary class="{{ $plate }} {{ $idle }} cursor-pointer list-none gap-1 [&::-webkit-details-marker]:hidden">
+            <details data-dismissable data-priority-more @if ($others !== []) data-priority-always @endif class="group relative mt-0.5 shrink-0">
+                <summary class="{{ $chip }} cursor-pointer list-none gap-1 [&::-webkit-details-marker]:hidden">
                     {{ __('shop.layout.more') }}
-                    <svg class="size-4 transition-transform duration-150 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <svg class="gl-ic size-4 transition-transform duration-150 ease-out group-open:rotate-180" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="m6 9 6 6 6-6"/>
                     </svg>
                 </summary>
 
-                <ul class="absolute top-full right-0 z-30 mt-2 grid w-max max-w-[min(40rem,calc(100vw-4rem))] grid-cols-2 gap-x-4 rounded-control border border-line bg-surface p-2 shadow-raised">
+                <ul class="gl-sheet absolute top-full right-0 z-30 mt-2 grid w-max max-w-[min(40rem,calc(100vw-4rem))] grid-cols-2 gap-x-3 p-2">
                     @foreach ($others as $category)
                         <li>
-                            <a
-                                href="{{ route('category', $category['slug']) }}"
-                                class="flex min-h-control items-center justify-between gap-4 rounded-control px-3 text-base transition-colors duration-150 ease-out hover:bg-bg hover:text-accent-ink"
-                            >
+                            <a href="{{ route('category', $category['slug']) }}" class="gl-row justify-between {{ $zoneClass($category) }}">
                                 <span>{{ $category['name'] }}</span>
-                                <span class="font-mono text-sm text-steel-500">{{ \App\Support\Typography::number($category['products_count']) }}</span>
+                                <span class="gl-row__n">{{ \App\Support\Typography::number($category['products_count']) }}</span>
                             </a>
                         </li>
                     @endforeach
 
                     @foreach ($featured as $category)
                         <li data-priority-extra>
-                            <a
-                                href="{{ route('category', $category['slug']) }}"
-                                class="flex min-h-control items-center justify-between gap-4 rounded-control px-3 text-base transition-colors duration-150 ease-out hover:bg-bg hover:text-accent-ink"
-                            >
+                            <a href="{{ route('category', $category['slug']) }}" class="gl-row justify-between {{ $zoneClass($category) }}">
                                 <span>{{ $category['name'] }}</span>
-                                <span class="font-mono text-sm text-steel-500">{{ \App\Support\Typography::number($category['products_count']) }}</span>
+                                <span class="gl-row__n">{{ \App\Support\Typography::number($category['products_count']) }}</span>
                             </a>
                         </li>
                     @endforeach
@@ -79,3 +78,19 @@
         @endif
     </div>
 </nav>
+
+@if ($shell->categories !== [])
+    <nav aria-label="{{ __('shop.layout.sections') }}" class="gl-ribbon lg:hidden">
+        <ul class="gl-ribbon__list">
+            @foreach ($shell->categories as $category)
+                <li class="shrink-0">
+                    <a
+                        href="{{ route('category', $category['slug']) }}"
+                        @if ($category['id'] === $shell->currentRootId) aria-current="true" @endif
+                        class="{{ $chip }} {{ $zoneClass($category) }}"
+                    ><i class="gl-navchip__dot" aria-hidden="true"></i>{{ $category['name'] }}</a>
+                </li>
+            @endforeach
+        </ul>
+    </nav>
+@endif
