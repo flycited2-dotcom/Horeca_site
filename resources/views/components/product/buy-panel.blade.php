@@ -1,9 +1,9 @@
-@props(['product', 'price' => null, 'stocks', 'facts', 'wholesalePending' => false])
+@props(['product', 'price' => null, 'stocks', 'facts', 'wholesalePending' => false, 'messengers' => []])
 
 {{--
     Панель покупки (ТЗ §8.3, §6.5, макет — экран 3): цена, счётчик и кнопка по статусу,
     склады со сроком доставки (количество штук не показывается никогда), гарантия
-    «Проверьте перед монтажом» и «К сравнению» (§8.5). На десктопе — липкая колонка 396 справа, ниже 1024 —
+    «Проверьте перед монтажом», вопрос в мессенджер и «К сравнению» (§8.5). На десктопе — липкая колонка 396 справа, ниже 1024 —
     под галереей; при прокрутке мимо неё появляется липкая полоса снизу.
 --}}
 @php
@@ -87,6 +87,13 @@
                     </div>
                 @endforeach
             </dl>
+        </div>
+    @endif
+
+    @if ($messengers !== [])
+        <div class="flex flex-col gap-2 border-t border-line-soft pt-3">
+            <p class="text-base"><span class="font-semibold">{{ __('shop.messengers.product_heading') }}</span> <span class="text-steel-500">{{ __('shop.messengers.product_text') }}</span></p>
+            <x-ui.messengers :links="$messengers" class="[&_a]:flex-1 [&_li]:flex [&_li]:flex-1" />
         </div>
     @endif
 

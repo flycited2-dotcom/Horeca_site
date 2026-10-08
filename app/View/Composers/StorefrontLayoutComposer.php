@@ -13,6 +13,7 @@ use App\Services\Catalog\CategoryTree;
 use App\Services\Compare\CompareList;
 use App\Services\Favorites\FavoriteList;
 use App\Services\Settings\Settings;
+use App\Support\Messengers;
 use App\Support\Phone;
 use App\View\StorefrontShell;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ final class StorefrontLayoutComposer
      */
     public const array STRIP_PAGES = ['dostavka', 'optovikam', 'o-kompanii', 'kontakty'];
 
-    public const array FOOTER_PAGES = ['dostavka', 'oplata', 'garantiya', 'optovikam', 'kontakty'];
+    public const array FOOTER_PAGES = ['dostavka', 'oplata', 'garantiya', 'optovikam', 'o-kompanii', 'kontakty'];
 
     public const string PRIVACY_PAGE = 'politika-konfidencialnosti';
 
@@ -46,7 +47,7 @@ final class StorefrontLayoutComposer
 
     public function compose(View $view): void
     {
-        $this->settings->preload('site.name', 'contacts.phones', 'contacts.email', 'contacts.schedule', 'contacts.address', 'seller.requisites', 'analytics.metrika_id');
+        $this->settings->preload('site.name', 'contacts.phones', 'contacts.email', 'contacts.schedule', 'contacts.address', 'seller.requisites', 'analytics.metrika_id', ...array_values(Messengers::KEYS));
         $consent = $this->request->cookie(CookieConsentController::COOKIE);
 
         $pages = Page::query()
@@ -84,6 +85,7 @@ final class StorefrontLayoutComposer
             favoritesCount: $this->favorites->count($this->request->user()),
             metrikaId: preg_match('/^\d{5,12}$/', (string) $this->text('analytics.metrika_id')) === 1 ? $this->text('analytics.metrika_id') : null,
             cookieConsent: in_array($consent, [CookieConsentController::ALL, CookieConsentController::NECESSARY], true) ? $consent : null,
+            messengers: Messengers::links($this->settings),
         ));
     }
 

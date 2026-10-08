@@ -154,6 +154,7 @@ timestamps · `deleted_at` (мягкое удаление администрат
 |---|---|---|
 | `site.name` | — (от заказчика) | название магазина |
 | `contacts.phones`, `contacts.email`, `contacts.address`, `contacts.schedule`, `contacts.socials` | — | контакты |
+| `contacts.telegram`, `contacts.max` | — | мессенджеры: Telegram — «@имя» или ссылка t.me, MAX — ссылка max.ru; пусто или не ссылка мессенджера — кнопки нет |
 | `seller.requisites` | — | реквизиты продавца для подвала и счетов |
 | `seller.vat_mode` | — (от заказчика) | `with_vat` / `without_vat`: подпись к ценам |
 | `pickup.address` | — | адрес самовывоза |

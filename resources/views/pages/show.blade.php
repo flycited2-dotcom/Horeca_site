@@ -2,7 +2,7 @@
     Статическая страница (ТЗ §5.5, §8): «Доставка», «Оплата», «Гарантия» и другие, которые
     менеджер включил в админке. Текст — Markdown, выводится через App\View\RichText.
     На «Доставке» и «Оплате» заголовки-вопросы с ответами идут в разметку FAQPage (ТЗ §14).
-    На «Контактах» под текстом — телефоны, почта, адрес, режим работы и реквизиты из «Настроек».
+    На «Контактах» под текстом — телефоны, почта, мессенджеры, адрес, режим работы и реквизиты из «Настроек».
 --}}
 <x-layouts.app :meta="$meta">
     <article class="rounded-card border border-line bg-surface p-4 md:p-8">
@@ -24,6 +24,12 @@
                     <div class="flex flex-col gap-1">
                         <dt class="text-sm text-steel-500">{{ __('shop.contacts.email') }}</dt>
                         <dd><a href="mailto:{{ $contacts->email }}" class="text-lg font-semibold transition-colors duration-150 ease-out hover:text-accent-ink">{{ $contacts->email }}</a></dd>
+                    </div>
+                @endif
+                @if ($contacts->messengers !== [])
+                    <div class="flex flex-col gap-2">
+                        <dt class="text-sm text-steel-500">{{ __('shop.contacts.messengers') }}</dt>
+                        <dd><x-ui.messengers :links="$contacts->messengers" /></dd>
                     </div>
                 @endif
                 @if ($contacts->address)

@@ -68,7 +68,7 @@
     </a>
 
     {{-- Пока заказчик не задал контакты и не включил страницы, полосе нечего показать. --}}
-    @if ($shell->phones !== [] || $shell->schedule || $shell->email || $shell->stripPages !== [])
+    @if ($shell->phones !== [] || $shell->schedule || $shell->email || $shell->messengers !== [] || $shell->stripPages !== [])
     <div class="bg-slate">
         <div class="container-page flex h-9 items-center justify-between gap-4 text-xs md:h-10 md:gap-6 md:text-sm">
             <div class="flex min-w-0 items-center gap-5">
@@ -81,6 +81,7 @@
                 @if ($shell->email)
                     <a href="mailto:{{ $shell->email }}" class="hidden font-medium lg:inline">{{ $shell->email }}</a>
                 @endif
+                <x-ui.messengers :links="$shell->messengers" variant="strip" class="shrink-0 flex-nowrap max-sm:[&_span]:sr-only" />
             </div>
 
             @if ($shell->stripPages !== [])

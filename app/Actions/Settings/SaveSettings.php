@@ -33,6 +33,8 @@ final class SaveSettings
         'contacts.email' => self::TEXT,
         'contacts.address' => self::TEXT,
         'contacts.schedule' => self::TEXT,
+        'contacts.telegram' => self::TEXT,
+        'contacts.max' => self::TEXT,
         'seller.requisites' => self::TEXT,
         'seller.vat_mode' => self::TEXT,
         'pickup.address' => self::TEXT,

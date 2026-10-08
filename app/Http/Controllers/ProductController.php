@@ -9,6 +9,7 @@ use App\Services\Catalog\CatalogQuery;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Seo\MetaBuilder;
 use App\Services\Settings\Settings;
+use App\Support\Messengers;
 use App\Support\StructuredData;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -44,6 +45,7 @@ class ProductController extends Controller
             ->get(['slug', 'title'])
             ->keyBy('slug');
 
+        $settings->preload('pickup.address', ...array_values(Messengers::KEYS));
         $pickup = $settings->get('pickup.address');
 
         return view('product.show', [
@@ -58,6 +60,7 @@ class ProductController extends Controller
             'prices' => $prices->forMany($similar->concat($related), $user),
             'pickup' => is_string($pickup) && trim($pickup) !== '' ? trim($pickup) : null,
             'pages' => $pages,
+            'messengers' => Messengers::links($settings),
             'structuredData' => StructuredData::product(
                 $product,
                 $price,

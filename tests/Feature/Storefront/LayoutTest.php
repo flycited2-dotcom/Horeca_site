@@ -140,3 +140,25 @@ it('reads the settings of the layout with one query', function () {
 
     expect($queries)->toHaveCount(1);
 });
+
+it('links the messengers from the settings in the service strip and the footer', function () {
+    setting('contacts.telegram', '@gastrosnab');
+    setting('contacts.max', 'https://max.ru/u/f9LHodD0cOKrE8Rl');
+
+    $response = $this->get('/')->assertOk();
+
+    expect(substr_count($response->getContent(), 'href="https://t.me/gastrosnab"'))->toBe(2)
+        ->and(substr_count($response->getContent(), 'href="https://max.ru/u/f9LHodD0cOKrE8Rl"'))->toBe(2);
+
+    $response->assertSee('aria-label="Написать в Telegram"', false)->assertSee('rel="noopener"', false);
+});
+
+it('shows no messenger the settings do not give a valid link for', function () {
+    setting('contacts.telegram', 'javascript:alert(1)');
+    setting('contacts.max', null);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertDontSee('data-messenger', false)
+        ->assertDontSee('javascript:alert', false);
+});

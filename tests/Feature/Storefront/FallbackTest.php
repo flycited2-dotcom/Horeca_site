@@ -70,6 +70,16 @@ it('puts the contacts and requisites from the settings under the text of the con
     $this->get('/o-kompanii')->assertOk()->assertDontSee('<dt class="text-sm text-steel-500">Телефоны</dt>', false);
 });
 
+it('puts the messengers from the settings on the contacts page', function () {
+    Page::factory()->create(['slug' => 'kontakty', 'title' => 'Контакты', 'content' => 'Пишите нам.']);
+    setting('contacts.telegram', 'https://t.me/gastrosnab');
+
+    $this->get('/kontakty')
+        ->assertOk()
+        ->assertSeeInOrder(['Пишите нам.', 'Мессенджеры', 'href="https://t.me/gastrosnab"', 'Написать в Telegram'], false)
+        ->assertDontSee('Написать в MAX');
+});
+
 it('shows only what Markdown can say in the text of a page', function () {
     Page::factory()->create([
         'slug' => 'oplata',

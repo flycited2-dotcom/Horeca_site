@@ -45,6 +45,8 @@ class ProductionSeeder extends Seeder
         'contacts.address' => null,
         'contacts.schedule' => null,
         'contacts.socials' => null,
+        'contacts.telegram' => null,
+        'contacts.max' => null,
         'seller.requisites' => null,
         'seller.vat_mode' => null,
         'pickup.address' => null,

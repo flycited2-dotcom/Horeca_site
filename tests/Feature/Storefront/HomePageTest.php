@@ -61,6 +61,16 @@ it('counts the stock of a section with its subsections and names the biggest of 
         ->assertSee('Шкафы холодильные, Лари морозильные');
 });
 
+it('does not say «0 в наличии» on a section with nothing in stock', function () {
+    $scales = Category::factory()->create(['name' => 'Весовое оборудование', 'show_on_home' => true, 'products_count' => 2]);
+    Product::factory()->count(2)->create(['category_id' => $scales->id]);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('2 позиции')
+        ->assertDontSee('0 в наличии');
+});
+
 it('shows the hits, the new products and the local warehouse only when there are any', function () {
     Setting::query()->create(['key' => 'catalog.local_warehouse_name', 'value' => 'Симферополь']);
     Setting::query()->create(['key' => 'catalog.local_strip_min_products', 'value' => 2]);

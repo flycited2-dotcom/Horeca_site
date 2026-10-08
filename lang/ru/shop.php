@@ -380,6 +380,15 @@ return [
         'phones' => 'Телефоны',
         'email' => 'Почта',
         'address' => 'Адрес',
+        'messengers' => 'Мессенджеры',
+    ],
+
+    'messengers' => [
+        'telegram' => 'Telegram',
+        'max' => 'MAX',
+        'write' => 'Написать в :name',
+        'product_heading' => 'Есть вопрос по товару?',
+        'product_text' => 'Напишите нам — подскажем по сроку, аналогу и подключению.',
     ],
 
     'seo' => [

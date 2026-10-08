@@ -99,6 +99,20 @@ it('renders the card with a fixed number of queries', function () {
     expect($queries)->toBeLessThanOrEqual(20);
 });
 
+it('offers to ask about the product in the messengers from the settings', function () {
+    setting('contacts.telegram', '@gastrosnab');
+    setting('contacts.max', 'https://max.ru/u/f9LHodD0cOKrE8Rl');
+
+    $this->get('/product/shkaf-holodilnyy')
+        ->assertOk()
+        ->assertSeeInOrder(['Есть вопрос по товару?', 'Написать в Telegram', 'Написать в MAX'])
+        ->assertSee('href="https://t.me/gastrosnab"', false);
+});
+
+it('has no question block without messengers', function () {
+    $this->get('/product/shkaf-holodilnyy')->assertOk()->assertDontSee('Есть вопрос по товару?');
+});
+
 it('marks the product and its offer up for search engines', function () {
     $this->product->update(['availability' => Availability::InStock, 'sku' => '11000019106']);
 

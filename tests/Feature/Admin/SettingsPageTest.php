@@ -69,6 +69,21 @@ it('shows the stored values and saves them with their types', function () {
         ->and(settingValue('analytics.metrika_id'))->toBe('98765432');
 });
 
+it('saves the messengers and refuses a link the storefront could not show', function () {
+    Livewire::test(ManageSettings::class)
+        ->fillForm(['contacts__telegram' => '@gastrosnab', 'contacts__max' => 'https://max.ru/u/f9LHodD0cOKrE8Rl'])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect(settingValue('contacts.telegram'))->toBe('@gastrosnab')
+        ->and(settingValue('contacts.max'))->toBe('https://max.ru/u/f9LHodD0cOKrE8Rl');
+
+    Livewire::test(ManageSettings::class)
+        ->fillForm(['contacts__telegram' => 'https://evil.example/gastrosnab', 'contacts__max' => 'gastrosnab'])
+        ->call('save')
+        ->assertHasFormErrors(['contacts__telegram', 'contacts__max']);
+});
+
 it('refuses values the storefront could not use', function () {
     Livewire::test(ManageSettings::class)
         ->fillForm([

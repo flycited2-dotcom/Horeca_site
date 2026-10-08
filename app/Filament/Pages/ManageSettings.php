@@ -5,7 +5,9 @@ namespace App\Filament\Pages;
 use App\Actions\Settings\SaveSettings;
 use App\Models\User;
 use App\Models\Warehouse;
+use App\Support\Messengers;
 use BackedEnum;
+use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -82,6 +84,8 @@ final class ManageSettings extends Page
                         Textarea::make(self::field('contacts.phones'))->label(__('admin.settings.fields.contacts.phones'))->rows(3)->maxLength(500)->helperText($hint('contacts.phones')),
                         Textarea::make(self::field('contacts.schedule'))->label(__('admin.settings.fields.contacts.schedule'))->rows(3)->maxLength(300),
                         $text('contacts.address')->maxLength(300)->columnSpanFull(),
+                        $text('contacts.telegram')->maxLength(300)->rule(self::messengerRule(Messengers::TELEGRAM))->helperText($hint('contacts.telegram')),
+                        $text('contacts.max')->maxLength(300)->rule(self::messengerRule(Messengers::MAX))->helperText($hint('contacts.max')),
                     ]),
                 Section::make(__('admin.settings.sections.seller'))
                     ->columns(2)
@@ -159,6 +163,18 @@ final class ManageSettings extends Page
         $settings->handle($values);
 
         Notification::make()->success()->title(__('admin.settings.saved'))->send();
+    }
+
+    /**
+     * A filled messenger field must give a link the storefront can show (App\Support\Messengers).
+     */
+    private static function messengerRule(string $messenger): Closure
+    {
+        return function (string $attribute, mixed $value, Closure $fail) use ($messenger): void {
+            if (is_string($value) && trim($value) !== '' && Messengers::link($messenger, $value) === null) {
+                $fail(__("admin.settings.invalid.{$messenger}"));
+            }
+        };
     }
 
     /**

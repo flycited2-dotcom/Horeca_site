@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 /**
  * What the storefront layout shows around every page (TZ §8.1, layout — screen 5):
- * contacts from the settings, root categories, the pages the manager has switched on and
+ * contacts and messengers from the settings, root categories, the pages the manager has switched on and
  * how many models the customer compares and keeps in favorites, what is in the cart.
  */
 final readonly class StorefrontShell
@@ -18,6 +18,7 @@ final readonly class StorefrontShell
      * @param  list<array{id: int, name: string, slug: string, icon: ?string, show_on_home: bool, products_count: int}>  $categories
      * @param  list<Page>  $stripPages
      * @param  list<Page>  $footerPages
+     * @param  list<array{key: string, label: string, href: string}>  $messengers
      */
     public function __construct(
         public string $siteName,
@@ -39,6 +40,7 @@ final readonly class StorefrontShell
         public int $favoritesCount = 0,
         public ?string $metrikaId = null,
         public ?string $cookieConsent = null,
+        public array $messengers = [],
     ) {}
 
     /**
