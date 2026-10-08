@@ -1,22 +1,23 @@
-@props(['availability', 'incomingAt' => null, 'variant' => 'badge'])
+@props(['availability', 'incomingAt' => null, 'variant' => 'badge', 'tone' => 'dark'])
 
 {{--
-    Статус наличия (ТЗ §6.5, §9, макет — экраны 2 и 8). Всегда словом, а не только цветом;
-    статусы различаются ещё и формой: «В наличии» — пилюля с точкой, «Ожидается» — плашка
-    с ромбом, «Под заказ» — пунктирная рамка с квадратом. «Ожидается» — с конкретной датой,
-    если поставщик её сообщил. Вариант text — цветное слово без плашки для плотных списков
-    (выдача под поиском, экран 5).
+    Статус наличия (ТЗ §6.5, §9, облик «Свечение», макет — экраны 2 и 8). Всегда словом, а не только цветом;
+    статусы различаются ещё и формой: «В наличии» — пилюля с точкой, «Ожидается» — плашка с ромбом,
+    «Под заказ» — пунктирная рамка с квадратом, снятый с производства — чёрточка. «Ожидается» — с конкретной
+    датой, если поставщик её сообщил. Вариант text — цветное слово без плашки для плотных списков
+    (выдача под поиском, экран 5). Тон plate — светлая пилюля для светлой плашки с фото (метка на фото
+    карточки листинга, как в макете); тон dark — для тёмных стеклянных поверхностей.
 --}}
 @php
     $styles = [
-        'in_stock' => ['rounded-full border-stock-line bg-stock-bg text-stock-text', 'size-1.75 rounded-full bg-stock-dot'],
-        'low' => ['rounded-full border-stock-line bg-stock-bg text-stock-text', 'size-1.75 rounded-full bg-stock-dot'],
-        'incoming' => ['rounded-xs border-incoming-line bg-incoming-bg text-incoming', 'size-1.75 rotate-45 bg-incoming-dot'],
-        'on_order' => ['border-dashed border-on-order-line bg-surface text-on-order', 'size-1.75 bg-on-order-line'],
-        'discontinued' => ['rounded-card border-line bg-bg text-steel-500', 'h-0.5 w-1.75 bg-steel-400'],
+        'in_stock' => ['rounded-full border-stock-line bg-stock-bg text-stock-text', 'size-1.75 rounded-full bg-stock-dot', 'gl-av--in'],
+        'low' => ['rounded-full border-stock-line bg-stock-bg text-stock-text', 'size-1.75 rounded-full bg-stock-dot', 'gl-av--in'],
+        'incoming' => ['rounded-xs border-incoming-line bg-incoming-bg text-incoming', 'size-1.75 rotate-45 bg-incoming-dot', 'gl-av--incoming'],
+        'on_order' => ['border-dashed border-on-order-line bg-surface text-on-order', 'size-1.75 bg-on-order-line', 'gl-av--order'],
+        'discontinued' => ['rounded-card border-line bg-bg text-steel-500', 'h-0.5 w-1.75 bg-steel-400', 'gl-av--off'],
     ];
 
-    [$badge, $marker] = $styles[$availability->value];
+    [$badge, $marker, $plate] = $styles[$availability->value];
 
     $label = $availability->getLabel();
 
@@ -35,6 +36,8 @@
             default => 'text-steel-500',
         },
     ]) }}>{{ $label }}</span>
+@elseif ($tone === 'plate')
+    <span {{ $attributes->class(['gl-av', $plate]) }}><span aria-hidden="true" class="gl-av__m"></span>{{ $label }}</span>
 @else
     <span {{ $attributes->class([
         'inline-flex items-center gap-1.5 self-start border px-2.5 py-1 text-sm leading-[1.3] font-medium',

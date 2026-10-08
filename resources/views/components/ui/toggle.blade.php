@@ -6,7 +6,8 @@
 ])
 
 {{--
-    Тумблер (ТЗ §9, макет — экраны 2 и 9): дорожка 40×24, ручка 18, включённый — accent.
+    Тумблер (ТЗ §9, облик «Свечение», макет — экраны 2 и 9): дорожка 44×26, ручка 20, включённый — оранжевый
+    со свечением, ручка тёмная (gl-switch).
     Это настоящий чекбокс с ролью switch: отправляется обычной формой и работает без
     скриптов. Строка высотой 44 — это и есть цель нажатия. Атрибуты уходят на чекбокс.
 --}}
@@ -24,9 +25,6 @@
         @checked($checked)
         {{ $attributes->class('peer sr-only') }}
     >
-    <span
-        aria-hidden="true"
-        class="relative h-6 w-10 shrink-0 rounded-full bg-line transition-colors duration-150 ease-out peer-checked:bg-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent after:absolute after:top-0.75 after:left-0.75 after:size-4.5 after:rounded-full after:bg-surface after:transition-transform after:duration-150 after:ease-out peer-checked:after:translate-x-4"
-    ></span>
+    <span aria-hidden="true" class="gl-switch"></span>
     <span>{{ $slot }}</span>
 </label>

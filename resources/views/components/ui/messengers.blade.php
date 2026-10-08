@@ -2,9 +2,9 @@
 
 {{--
     Мессенджеры магазина (ТЗ §5.5, App\Support\Messengers): Telegram и MAX из «Настроек».
-    «strip» — короткие ссылки в служебной полосе и подвале, «buttons» — кнопки по 44 px
-    на «Контактах» и в карточке товара. $tone="night" — для тёмной служебной полосы.
-    Ссылка открывается в приложении или новой вкладке.
+    «strip» — короткие ссылки в служебной полосе и подвале, «buttons» — круглые стеклянные кнопки
+    не ниже 44 px на «Контактах» и в карточке товара (облик «Свечение»). $tone="night" — для тёмной
+    служебной полосы. Ссылка открывается в приложении или новой вкладке.
 --}}
 @if ($links !== [])
     <ul {{ $attributes->class(['flex flex-wrap items-center', 'gap-4' => $variant === 'strip', 'gap-2' => $variant !== 'strip']) }}>
@@ -17,10 +17,10 @@
                     data-messenger="{{ $link['key'] }}"
                     @if ($variant === 'strip') aria-label="{{ __('shop.messengers.write', ['name' => $link['label']]) }}" @endif
                     @class([
-                        'inline-flex items-center gap-1.5 font-medium transition-colors duration-150 ease-out',
+                        'inline-flex items-center gap-1.5 font-medium transition-colors duration-150 ease-out' => $variant === 'strip',
                         'hover:text-accent-ink' => $variant === 'strip' && $tone !== 'night',
                         'text-night-text hover:text-white' => $variant === 'strip' && $tone === 'night',
-                        'h-control rounded-control border border-line bg-surface px-4 text-base hover:border-accent-ink' => $variant !== 'strip',
+                        'gl-btn gl-btn--glass gl-btn--sm gl-btn--fit' => $variant !== 'strip',
                     ])
                 >
                     @if ($link['key'] === \App\Support\Messengers::TELEGRAM)

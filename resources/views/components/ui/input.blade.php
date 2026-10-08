@@ -8,7 +8,8 @@
 ])
 
 {{--
-    Поле ввода (ТЗ §9, макет — экраны 9 и 15): подпись сверху, высота 44, радиус 6.
+    Поле ввода (ТЗ §9, облик «Свечение», макет — экраны 9 и 15): подпись сверху, высота 44, непрозрачное
+    тёмное поле (gl-field) со свечением рамки на фокусе.
     Ошибка живёт у поля — рамка danger и текст под полем, который объясняет, что
     исправить. Без явной ошибки берётся ошибка валидации по имени поля. Моноширинный
     вариант — для машинных данных: ИНН, телефон, артикул. Класс уходит на обёртку,
@@ -31,11 +32,9 @@
         @if ($message) aria-invalid="true" @endif
         @if ($describedBy) aria-describedby="{{ $describedBy }}" @endif
         {{ $attributes->except('class')->merge(['type' => 'text'])->class([
-            'h-control w-full rounded-control border bg-surface px-3 text-base text-ink placeholder:text-steel-500',
-            'transition-colors duration-150 ease-out focus:border-accent',
+            'gl-field h-control w-full rounded-control border px-3 text-base',
             'font-mono tabular' => $mono,
             'border-danger' => $message,
-            'border-line' => ! $message,
         ]) }}
     >
 

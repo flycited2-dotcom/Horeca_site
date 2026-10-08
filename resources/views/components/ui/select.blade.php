@@ -9,8 +9,8 @@
 ])
 
 {{--
-    Выпадающий список (ТЗ §9, макет — экраны 12 и 15c): подпись сверху, высота 44, радиус 6,
-    как у поля ввода. Варианты — «значение => подпись». Заглушка-подсказка без значения идёт
+    Выпадающий список (ТЗ §9, облик «Свечение», макет — экраны 12 и 15c): подпись сверху, высота 44,
+    как у поля ввода (gl-field). Варианты — «значение => подпись». Заглушка-подсказка без значения идёт
     первой и выбрана, пока ничего не выбрано. Ошибка — у поля; без явной берётся ошибка
     валидации по имени. Класс уходит на обёртку, остальные атрибуты — на сам список.
 --}}
@@ -30,9 +30,8 @@
         name="{{ $name }}"
         @if ($message) aria-invalid="true" aria-describedby="{{ $id }}-error" @endif
         {{ $attributes->except('class')->class([
-            'h-control w-full rounded-control border bg-surface px-3 text-base text-ink transition-colors duration-150 ease-out focus:border-accent',
+            'gl-field h-control w-full rounded-control border px-3 text-base',
             'border-danger' => $message,
-            'border-line' => ! $message,
         ]) }}
     >
         @if ($placeholder !== null)

@@ -44,7 +44,7 @@ it('offers up to three switched-on collections with products on the home page', 
 
     $this->get(route('home'))
         ->assertOk()
-        ->assertSee('Соберём кухню под задачу')
+        ->assertSeeText('Соберём кухню под задачу')
         ->assertSeeInOrder(['Кафе до 50 посадок', 'Базовый набор для кухни.', '1 модель', 'Бар', 'Пиццерия'])
         ->assertSee('href="'.route('collection', 'kafe').'"', false)
         ->assertDontSee('Столовая')

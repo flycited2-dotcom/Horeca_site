@@ -19,7 +19,7 @@
             <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
         </button>
     @else
-        <svg class="gl-ic gl-ic--gl-lead" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+        <svg class="gl-ic gl-ic--lead" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
     @endif
 
     <label for="{{ $id }}" class="sr-only">{{ __('shop.layout.search') }}</label>
@@ -40,6 +40,6 @@
     >
 
     @unless ($header)
-        <button type="submit" class="gl-btn gl-btn--gl-hot gl-btn--gl-sm">{{ __('shop.layout.search') }}</button>
+        <button type="submit" class="gl-btn gl-btn--hot gl-btn--sm">{{ __('shop.layout.search') }}</button>
     @endunless
 </form>

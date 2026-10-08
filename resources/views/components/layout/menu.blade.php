@@ -53,10 +53,10 @@
         @endif
 
         <ul class="mt-2 flex flex-col gap-2 border-t border-white/10 p-1 pt-3">
-            <li><a href="{{ route('catalog') }}" class="gl-row gl-row--gl-box">{{ __('shop.layout.all_categories') }}</a></li>
-            <li><a href="{{ route('brands') }}" class="gl-row gl-row--gl-box">{{ __('shop.brands.title') }}</a></li>
+            <li><a href="{{ route('catalog') }}" class="gl-row gl-row--box">{{ __('shop.layout.all_categories') }}</a></li>
+            <li><a href="{{ route('brands') }}" class="gl-row gl-row--box">{{ __('shop.brands.title') }}</a></li>
             @foreach ($shell->stripPages as $page)
-                <li><a href="{{ $shell->pageUrl($page) }}" class="gl-row gl-row--gl-box">{{ $page->title }}</a></li>
+                <li><a href="{{ $shell->pageUrl($page) }}" class="gl-row gl-row--box">{{ $page->title }}</a></li>
             @endforeach
         </ul>
     </div>

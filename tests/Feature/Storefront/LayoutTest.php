@@ -1,9 +1,11 @@
 <?php
 
+use App\Livewire\InstantSearch;
 use App\Models\Category;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\User;
 use App\Services\Catalog\CatalogCache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\TestResponse;
@@ -15,6 +17,16 @@ use Illuminate\Testing\TestResponse;
 function sectionsRow(TestResponse $response): string
 {
     preg_match('/<nav[^>]*data-priority-nav.*?<\/nav>/s', $response->getContent(), $match);
+
+    return $match[0] ?? '';
+}
+
+/**
+ * The bottom bar of the phone, cut out of the page: Telegram and the cart link also stand in the strip and the footer.
+ */
+function phoneDock(TestResponse $response): string
+{
+    preg_match('/<nav[^>]*class="gl-dock".*?<\/nav>/s', $response->getContent(), $match);
 
     return $match[0] ?? '';
 }
@@ -141,13 +153,14 @@ it('reads the settings of the layout with one query', function () {
     expect($queries)->toHaveCount(1);
 });
 
-it('links the messengers from the settings in the service strip and the footer', function () {
+it('links the messengers from the settings in the service strip and the footer, Telegram also in the phone dock', function () {
     setting('contacts.telegram', '@gastrosnab');
     setting('contacts.max', 'https://max.ru/u/f9LHodD0cOKrE8Rl');
 
     $response = $this->get('/')->assertOk();
 
-    expect(substr_count($response->getContent(), 'href="https://t.me/gastrosnab"'))->toBe(2)
+    // Telegram: the strip, the footer and the bottom bar of the phone; MAX: the strip and the footer.
+    expect(substr_count($response->getContent(), 'href="https://t.me/gastrosnab"'))->toBe(3)
         ->and(substr_count($response->getContent(), 'href="https://max.ru/u/f9LHodD0cOKrE8Rl"'))->toBe(2);
 
     $response->assertSee('aria-label="Написать в Telegram"', false)->assertSee('rel="noopener"', false);
@@ -161,4 +174,104 @@ it('shows no messenger the settings do not give a valid link for', function () {
         ->assertOk()
         ->assertDontSee('data-messenger', false)
         ->assertDontSee('javascript:alert', false);
+});
+
+it('lays the live scene behind every page, errors and the missing page included', function () {
+    foreach (['/', '/catalog', '/brands', '/search?q=шкаф', '/no-such-page'] as $path) {
+        $this->get($path)->assertSee('<div class="gl-stage__bg" aria-hidden="true">', false);
+    }
+
+    expect(view('errors.500')->render())->toContain('<div class="gl-stage__bg" aria-hidden="true">', 'class="gl-pill"', config('app.name'));
+});
+
+it('draws the header as a pill with the mark, the real links, the search and the cart', function () {
+    $response = $this->get('/')->assertOk()->assertSeeLivewire(InstantSearch::class);
+
+    preg_match('/<nav class="gl-nav".*?<\/nav>/s', $response->getContent(), $nav);
+
+    expect($nav[0] ?? '')->toContain('href="'.route('catalog').'"', 'href="'.route('brands').'"', 'href="'.route('wholesale').'"', 'Каталог', 'Бренды', 'Оптовым клиентам');
+
+    $response->assertSee('<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">', false)
+        ->assertSeeInOrder(['class="gl-pill"', 'class="gl-logo"', 'class="gl-nav"', 'id="site-search"', 'data-cart-link'], false);
+});
+
+it('marks where the customer is in the links of the header', function () {
+    $brands = $this->get(route('brands'))->assertOk()->getContent();
+
+    expect($brands)->toMatch('/<a href="'.preg_quote(route('brands'), '/').'"\s+aria-current="page"/')
+        ->and($brands)->not->toMatch('/<a href="'.preg_quote(route('catalog'), '/').'"\s+aria-current/');
+
+    $category = Category::factory()->create(['products_count' => 3]);
+
+    expect($this->get(route('category', $category))->getContent())
+        ->toMatch('/<a href="'.preg_quote(route('catalog'), '/').'"\s+aria-current="true"/');
+});
+
+it('shows the sign-in link to a guest and the account menu to a customer', function () {
+    $this->get('/')->assertOk()
+        ->assertSee('href="'.route('login').'"', false)
+        ->assertSee('aria-label="Войти в личный кабинет"', false)
+        ->assertDontSee('action="'.route('logout').'"', false);
+
+    $this->actingAs(User::factory()->create(['name' => 'Алексей Иванов']))->get('/')->assertOk()
+        ->assertSee('aria-label="Кабинет: Алексей Иванов"', false)
+        ->assertSee('href="'.route('account.orders').'"', false)
+        ->assertSee('action="'.route('logout').'"', false)
+        ->assertDontSee('aria-label="Войти в личный кабинет"', false);
+});
+
+it('keeps the first screen of the home page inside the scene and gives it a main without margins', function () {
+    $this->get('/')->assertOk()
+        ->assertSeeInOrder(['class="gl-stage__bg"', 'class="gl-stage__hero"', '<main id="content" class="flex-1">'], false);
+
+    $this->get('/brands')->assertOk()
+        ->assertDontSee('class="gl-stage__hero"', false)
+        ->assertSee('<main id="content" class="flex-1 container-page py-6 md:py-8">', false);
+});
+
+it('keeps the field for a known article in the footer working', function () {
+    $response = $this->get('/')->assertOk();
+
+    preg_match('/<footer class="gl-foot.*?<\/footer>/s', $response->getContent(), $footer);
+
+    expect($footer[0] ?? '')->toContain('Знаете артикул?', 'action="'.route('search').'"', 'id="footer-search"', 'name="q"', 'class="gl-find"', 'Найти');
+});
+
+it('puts the cart and Telegram into the bottom bar of the phone', function () {
+    setting('contacts.telegram', '@gastrosnab');
+
+    expect(phoneDock($this->get('/')->assertOk()))
+        ->toContain('aria-label="Быстрые действия"', 'href="'.route('cart').'"', 'Корзина', 'href="https://t.me/gastrosnab"', 'Написать в Telegram')
+        ->not->toContain('Каталог');
+});
+
+it('sends the second button of the bottom bar to the catalog until Telegram is set', function () {
+    expect(phoneDock($this->get('/')->assertOk()))
+        ->toContain('href="'.route('cart').'"', 'href="'.route('catalog').'"', 'Каталог')
+        ->not->toContain('Telegram');
+});
+
+it('leaves the bottom of the page to the purchase bar of the product and to the cart itself', function () {
+    $category = Category::factory()->create(['products_count' => 1]);
+    $product = Product::factory()->inStock()->create(['category_id' => $category->id]);
+
+    $this->get(route('product', $product))->assertOk()
+        ->assertSee('data-sticky-buy', false)
+        ->assertDontSee('class="gl-dock"', false);
+
+    $this->get(route('cart'))->assertOk()->assertDontSee('class="gl-dock"', false);
+    $this->get(route('catalog'))->assertOk()->assertSee('class="gl-dock"', false);
+});
+
+it('lifts the notices and the cookie banner above the purchase bar of the product page only', function () {
+    $category = Category::factory()->create(['products_count' => 1]);
+    $product = Product::factory()->inStock()->create(['category_id' => $category->id]);
+
+    expect($this->get(route('product', $product))->getContent())
+        ->toMatch('/<div\s+data-notices[^>]*\bdata-bar\b[^>]*class="gl-notices"/')
+        ->toMatch('/<section\s+data-cookie-banner[^>]*\bdata-bar\b/');
+
+    expect($this->get(route('catalog'))->getContent())
+        ->not->toMatch('/data-notices[^>]*\bdata-bar\b/')
+        ->not->toMatch('/data-cookie-banner[^>]*\bdata-bar\b/');
 });

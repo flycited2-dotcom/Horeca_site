@@ -158,15 +158,42 @@ it('uploads the picture of a section from the admin and shows it at once', funct
         ->and(app(CategoryImages::class)->for([$root->id])[$root->id])->toBe($uploaded);
 });
 
-it('loads the first tiles of the home page at once and leaves the rest for scrolling', function () {
-    foreach (range(1, 6) as $sort) {
-        $root = Category::factory()->create(['show_on_home' => true, 'products_count' => 1, 'sort' => $sort]);
+it('loads the two pictures of the first screen at once and leaves the tiles for scrolling', function () {
+    $cold = Category::factory()->create(['name' => 'Холодильное оборудование', 'show_on_home' => true, 'products_count' => 1, 'sort' => 1]);
+    $hot = Category::factory()->create(['name' => 'Тепловое оборудование', 'show_on_home' => true, 'products_count' => 1, 'sort' => 2]);
+    categoryPhotoProduct(['category_id' => $cold->id]);
+    categoryPhotoProduct(['category_id' => $hot->id]);
+
+    foreach (range(3, 6) as $sort) {
+        $root = Category::factory()->create(['name' => "Раздел {$sort}", 'show_on_home' => true, 'products_count' => 1, 'sort' => $sort]);
         categoryPhotoProduct(['category_id' => $root->id]);
     }
 
     $html = $this->get('/')->assertOk()->getContent();
     preg_match_all('/<img src="[^"]*-card\.webp"[^>]*loading="(eager|lazy)"/', $html, $loading);
 
-    expect(array_slice($loading[1], 0, 4))->each->toBe('eager')
-        ->and(array_slice($loading[1], 4))->each->toBe('lazy');
+    // The first screen shows the cold and the hot section; the six tiles of the catalog come below it.
+    expect($loading[1])->toHaveCount(8)
+        ->and(array_slice($loading[1], 0, 2))->each->toBe('eager')
+        ->and(array_slice($loading[1], 2))->each->toBe('lazy')
+        ->and($html)->toContain('fetchpriority="high"');
+});
+
+it('puts the pictures of the sections on light plates and keeps them out of the reading order', function () {
+    $root = Category::factory()->create(['name' => 'Весовое оборудование', 'show_on_home' => true, 'products_count' => 1]);
+    $product = categoryPhotoProduct(['category_id' => $root->id]);
+
+    preg_match('/aria-labelledby="home-sections".*?<\/section>/s', $this->get('/')->assertOk()->getContent(), $catalog);
+
+    expect($catalog[0])->toContain('<span class="gl-cat__photo" aria-hidden="true">', '<span class="gl-plate gl-plate--photo">', 'src="'.cardUrl($product).'" alt=""')
+        ->and($catalog[0])->not->toContain('gl-type');
+});
+
+it('draws a ruled plate with a word of the name for a section without a picture', function () {
+    Category::factory()->create(['name' => 'Торговые стеллажи', 'show_on_home' => true, 'products_count' => 4]);
+
+    preg_match('/aria-labelledby="home-sections".*?<\/section>/s', $this->get('/')->assertOk()->getContent(), $catalog);
+
+    expect($catalog[0])->toContain('gl-cat--type', '<span class="gl-type"><span>Стеллажи</span></span>')
+        ->and($catalog[0])->not->toContain('<img');
 });

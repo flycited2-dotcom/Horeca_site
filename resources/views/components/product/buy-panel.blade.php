@@ -1,18 +1,26 @@
 @props(['product', 'price' => null, 'stocks', 'facts', 'wholesalePending' => false, 'messengers' => []])
 
 {{--
-    Панель покупки (ТЗ §8.3, §6.5, макет — экран 3): цена, счётчик и кнопка по статусу,
+    Панель покупки (ТЗ §8.3, §6.5, облик «Свечение», макет — экран 3): стеклянная карточка со светящейся
+    рамкой зоны товара, цена крупно, счётчик и главная оранжевая кнопка по статусу,
     склады со сроком доставки (количество штук не показывается никогда), гарантия
     «Проверьте перед монтажом», вопрос в мессенджер и «К сравнению» (§8.5). На десктопе — липкая колонка 396 справа, ниже 1024 —
     под галереей; при прокрутке мимо неё появляется липкая полоса снизу.
 --}}
 @php
     use App\Enums\Availability;
+    use App\Support\CategoryZone;
 
     $install = $facts->installCheck();
+    $zone = CategoryZone::of($product->category?->icon, $product->category?->name);
 @endphp
 
-<div data-buy-panel {{ $attributes->class('flex flex-col gap-4 rounded-card border border-line bg-surface p-4 shadow-raised md:p-5') }}>
+<div data-buy-panel {{ $attributes->class([
+    'gl-card gl-pbuy flex flex-col gap-4',
+    'gl-cold' => $zone === CategoryZone::COLD,
+    'gl-hot' => $zone === CategoryZone::HOT,
+    'gl-neutral' => $zone === CategoryZone::NEUTRAL,
+]) }}>
     <x-ui.price :price="$price" size="page" />
 
     @if ($wholesalePending && $price !== null)
@@ -35,14 +43,14 @@
         <button
             type="button"
             popovertarget="lead-one-click"
-            class="tap-target -mt-1 self-center text-sm font-medium text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark"
+            class="gl-pbuy__link tap-target -mt-1 self-center text-sm"
         >{{ __('shop.product.one_click') }}</button>
     @endif
 
     @if ($stocks->isNotEmpty() || $product->warranty_months)
-        <ul class="flex flex-col border-t border-line-soft">
+        <ul class="flex flex-col border-t border-white/10">
             @if ($stocks->isNotEmpty())
-                <li class="grid grid-cols-[24px_minmax(0,1fr)] gap-2.5 border-b border-line-soft py-2.5">
+                <li class="grid grid-cols-[24px_minmax(0,1fr)] gap-2.5 border-b border-white/10 py-2.5">
                     <svg class="size-6 text-steel-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                         <path d="M3 7h11v8H3zM14 10h4l3 3v2h-7M6.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M17.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
                     </svg>
@@ -77,7 +85,7 @@
     @endif
 
     @if ($install !== [])
-        <div class="flex flex-col gap-1.5 rounded-card border border-line-soft bg-bg p-3">
+        <div class="gl-pbuy__box flex flex-col gap-1.5 p-4">
             <span class="text-base font-semibold">{{ __('shop.product.install_check') }}</span>
             <dl class="flex flex-col gap-1">
                 @foreach ($install as $row)
@@ -91,7 +99,7 @@
     @endif
 
     @if ($messengers !== [])
-        <div class="flex flex-col gap-2 border-t border-line-soft pt-3">
+        <div class="flex flex-col gap-2 border-t border-white/10 pt-3">
             <p class="text-base"><span class="font-semibold">{{ __('shop.messengers.product_heading') }}</span> <span class="text-steel-500">{{ __('shop.messengers.product_text') }}</span></p>
             <x-ui.messengers :links="$messengers" class="[&_a]:flex-1 [&_li]:flex [&_li]:flex-1" />
         </div>

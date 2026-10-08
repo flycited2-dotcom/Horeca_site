@@ -6,22 +6,24 @@
 ])
 
 {{--
-    Кнопка дизайн-системы (ТЗ §9): главная — сигнальным оранжевым (облик «Холод и жар»),
-    вторичная, нейтральная и «ночная» — контурная для тёмного первого экрана; высота 44 px
-    на всех диапазонах, сдвига при наведении нет — меняются только цвета.
+    Кнопка дизайн-системы (ТЗ §9, облик «Свечение»): главная — круглая оранжевая со свечением и тёмным
+    текстом (белый на оранжевом не читается), вторичная и «ночная» — стеклянные, нейтральная — контурная.
+    Стили живут в glow.css и glow-cards.css (gl-btn); высота 46 px на всех диапазонах, сдвига при
+    наведении нет — меняются только цвет и свечение. Утилиты вызывающего (w-full, text-sm, класс-крючок
+    для скриптов) ложатся поверх.
 --}}
 @php
-    $base = 'inline-flex h-control items-center justify-center gap-2 rounded-control px-4 text-base leading-none font-medium transition-colors duration-150 ease-out';
+    $base = 'gl-btn gl-btn--sm';
 
     $styles = [
-        'primary' => 'bg-signal text-white hover:bg-signal-dark',
-        'secondary' => 'border border-accent bg-surface text-accent-ink hover:bg-accent-soft',
-        'neutral' => 'border border-line bg-surface text-ink hover:border-accent-ink',
-        'night' => 'border border-night-line text-white hover:border-signal-bright hover:bg-night-soft',
+        'primary' => 'gl-btn--hot',
+        'secondary' => 'gl-btn--glass',
+        'neutral' => 'gl-btn--quiet',
+        'night' => 'gl-btn--glass',
     ];
 
     $classes = $base.' '.($disabled
-        ? 'pointer-events-none border border-line-soft bg-bg text-steel-400'
+        ? 'pointer-events-none gl-btn--off'
         : ($styles[$variant] ?? $styles['primary']));
 @endphp
 

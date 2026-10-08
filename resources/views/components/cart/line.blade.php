@@ -1,16 +1,18 @@
 @props(['line'])
 
 {{--
-    Строка корзины (ТЗ §10.1, макет — экран 6): фото или заглушка, бренд и артикул,
+    Строка корзины (ТЗ §10.1, облик «Свечение», макет — экран 6): фото на светлой плашке или заглушка, бренд и артикул,
     название, статус, счётчик, цена за единицу и сумма, удаление. «Под заказ» — подпись
     про срок; изменившаяся цена — прежняя рядом с новой; позиция, которую больше нельзя
     купить, подсвечена и держит оформление, пока её не удалят. Формы работают без
     скриптов (CartController), Livewire перехватывает их на месте.
 --}}
 @php
+    use App\Support\CategoryZone;
     use App\Support\Typography;
 
     $product = $line->product;
+    $zone = CategoryZone::of($product->category?->icon, $product->category?->name);
     $id = $product->id;
 @endphp
 
@@ -22,20 +24,20 @@
     ])
 >
     <a href="{{ route('product', $product) }}" tabindex="-1" aria-hidden="true" class="md:self-start">
-        <x-ui.product-image :product="$product" conversion="thumb" ratio="aspect-square rounded-card border border-line-soft" icon-class="size-7" />
+        <x-ui.product-image :product="$product" conversion="thumb" plate :zone="$zone" ratio="aspect-square gl-pimg--thumb" icon-class="size-7" />
     </a>
 
     <div class="flex min-w-0 flex-col gap-1.5">
         <p class="flex flex-wrap items-baseline gap-x-2.5 text-sm">
             @if ($product->brand)
-                <span class="font-medium">{{ $product->brand->name }}</span>
+                <span class="font-bold text-steel-500">{{ $product->brand->name }}</span>
             @endif
             @if ($product->sku)
                 <x-ui.data :label="__('shop.product.sku')">{{ $product->sku }}</x-ui.data>
             @endif
         </p>
 
-        <a href="{{ route('product', $product) }}" class="text-base font-semibold transition-colors duration-150 ease-out hover:text-accent-ink md:text-md">{{ $product->name }}</a>
+        <a href="{{ route('product', $product) }}" class="text-base font-extrabold text-white transition-colors duration-150 ease-out hover:text-accent-ink md:text-md">{{ $product->name }}</a>
 
         @if ($line->block)
             <p class="text-sm font-medium text-danger-text">{{ $line->block->lineMessage() }}</p>
@@ -66,7 +68,7 @@
             @csrf
             @method('PATCH')
             <x-ui.counter name="quantity" :value="$line->quantity()" :min="0" id="cart-quantity-{{ $id }}" :label="__('shop.counter.label').': '.$product->name" />
-            <button type="submit" class="no-js-only tap-target text-sm font-medium text-accent-ink">{{ __('shop.cart.recalculate') }}</button>
+            <button type="submit" class="no-js-only tap-target text-sm font-bold text-accent-ink">{{ __('shop.cart.recalculate') }}</button>
         </form>
 
         <div class="col-start-2 flex items-baseline justify-between gap-3 md:col-start-auto md:flex-col md:items-end md:gap-0.5">
@@ -77,7 +79,7 @@
                 @endif
                 {{ __('shop.cart.per_unit', ['price' => Typography::money($line->unitPrice()), 'unit' => $product->unit]) }}
             </span>
-            <span class="text-lg font-bold whitespace-nowrap tabular">{{ Typography::money($line->sum()) }}</span>
+            <span class="gl-price gl-price--row">{{ Typography::money($line->sum()) }}</span>
         </div>
     @endif
 
@@ -92,7 +94,7 @@
         @if ($line->block)
             <x-ui.button type="submit" variant="neutral" class="text-sm">{{ __('shop.cart.remove') }}</x-ui.button>
         @else
-            <button type="submit" class="tap-target flex size-8 items-center justify-center rounded-control text-steel-500 transition-colors duration-150 ease-out hover:text-danger-text">
+            <button type="submit" class="tap-target flex size-8 items-center justify-center rounded-full text-steel-500 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-danger-text">
                 <span class="sr-only">{{ __('shop.cart.remove_named', ['name' => $product->name]) }}</span>
                 <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
             </button>

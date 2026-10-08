@@ -26,7 +26,7 @@
         <a
             href="{{ route('catalog') }}"
             @if ($shell->inCatalog) aria-current="page" @endif
-            class="mt-0.5 shrink-0 {{ $chip }} gl-hot gl-navchip--gl-main"
+            class="mt-0.5 shrink-0 {{ $chip }} gl-hot gl-navchip--main"
         >
             <svg class="gl-ic size-5" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M4 7h16M4 12h16M4 17h16"/>

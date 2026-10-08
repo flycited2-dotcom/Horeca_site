@@ -15,7 +15,7 @@
 ])
 
 {{--
-    Панель «Подбор» (ТЗ §8.2, макет — экраны 2, 10 и 14). С 1280 px — липкая колонка,
+    Панель «Подбор» (ТЗ §8.2, облик «Свечение», макет — экраны 2, 10 и 14). С 1280 px — липкая стеклянная колонка,
     фильтр применяется сразу, счётчики брендов и наличия считаются при остальных фильтрах.
     Ниже 1280 — шторка на popover (утилита filter-sheet) с кнопкой «Показать N моделей».
     Без скриптов это обычная GET-форма: те же имена полей, что в адресе ($hidden — запрос
@@ -36,9 +36,9 @@
             <input type="hidden" name="{{ $name }}" value="{{ $value }}">
         @endforeach
 
-        <div class="flex min-h-0 flex-1 flex-col overflow-y-auto bg-surface xl:overflow-visible xl:rounded-card xl:border xl:border-line">
+        <div class="gl-fpanel flex min-h-0 flex-1 flex-col overflow-y-auto xl:overflow-visible">
             <div class="flex items-center justify-between gap-3 border-b border-line-soft px-4 py-2 xl:py-3.5">
-                <h2 id="{{ $id }}-title" class="text-lg font-semibold">
+                <h2 id="{{ $id }}-title" class="text-lg font-bold text-white">
                     <span class="xl:hidden">{{ __('shop.catalog.filters') }}</span>
                     <span class="max-xl:hidden">{{ $title ?? __('shop.catalog.filters_title') }}</span>
                 </h2>
@@ -52,7 +52,7 @@
                         type="button"
                         popovertarget="{{ $id }}"
                         popovertargetaction="hide"
-                        class="flex size-control items-center justify-center rounded-control border border-line transition-colors duration-150 ease-out hover:border-accent-ink xl:hidden"
+                        class="gl-round xl:hidden"
                     >
                         <span class="sr-only">{{ __('shop.catalog.filters_close') }}</span>
                         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
@@ -83,7 +83,7 @@
                         value="{{ $filters->priceFrom }}"
                         placeholder="{{ $priceRange ? \App\Support\Typography::number(intdiv($priceRange['min']->kopecks, 100)) : '' }}"
                         wire:model.live.debounce.600ms="priceFrom"
-                        class="h-control w-full min-w-0 rounded-control border border-line bg-surface px-3 text-base tabular placeholder:text-steel-500 focus:border-accent"
+                        class="gl-field h-control w-full min-w-0 rounded-control border px-3 text-base tabular"
                     >
                     <span class="text-steel-500" aria-hidden="true">—</span>
                     <label for="{{ $id }}-price-to" class="sr-only">{{ __('shop.catalog.price_to') }}</label>
@@ -96,7 +96,7 @@
                         value="{{ $filters->priceTo }}"
                         placeholder="{{ $priceRange ? \App\Support\Typography::number(intdiv($priceRange['max']->kopecks, 100)) : '' }}"
                         wire:model.live.debounce.600ms="priceTo"
-                        class="h-control w-full min-w-0 rounded-control border border-line bg-surface px-3 text-base tabular placeholder:text-steel-500 focus:border-accent"
+                        class="gl-field h-control w-full min-w-0 rounded-control border px-3 text-base tabular"
                     >
                 </div>
 
@@ -133,7 +133,7 @@
                                 autocomplete="off"
                                 placeholder="{{ __('shop.catalog.brand_search') }}"
                                 wire:model.live.debounce.300ms="brandQuery"
-                                class="h-control w-full rounded-control border border-line bg-surface px-3 text-base placeholder:text-steel-500 focus:border-accent"
+                                class="gl-field h-control w-full rounded-control border px-3 text-base"
                             >
                         </div>
                     @endif
@@ -191,7 +191,7 @@
                                 value="{{ $facet->condition['min'] ?? '' }}"
                                 placeholder="{{ $facet->min !== null ? \App\Support\Typography::decimal($facet->min) : '' }}"
                                 wire:model.live.debounce.600ms="attr.{{ $facet->slug }}.min"
-                                class="h-control w-full min-w-0 rounded-control border border-line bg-surface px-3 text-base tabular placeholder:text-steel-500 focus:border-accent"
+                                class="gl-field h-control w-full min-w-0 rounded-control border px-3 text-base tabular"
                             >
                             <span class="text-steel-500" aria-hidden="true">—</span>
                             <label for="{{ $id }}-attr-{{ $facet->slug }}-max" class="sr-only">{{ __('shop.catalog.attribute_to', ['name' => $facet->name]) }}</label>
@@ -204,7 +204,7 @@
                                 value="{{ $facet->condition['max'] ?? '' }}"
                                 placeholder="{{ $facet->max !== null ? \App\Support\Typography::decimal($facet->max) : '' }}"
                                 wire:model.live.debounce.600ms="attr.{{ $facet->slug }}.max"
-                                class="h-control w-full min-w-0 rounded-control border border-line bg-surface px-3 text-base tabular placeholder:text-steel-500 focus:border-accent"
+                                class="gl-field h-control w-full min-w-0 rounded-control border px-3 text-base tabular"
                             >
                         </div>
 

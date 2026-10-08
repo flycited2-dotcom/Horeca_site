@@ -43,7 +43,7 @@
                 <p class="gl-res__empty">{{ __('shop.search.empty_heading', ['query' => $text]) }}</p>
             @else
                 @if ($result->layoutSwitched)
-                    <p class="gl-res__empty gl-res__empty--gl-note">{{ __('shop.search.switched', ['query' => $result->query]) }}</p>
+                    <p class="gl-res__empty gl-res__empty--note">{{ __('shop.search.switched', ['query' => $result->query]) }}</p>
                 @endif
 
                 @if ($result->products->isNotEmpty())

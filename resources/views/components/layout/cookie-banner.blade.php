@@ -11,7 +11,7 @@
     data-cookie-banner
     aria-labelledby="cookie-banner-heading"
     @if ($bar) data-bar @endif
-    class="gl-card gl-card--gl-duo gl-cookie"
+    class="gl-card gl-card--duo gl-cookie"
 >
     <h2 id="cookie-banner-heading">{{ __('shop.cookies.heading') }}</h2>
     <p>
@@ -22,7 +22,7 @@
     </p>
     <form method="post" action="{{ route('cookie-consent') }}" data-consent-form class="gl-cookie__act">
         @csrf
-        <button type="submit" name="consent" value="all" class="gl-btn gl-btn--gl-hot gl-btn--gl-sm max-sm:flex-1">{{ __('shop.cookies.accept') }}</button>
-        <button type="submit" name="consent" value="necessary" class="gl-btn gl-btn--gl-glass gl-btn--gl-sm max-sm:flex-1">{{ __('shop.cookies.necessary') }}</button>
+        <button type="submit" name="consent" value="all" class="gl-btn gl-btn--hot gl-btn--sm max-sm:flex-1">{{ __('shop.cookies.accept') }}</button>
+        <button type="submit" name="consent" value="necessary" class="gl-btn gl-btn--glass gl-btn--sm max-sm:flex-1">{{ __('shop.cookies.necessary') }}</button>
     </form>
 </section>

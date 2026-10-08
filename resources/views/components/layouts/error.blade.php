@@ -32,13 +32,13 @@
         </header>
 
         <main class="container-page flex-1 py-8 md:py-14">
-            <section class="gl-card gl-card--gl-duo flex max-w-2xl flex-col items-start gap-4 p-5 md:p-8">
+            <section class="gl-card gl-card--duo flex max-w-2xl flex-col items-start gap-4 p-5 md:p-8">
                 <h1 class="text-2xl font-bold md:text-3xl">{{ __('shop.errors.'.$key.'.title') }}</h1>
                 <p class="max-w-prose text-base text-steel-500">{{ __('shop.errors.'.$key.'.text') }}</p>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ url('/') }}" class="gl-btn gl-btn--gl-hot">{{ __('shop.errors.home') }}</a>
+                    <a href="{{ url('/') }}" class="gl-btn gl-btn--hot">{{ __('shop.errors.home') }}</a>
                     @unless ((int) $code === 503)
-                        <a href="{{ url('/catalog') }}" class="gl-btn gl-btn--gl-glass">{{ __('shop.errors.catalog') }}</a>
+                        <a href="{{ url('/catalog') }}" class="gl-btn gl-btn--glass">{{ __('shop.errors.catalog') }}</a>
                     @endunless
                 </div>
             </section>

@@ -1,2 +1,268 @@
+/*
+ * Общие карточки и элементы витрины в облике «Свечение» (ТЗ §9): кнопки, плашки наличия, поля, счётчик,
+ * чипы и сегменты, карточки и строки товаров, плитки разделов, панель покупки, пагинация, кабинет.
+ * Основа (gl-card, gl-plate, gl-btn, gl-round, gl-price, gl-badge, цвета зон gl-cold и gl-hot) лежит в glow.css;
+ * здесь — то, чего в макете нет: данные сайта вместо статики. Все классы с префиксом gl- и в слое components,
+ * как в основе: утилиты Tailwind их перебивают, поэтому у элементов с этими правилами конфликтующих утилит нет.
+ * Свечение у карточек листинга даёт зона товара (App\Support\CategoryZone): холод — голубое, жар — оранжевое,
+ * остальное — нейтральное серое. Строки и таблицы свечения не получают: им нужна читаемость.
+ */
 @layer components {
+/* ───────── Зона ─────────
+   Холод и жар задают gl-cold и gl-hot из основы; у нейтрального раздела свечение серое. */
+.gl-neutral{--gl-glow:var(--gl-neutral-rgb)}
+
+/* ───────── Кнопки сайта (ui/button) ─────────
+   Главная — оранжевая с тёмным текстом (белый на ней не читается), вторичная — стеклянная, нейтральная — контурная.
+   Высота 46 px у gl-btn--sm, шире 44 — цель нажатия не меньше нормы. */
+.gl-btn--quiet{background:transparent;color:#E6ECF0;border-color:rgba(255,255,255,.2)}
+.gl-btn--quiet:hover{background:rgba(255,255,255,.07);border-color:rgba(108,200,255,.7);color:#fff}
+.gl-btn--off{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:#8A959E;box-shadow:none;cursor:not-allowed}
+/* Подпись может быть длинной («Убрать из избранного» в половине панели): строка переносится, высота растёт. */
+.gl-btn--fit{white-space:normal;text-align:center;line-height:1.2;padding-top:8px;padding-bottom:8px}
+/* В плотных местах (строка таблицы, карточка листинга) — свечение без широкого ореола. */
+.gl-btn--hot.gl-btn--calm{box-shadow:0 6px 20px -8px rgba(255,106,19,.7)}
+.gl-btn--hot.gl-btn--calm:hover{box-shadow:0 8px 26px -6px rgba(255,106,19,.85)}
+/* Круглая кнопка, собранная из x-ui.button (корзина на карточке): поля и высота кнопки ей не нужны. */
+.gl-btn.gl-round{min-height:0;padding:0;gap:0}
+
+/* ───────── Плашка наличия ─────────
+   На светлой плашке с фото статус светлый, как в макете: слово и форма маркера — круг у «В наличии»,
+   ромб у «Ожидается», пунктирная рамка и квадрат у «Под заказ», чёрточка у снятого с производства. */
+.gl-av{display:inline-flex;align-items:center;align-self:flex-start;gap:7px;min-height:28px;padding:0 12px 0 10px;border-radius:999px;border:1px solid transparent;
+  font:800 13px/1.2 var(--gl-f-text);white-space:nowrap}
+.gl-av__m{width:8px;height:8px;flex:none;border-radius:50%;background:currentColor}
+.gl-av--in{background:#E6F2EC;color:#166B49}
+.gl-av--incoming{background:#FDF4E7;color:#8F4207}
+.gl-av--incoming .gl-av__m{width:7px;height:7px;border-radius:1px;transform:rotate(45deg)}
+.gl-av--order{background:#fff;color:#A3350B;border:1px dashed #A3350B}
+.gl-av--order .gl-av__m{border-radius:0}
+.gl-av--off{background:#EEF1F3;color:#5D686F;border-color:#C9D1D7}
+.gl-av--off .gl-av__m{width:8px;height:2px;border-radius:0}
+
+/* ───────── Цена ───────── */
+.gl-price--card{font-size:18px}
+.gl-price--row{font-size:18px}
+.gl-price--page{font-size:clamp(28px,3vw,36px)}
+@media (min-width:768px){.gl-price--card{font-size:22px}}
+.gl-price-ask{color:#fff;font:800 16px/1.25 var(--gl-f-text)}
+.gl-price-ask--page{font-size:24px}
+.gl-yours{display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:999px;border:1px solid var(--color-accent-line);background:var(--color-accent-soft);color:var(--color-accent-ink);font:700 12px/1.3 var(--gl-f-text)}
+
+/* ───────── Поля, выбор карточкой, тумблер, счётчик ─────────
+   Поля непрозрачные: они читаются на любой ауре сцены. Фокус — тёплое свечение; ошибка (утилита border-danger)
+   перебивает цвет рамки и на фокусе. */
+.gl-field{background-color:var(--color-surface);border-color:rgba(255,255,255,.16);color:var(--gl-text);transition:border-color var(--gl-ease),box-shadow var(--gl-ease)}
+.gl-field:hover{border-color:rgba(255,255,255,.3)}
+.gl-field:focus{border-color:var(--gl-hot);box-shadow:0 0 0 4px rgba(255,106,19,.16)}
+.gl-field::placeholder{color:var(--color-steel-500);opacity:1}
+
+.gl-choice{display:flex;gap:12px;padding:14px;border-radius:20px;border:1px solid rgba(255,255,255,.14);cursor:pointer;
+  background:linear-gradient(180deg,rgba(26,34,41,.72),rgba(13,18,23,.76));transition:border-color var(--gl-ease),box-shadow var(--gl-ease),background-color var(--gl-ease)}
+.gl-choice:hover{border-color:rgba(255,255,255,.34)}
+.gl-choice:has(:checked){border-color:var(--gl-hot);background:radial-gradient(120% 90% at 50% 0%,rgba(255,106,19,.16),transparent 70%),linear-gradient(180deg,rgba(34,26,22,.8),rgba(15,16,18,.84));
+  box-shadow:0 0 0 1px rgba(255,106,19,.3),0 16px 40px -18px rgba(255,106,19,.6)}
+.gl-choice:has(:focus-visible){outline:2px solid var(--gl-hot);outline-offset:2px}
+
+.gl-switch{position:relative;display:block;flex:none;width:44px;height:26px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
+  transition:background-color var(--gl-ease),border-color var(--gl-ease),box-shadow var(--gl-ease)}
+.gl-switch::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#EEF3F6;transition:transform var(--gl-ease),background-color var(--gl-ease)}
+input:checked + .gl-switch{background:var(--gl-hot);border-color:transparent;box-shadow:0 0 18px -4px rgba(255,106,19,.8)}
+input:checked + .gl-switch::after{transform:translateX(18px);background:var(--gl-ink)}
+input:focus-visible + .gl-switch{outline:2px solid var(--gl-hot);outline-offset:2px}
+
+.gl-counter{display:inline-flex;flex:none;align-items:center;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);
+  transition:border-color var(--gl-ease),box-shadow var(--gl-ease)}
+.gl-counter:hover{border-color:rgba(255,255,255,.34)}
+.gl-counter:focus-within{border-color:rgba(108,200,255,.7);box-shadow:0 0 0 4px rgba(108,200,255,.14)}
+.gl-counter__btn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;color:#fff;font-size:18px;line-height:1;cursor:pointer;transition:background-color var(--gl-ease)}
+.gl-counter__btn:hover{background:rgba(255,255,255,.12)}
+.gl-counter__input{width:52px;height:44px;padding:0;background:transparent;border:0;color:#fff;text-align:center;font:700 15px/1 var(--gl-f-text);font-variant-numeric:tabular-nums;
+  appearance:none;-moz-appearance:textfield}
+.gl-counter__input::-webkit-inner-spin-button,.gl-counter__input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+
+/* ───────── Чипы, сегменты, панели ───────── */
+/* Чип применённого фильтра: тёплая рамка, крестик снимает фильтр. */
+.gl-fchip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px 0 14px;border-radius:999px;border:1px solid rgba(255,106,19,.55);background:rgba(255,106,19,.1);
+  color:#FF9A52;font:700 14px/1 var(--gl-f-text);white-space:nowrap;text-decoration:none;transition:background-color var(--gl-ease),border-color var(--gl-ease),color var(--gl-ease)}
+.gl-fchip:hover{background:rgba(255,106,19,.18);border-color:rgba(255,106,19,.85);color:#FFB27A}
+
+/* Чип-ссылка: подраздел, раздел «Уточнить», число — моноширинным. Выбранный светится цветом своей зоны. */
+.gl-lchip{--gl-glow:var(--gl-neutral-rgb);display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);color:#E6ECF0;font:700 14px/1.2 var(--gl-f-text);white-space:nowrap;text-decoration:none;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  transition:background-color var(--gl-ease),border-color var(--gl-ease),box-shadow var(--gl-ease),color var(--gl-ease)}
+.gl-lchip.gl-cold{--gl-glow:var(--gl-cold-rgb)}
+.gl-lchip.gl-hot{--gl-glow:var(--gl-hot-rgb)}
+.gl-lchip:hover{background:rgb(var(--gl-glow) / .14);border-color:rgb(var(--gl-glow) / .7);color:#fff}
+.gl-lchip[aria-current]{background:rgb(var(--gl-glow) / .18);border-color:rgb(var(--gl-glow) / .85);color:#fff;box-shadow:0 0 22px -6px rgb(var(--gl-glow) / .7)}
+.gl-lchip__n{color:var(--gl-faint);font:600 13px/1 var(--gl-f-mono);font-variant-numeric:tabular-nums}
+.gl-lchip--lg{min-height:44px;padding:0 18px;font-size:15px}
+.gl-lchip--tab{min-height:44px;padding:0 18px;font-size:15px}
+
+/* Сегменты (сортировка, вид листинга): круглая стеклянная полоса, выбранный — залит и в рамке. */
+.gl-seg{display:flex;gap:2px;padding:2px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);list-style:none}
+.gl-seg a{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid transparent;color:#C6D0D6;
+  font:700 14px/1 var(--gl-f-text);white-space:nowrap;text-decoration:none;transition:background-color var(--gl-ease),color var(--gl-ease),border-color var(--gl-ease)}
+.gl-seg a:hover{background:rgba(255,255,255,.08);color:#fff}
+.gl-seg a[aria-current]{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28);color:#fff}
+.gl-seg--icons a{width:44px;padding:0}
+
+/* Липкая полоса листинга ниже 1280 px: прозрачная для сцены, но достаточно плотная, чтобы товары под ней не просвечивали. */
+.gl-bar{top:0;background:#080B0E;border-color:rgba(255,255,255,.08)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .gl-bar{background:rgba(8,11,14,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+}
+/* Шире 820 px шапка-таблетка липкая (80 px вместе с отступом), полоса встаёт под ней. */
+@media (min-width:821px){.gl-bar{top:92px}}
+
+/* Панель «Подбор»: с 1280 px — стеклянная колонка, ниже — содержимое шторки на сплошном фоне. */
+.gl-fpanel{background:var(--color-surface)}
+@media (min-width:1280px){
+  .gl-fpanel{border-radius:24px;border:1px solid rgba(255,255,255,.1);
+    background:radial-gradient(120% 40% at 50% 0%,rgba(255,255,255,.05),transparent 70%),linear-gradient(180deg,rgba(24,31,38,.82),rgba(13,18,23,.86))}
+}
+
+/* ───────── Плашка под фото ─────────
+   Снимки поставщика лежат на белом фоне, поэтому фото — на белой плашке с мягким свечением зоны карточки
+   (цвет --gl-glow приходит от карточки, у плашки без карточки — gl-neutral, gl-cold или gl-hot на ней самой).
+   Фото вписано в плашку и ничем не обрабатывается. Без фото — пиктограмма типа оборудования. */
+.gl-pimg,.gl-cpic{padding:10px;border-radius:16px}
+.gl-pimg--photo,.gl-cpic--photo{--gl-plate:#fff}
+.gl-pimg img,.gl-cpic img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;padding:inherit;box-sizing:border-box;object-fit:contain}
+.gl-pimg__type{position:absolute;left:10px;bottom:10px;z-index:1;display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:999px;background:var(--gl-night);color:#fff;font:700 12px/1 var(--gl-f-text)}
+.gl-pimg--thumb{padding:4px;border-radius:12px}
+
+/* ───────── Карточка товара в листинге ─────────
+   С 768 px — вертикальная стеклянная карточка: плашка с фото и меткой наличия, бренд и артикул, название,
+   внизу цена и круглая кнопка корзины. Вся карточка — одна ссылка (растянутая ссылка названия),
+   кнопки и «Сравнить» лежат над ней. На телефоне — горизонтальная: плашка 96 px, цена и наличие, без кнопки. */
+.gl-pcard{display:flex;flex-direction:column;height:100%;min-width:0;padding:12px 12px 16px}
+.gl-pcard:hover,.gl-pcard:focus-within{--gl-ringo:1;box-shadow:0 0 0 1px rgb(var(--gl-glow) / .22),0 22px 64px -20px rgb(var(--gl-glow) / .6)}
+.gl-pcard__ph{position:relative}
+.gl-pcard__ph>a{display:block}
+.gl-pcard__plate{aspect-ratio:4/3;width:100%}
+.gl-pcard__stock{position:absolute;left:10px;top:10px;z-index:3}
+.gl-pcard__body{display:flex;flex-direction:column;gap:6px;min-width:0;padding:16px 6px 0}
+.gl-pcard__meta{display:flex;align-items:baseline;justify-content:space-between;gap:8px;color:var(--gl-faint);font:700 13px/1.3 var(--gl-f-text)}
+.gl-pcard__name{font:800 17px/1.3 var(--gl-f-text);color:#fff;letter-spacing:-.005em}
+.gl-pcard__name a{color:inherit;text-decoration:none}
+.gl-pcard__name a::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
+.gl-pcard__name a:hover{text-decoration:underline;text-underline-offset:3px}
+.gl-pcard__buy{display:flex;flex-direction:column;gap:12px;margin-top:auto;min-width:0;padding:16px 6px 0}
+.gl-pcard__foot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 12px;padding-top:14px;border-top:1px solid rgba(255,255,255,.11)}
+.gl-pcard__foot>form{margin-left:auto}
+.gl-pcard__tools{display:flex;flex-wrap:wrap;justify-content:center;gap:0 16px}
+.gl-pcard form,.gl-pcard .gl-btn,.gl-pcard .gl-round{position:relative;z-index:3}
+@media (max-width:767.98px){
+  .gl-pcard{display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-rows:auto 1fr;grid-template-areas:"ph body" "ph buy";align-items:start;gap:6px 14px;padding:12px;border-radius:22px}
+  .gl-pcard__ph{grid-area:ph}
+  .gl-pcard__plate{aspect-ratio:1;padding:6px;border-radius:14px}
+  .gl-pcard__body{grid-area:body;gap:4px;padding:0}
+  .gl-pcard__name{font-size:16px}
+  .gl-pcard__buy{grid-area:buy;align-self:end;margin-top:0;gap:0;padding:0}
+  .gl-pcard__foot{flex-wrap:wrap;align-items:center;gap:6px 10px;padding-top:0;border-top:0}
+}
+
+/* ───────── Строка результата и таблица листинга ─────────
+   Без свечения: рядов много, их сравнивают глазами. Точное совпадение по артикулу — стеклянная карточка с тёплым кольцом. */
+.gl-prow__plate{aspect-ratio:1;padding:4px;border-radius:12px}
+.gl-prow__name a{color:inherit;text-decoration:none}
+.gl-prow__name a:hover{text-decoration:underline;text-underline-offset:3px}
+@media (max-width:767.98px){
+  .gl-prow:not(.gl-card){border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(16,22,27,.92)}
+}
+@media (min-width:768px){
+  .gl-prow__plate{aspect-ratio:4/3;padding:6px}
+  .gl-prow:not(.gl-card){border-bottom:1px solid rgba(255,255,255,.07);transition:background-color var(--gl-ease)}
+  .gl-prow:not(.gl-card):hover{background:rgba(255,255,255,.03)}
+}
+.gl-prow.gl-card{border-radius:24px}
+
+.gl-tablewrap{overflow-x:auto;border-radius:22px;border:1px solid rgba(255,255,255,.1);background:rgba(16,22,27,.92)}
+.gl-tablewrap thead{background:rgba(255,255,255,.04)}
+.gl-tablewrap tbody tr{transition:background-color var(--gl-ease)}
+.gl-tablewrap tbody tr:hover{background:rgba(255,255,255,.03)}
+
+/* ───────── Плитка раздела и подраздела ─────────
+   Стеклянная карточка со светящейся рамкой зоны: плашка с картинкой группы товаров, название, подписи из слота. */
+.gl-ctile{display:flex;flex-direction:column;height:100%;min-width:0;padding:10px 10px 14px;border-radius:22px;color:inherit;text-decoration:none}
+.gl-ctile:focus-visible{--gl-ringo:1;box-shadow:0 0 0 1px rgb(var(--gl-glow) / .22),0 22px 64px -20px rgb(var(--gl-glow) / .6)}
+.gl-ctile__plate{aspect-ratio:4/3;width:100%}
+.gl-ctile--compact{padding:8px 8px 12px;border-radius:20px}
+.gl-ctile--compact .gl-ctile__plate{padding:6px;border-radius:14px}
+.gl-ctile__body{display:flex;flex:1;flex-direction:column;gap:4px;padding:12px 8px 0}
+.gl-ctile--compact .gl-ctile__body{padding:10px 6px 0}
+.gl-ctile__name{color:#fff;font:800 16px/1.25 var(--gl-f-text);letter-spacing:-.005em;overflow-wrap:anywhere;hyphens:auto}
+.gl-ctile--compact .gl-ctile__name{font-size:15px}
+.gl-ctile--featured .gl-ctile__name{font:700 clamp(20px,2vw,26px)/1.18 var(--gl-f-disp);letter-spacing:-.02em;text-wrap:balance}
+.gl-ctile--featured .gl-ctile__plate{aspect-ratio:16/10}
+.gl-ctile--featured{padding:14px 14px 18px}
+.gl-ctile--featured .gl-ctile__body{gap:8px;padding:16px 8px 0}
+@media (max-width:767.98px){
+  .gl-ctile--compact{border-radius:18px}
+  .gl-ctile--compact .gl-ctile__name{font-size:14px}
+}
+
+/* ───────── Панель покупки и липкая полоса ───────── */
+.gl-pbuy{padding:20px}
+@media (min-width:768px){.gl-pbuy{padding:24px}}
+.gl-pbuy__box{border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04)}
+.gl-pbuy a.gl-pbuy__link,.gl-pbuy button.gl-pbuy__link{color:var(--color-accent-ink);font-weight:700;transition:color var(--gl-ease)}
+.gl-pbuy .gl-pbuy__link:hover{color:var(--color-accent-dark)}
+.gl-sbar{background:#05070A;border-top:1px solid rgba(255,255,255,.1)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .gl-sbar{background:rgba(5,7,10,.88);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+}
+.gl-thumb{border-radius:16px;border:1px solid rgba(255,255,255,.14);background:#fff;overflow:hidden;transition:border-color var(--gl-ease),box-shadow var(--gl-ease)}
+.gl-thumb:hover{border-color:rgba(108,200,255,.7)}
+.gl-thumb[aria-current="true"]{border-color:var(--gl-hot);box-shadow:0 0 18px -4px rgba(255,106,19,.7)}
+.gl-gallery__track{border-radius:24px;border:1px solid rgba(255,255,255,.12);background:#fff}
+.gl-gallery__arrow{border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(10,14,18,.86);color:#fff;
+  box-shadow:0 8px 24px -8px rgba(0,0,0,.8);transition:background-color var(--gl-ease),border-color var(--gl-ease),color var(--gl-ease)}
+.gl-gallery__arrow:hover{background:rgba(255,255,255,.14);border-color:rgba(108,200,255,.7)}
+
+/* ───────── Пагинация ───────── */
+.gl-pg{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);color:#fff;font:700 15px/1 var(--gl-f-text);font-variant-numeric:tabular-nums;text-decoration:none;
+  transition:background-color var(--gl-ease),border-color var(--gl-ease),box-shadow var(--gl-ease)}
+a.gl-pg:hover{background:rgba(255,255,255,.12);border-color:rgba(108,200,255,.7)}
+.gl-pg--num{width:44px;padding:0}
+.gl-pg--on{background:var(--gl-hot);border-color:transparent;color:var(--gl-ink);box-shadow:0 8px 22px -8px rgba(255,106,19,.8)}
+.gl-pg--gap{border-color:transparent;background:transparent;color:var(--gl-faint)}
+.gl-meter{height:6px;width:100%;max-width:360px;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.1)}
+.gl-meter>span{display:block;height:100%;border-radius:inherit;background:var(--gl-hot);box-shadow:0 0 14px rgba(255,106,19,.7)}
+
+/* ───────── Пустой результат ───────── */
+.gl-emptyic{display:flex;flex:none;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:var(--gl-muted)}
+
+/* ───────── Уведомление ───────── */
+.gl-toast{border-radius:22px;border:1px solid rgba(255,255,255,.18);background:#0E1318;color:var(--gl-text);
+  box-shadow:0 24px 60px -16px rgba(0,0,0,.8),0 0 40px -12px rgba(108,200,255,.3)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .gl-toast{background:rgba(14,19,24,.94);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3)}
+}
+
+/* ───────── Кабинет ───────── */
+.gl-tabs{display:flex;gap:8px;list-style:none;padding:0}
+.gl-orow{border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(16,22,27,.92)}
+.gl-orow__repeat{display:flex;align-items:center;justify-content:center;width:100%;min-height:46px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);
+  color:#fff;font:800 15px/1 var(--gl-f-text);cursor:pointer;transition:background-color var(--gl-ease),border-color var(--gl-ease)}
+.gl-orow__repeat:hover{background:rgba(255,255,255,.12);border-color:rgba(108,200,255,.7)}
+@media (min-width:1024px){
+  .gl-orow{border-radius:0;border:0;background:transparent}
+  .gl-orow__repeat{display:inline;width:auto;min-height:0;border:0;border-radius:0;background:none;color:var(--color-accent-ink);font:700 13px/1.3 var(--gl-f-text)}
+  .gl-orow__repeat:hover{background:none;color:var(--color-accent-dark)}
+}
+
+/* ───────── Телефон ───────── */
+@media (max-width:600px){
+  .gl-pbuy{padding:16px}
+  .gl-seg a{padding:0 12px}
+}
+
+/* Браузер без размытия фона: чипы на сплошном цвете. */
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .gl-lchip{background:#1A2228}
+}
 }

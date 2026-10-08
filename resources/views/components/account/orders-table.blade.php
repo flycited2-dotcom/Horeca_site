@@ -1,9 +1,9 @@
 @props(['orders'])
 
 {{--
-    Заявки клиента (макет, экран 7): номер, дата, состав, оплата, отгрузка — две независимые
-    колонки, — сумма и «Повторить». С 1024 px — таблица с колонками макета, ниже — карточка
-    заказа: номер и сумма сверху, оплата и отгрузка строками с подписями, кнопка во всю
+    Заявки клиента (облик «Свечение», макет, экран 7): номер, дата, состав, оплата, отгрузка — две независимые
+    колонки, — сумма и «Повторить». С 1024 px — таблица с колонками макета, ниже — стеклянная карточка
+    заказа: номер и сумма сверху, оплата и отгрузка строками с подписями, круглая кнопка во всю
     ширину, карточки лежат прямо на полотне. Одна разметка на оба вида: раскладку задают
     области сетки, рамку таблицы — страница (`lg:` у обёртки).
 --}}
@@ -34,9 +34,9 @@
                 $rest = $order->items->count() - 1;
             @endphp
             <li
-                class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-2 rounded-card border border-line bg-surface p-3 [grid-template-areas:'num_sum''date_date''items_items''pay_pay''ship_ship''act_act'] lg:items-start lg:rounded-none lg:border-0 lg:px-4 lg:py-3.5 lg:[grid-template-areas:'num_date_items_pay_ship_sum''num_date_items_pay_ship_act'] {{ $grid }}"
+                class="gl-orow grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-2 p-3 [grid-template-areas:'num_sum''date_date''items_items''pay_pay''ship_ship''act_act'] lg:items-start lg:px-4 lg:py-3.5 lg:[grid-template-areas:'num_date_items_pay_ship_sum''num_date_items_pay_ship_act'] {{ $grid }}"
             >
-                <a href="{{ route('account.order', $order) }}" class="self-baseline font-mono text-md font-semibold text-ink tabular transition-colors duration-150 ease-out [grid-area:num] hover:text-accent-ink">
+                <a href="{{ route('account.order', $order) }}" class="self-baseline font-mono text-md font-bold text-white tabular transition-colors duration-150 ease-out [grid-area:num] hover:text-accent-ink">
                     <span class="sr-only">{{ __('shop.account.orders.number') }} </span>{{ $order->number }}
                 </a>
 
@@ -61,16 +61,13 @@
                     <x-account.progress :tone="$progress->shipmentTone" :label="$progress->shipment" />
                 </div>
 
-                <span class="self-baseline text-right text-lg font-bold whitespace-nowrap tabular [grid-area:sum] lg:text-[1.0625rem] lg:leading-[1.2]">
+                <span class="self-baseline text-right text-lg font-bold whitespace-nowrap text-white tabular [grid-area:sum] lg:text-[1.0625rem] lg:leading-[1.2]">
                     <span class="sr-only">{{ __('shop.account.orders.sum') }}: </span>{{ Typography::money($order->total) }}
                 </span>
 
                 <form method="post" action="{{ route('account.order.repeat', $order) }}" class="[grid-area:act] lg:text-right">
                     @csrf
-                    <button
-                        type="submit"
-                        class="text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark max-lg:h-control max-lg:w-full max-lg:rounded-control max-lg:border max-lg:border-line max-lg:text-base max-lg:font-medium max-lg:text-ink max-lg:hover:border-accent-ink lg:text-sm"
-                    >
+                    <button type="submit" class="gl-orow__repeat">
                         <span class="lg:hidden">{{ __('shop.account.order.repeat') }}</span><span class="max-lg:hidden">{{ __('shop.account.orders.repeat') }}<span class="sr-only"> {{ $order->number }}</span></span>
                     </button>
                 </form>

@@ -1,148 +1,143 @@
 {{--
-    Главная (ТЗ §8.1, макет — экран 4, облик «Холод и жар»): тёмный первый экран с заголовком,
-    кнопками «Открыть каталог» и «Найдём за вас» и цифрами каталога, ниже — плитки всех
-    корневых разделов, окрашенные по «температуре» (App\Support\CategoryZone): крупнейшие
-    «холодный» и «горячий» разделы открывают их большими плитками (App\View\HomeCatalog),
-    покупатель прокручивает страницу и видит весь каталог целиком. Ниже — подборки «Соберём кухню
-    под задачу» (если они включены) и ленты карточек. Внизу — бренды списком названий
-    (ТЗ §8.1, п. 5). Поле «Знаю артикул» осталось в шапке и подвале.
+    Главная (ТЗ §8.1, облик «Свечение», макет gs-designs/d.html): живая сцена каркаса, первый экран с цифрами каталога
+    (x-home.hero) и ниже блоки сверху вниз — каталог (две витринные карточки «Холод» и «Жар», остальные разделы
+    ровной сеткой), «В наличии» гармошкой, ленты местного склада, хитов и новинок карточками, подборки
+    «Соберём кухню под задачу» (если включены), бренды и поле «Знаете артикул?». Каждый блок строит свою
+    секцию в .gl-wrap макета, поэтому <main> главной без полей. Всё содержимое приходит из HomeController:
+    разделы — App\View\HomeCatalog, цифры — App\View\HomeHero, ленты товаров — App\View\HomeShelf. Пустая
+    лента и выключенные подборки не показываются. Стили — resources/css/glow.css и glow-home.css.
 --}}
 @php
     use App\Support\Typography;
 
-    $count = fn (string $key, int $value): string => trans_choice($key, $value, ['count' => Typography::number($value)]);
-    $titles = [
-        'in_stock' => __('shop.home.in_stock_strip'),
-        'local' => __('shop.home.local', ['warehouse' => $warehouse]),
-        'hits' => __('shop.home.hits'),
-        'new' => __('shop.home.new'),
-    ];
+    $stripIds = ['in_stock' => 'stock', 'local' => 'ready', 'hits' => 'hits', 'new' => 'fresh'];
+    $sectionCount = count($sections->tiles);
 @endphp
 
 <x-layouts.app :title="__('shop.home.title')" :description="__('shop.seo.home_description')">
     <x-slot:hero>
-        <section class="bg-night text-white" aria-labelledby="home-heading">
-            <div class="container-page grid gap-0 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-                <div class="flex flex-col gap-4 py-7 md:gap-5 md:py-10 lg:pr-10">
-                    <h1 id="home-heading" class="font-display text-[1.75rem] leading-[1.08] font-bold tracking-[-0.02em] text-balance md:text-[2.5rem] xl:text-[2.75rem]">
-                        {{ __('shop.home.hero.heading_lead') }} <span class="text-signal-bright">{{ __('shop.home.hero.heading_accent') }}</span>
-                    </h1>
-                    <p class="max-w-[46ch] text-md leading-normal text-night-text">{{ __('shop.home.hero.text') }}</p>
-                    <div class="flex flex-wrap gap-2.5">
-                        <x-ui.button :href="route('catalog')">{{ __('shop.home.hero.catalog') }}</x-ui.button>
-                        <x-ui.button variant="night" popovertarget="lead-not-found">{{ __('shop.leads.titles.not_found') }}</x-ui.button>
-                    </div>
-                </div>
-
-                @if ($hero->facts !== [])
-                    {{-- Линии между цифрами — фон сетки в зазоре 1 px; на телефоне блок идёт под заголовком во всю ширину. --}}
-                    <dl aria-label="{{ __('shop.home.hero.facts_label') }}" class="grid grid-cols-2 gap-px self-stretch border-night-line bg-night-line max-lg:border-t max-md:-mx-3 md:max-lg:-mx-6 lg:border-l">
-                        @foreach ($hero->facts as $fact)
-                            <div @class([
-                                'flex min-h-24 flex-col-reverse justify-start gap-1.5 bg-night px-4 py-4 md:min-h-28 md:px-6 md:py-5',
-                                'col-span-2' => $loop->last && $loop->odd,
-                            ])>
-                                <dt class="text-sm text-night-text">{{ trans_choice($fact['label'], $fact['value']) }}</dt>
-                                <dd @class([
-                                    'font-display text-[1.625rem] leading-none font-bold tabular md:text-[2rem]',
-                                    'text-cold-bright' => $fact['zone'] === \App\Support\CategoryZone::COLD,
-                                    'text-hot-bright' => $fact['zone'] === \App\Support\CategoryZone::HOT,
-                                ])>{{ Typography::number($fact['value']) }}</dd>
-                            </div>
-                        @endforeach
-                    </dl>
-                @endif
-            </div>
-        </section>
+        <x-home.hero :hero="$hero" :sections="$sections" :images="$images" />
     </x-slot:hero>
 
     <x-lead.dialog id="lead-not-found" type="not_found" :message-label="__('shop.leads.fields.what')" />
 
-    <section class="flex flex-col gap-4 md:gap-5" aria-labelledby="home-sections">
-        <h2 id="home-sections" class="font-display text-xl font-bold md:text-2xl">{{ __('shop.home.catalog') }}</h2>
+    <section class="gl-sec" id="catalog" aria-labelledby="home-sections">
+        <i class="gl-glowzone gl-gz--cat-c" aria-hidden="true"></i>
+        <i class="gl-glowzone gl-gz--cat-h" aria-hidden="true"></i>
 
-        @if ($home['sections'] === [])
-            <p class="text-steel-500">{{ __('shop.home.catalog_empty') }}</p>
-        @else
-            <nav aria-label="{{ __('shop.home.catalog') }}">
-                {{-- Витринные плитки «Холод» и «Жар» идут первыми: на телефоне — во всю ширину, с ноутбука — на 2×2 ячейки. --}}
-                <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-                    @foreach ($sections->tiles as $section)
-                        <li @class(['col-span-2 lg:row-span-2' => $section['featured']])>
-                            <x-catalog.category-tile :name="$section['name']" :url="route('category', $section['slug'])" :image="$images[$section['id']] ?? null" :icon="$section['icon']" :zone="$section['zone']" :featured="$section['featured']" :eager="$loop->index < 4">
-                                <span @class(['text-steel-500 tabular', 'text-sm' => ! $section['featured'], 'text-base' => $section['featured']])>
-                                    <span class="md:hidden">{{ $count('shop.home.positions', $section['products_count']) }}</span>
-                                    {{-- «0 в наличии» звучит как «ничего нет»: без товаров на складах — только число позиций. --}}
-                                    <span class="max-md:hidden">{{ $section['in_stock'] > 0 ? __('shop.home.tile_counts', ['products' => $count('shop.home.positions', $section['products_count']), 'in_stock' => Typography::number($section['in_stock'])]) : $count('shop.home.positions', $section['products_count']) }}</span>
-                                </span>
-                                @if ($section['children'] !== [])
-                                    <span @class(['text-steel-500', 'text-xs max-md:hidden' => ! $section['featured'], 'text-sm' => $section['featured']])>{{ implode(', ', $section['children']) }}</span>
-                                @endif
-                            </x-catalog.category-tile>
-                        </li>
-                    @endforeach
-                </ul>
-            </nav>
-        @endif
+        <div class="gl-wrap">
+            <x-home.heading
+                id="home-sections"
+                :chip="__('shop.home.catalog')"
+                :lead="__('shop.home.catalog_heading_lead')"
+                :accent="__('shop.home.catalog_heading_accent')"
+                :sub="$sectionCount === 0 ? null : trans_choice('shop.home.catalog_sections', $sectionCount, ['count' => Typography::number($sectionCount)]).'. '.__('shop.home.catalog_note')"
+            />
+
+            @if ($sectionCount === 0)
+                <p class="gl-sub">{{ __('shop.home.catalog_empty') }}</p>
+            @else
+                <nav aria-label="{{ __('shop.home.catalog') }}">
+                    <ul class="gl-cats">
+                        @foreach ($sections->tiles as $tile)
+                            <li @class(['gl-cats__li', 'gl-cats__li--lg' => $tile['featured'], 'gl-cats__li--wide' => $tile['wide']])>
+                                <x-home.category :tile="$tile" :image="$images[$tile['id']] ?? null" />
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
+            @endif
+        </div>
     </section>
 
-    @if ($collections->isNotEmpty())
-        <section class="mt-10" aria-labelledby="collections-heading">
-            <h2 id="collections-heading" class="font-display text-xl font-bold">{{ __('shop.collections.heading') }}</h2>
+    @foreach ($shelves as $key => $shelf)
+        @php
+            $text = __("shop.home.strips.{$key}");
+            $accordion = $key === 'in_stock' && $shelf->isAccordion();
+        @endphp
 
-            <ul class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-                @foreach ($collections as $collection)
-                    <li>
-                        <a
-                            href="{{ route('collection', $collection) }}"
-                            class="flex h-full items-start gap-3 rounded-card border border-line bg-surface p-4 transition-[border-color,box-shadow] duration-150 ease-out hover:border-accent-ink hover:shadow-raised"
-                        >
-                            <x-ui.equipment-icon :icon="$collection->icon" class="mt-0.5 size-6 text-steel-500" />
-                            <span class="flex min-w-0 flex-col gap-0.5">
-                                <span class="text-md leading-tight font-semibold">{{ $collection->name }}</span>
-                                @if (filled($collection->description))
-                                    <span class="line-clamp-2 text-sm text-steel-500">{{ $collection->description }}</span>
-                                @endif
-                                <span class="text-sm text-steel-500 tabular">{{ $count('shop.catalog.models', $collection->listed_count) }}</span>
-                            </span>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        </section>
-    @endif
+        <section class="gl-sec" id="{{ $stripIds[$key] }}" aria-labelledby="strip-{{ $key }}">
+            @if ($accordion)
+                <i class="gl-glowzone gl-gz--stock" aria-hidden="true"></i>
+            @else
+                <i class="gl-glowzone gl-gz--ship-c" aria-hidden="true"></i>
+                <i class="gl-glowzone gl-gz--ship-h" aria-hidden="true"></i>
+            @endif
 
-    @foreach ($strips as $key => $products)
-        <section class="mt-10" aria-labelledby="strip-{{ $key }}">
-            <h2 id="strip-{{ $key }}" class="font-display text-xl font-bold">{{ $titles[$key] }}</h2>
+            <div class="gl-wrap">
+                <x-home.heading
+                    :id="'strip-'.$key"
+                    :chip="$text['chip']"
+                    :lead="$text['lead'] ?? null"
+                    :accent="$key === 'local' ? $warehouse : ($text['accent'] ?? null)"
+                    :sub="$text['sub']"
+                    :hint="$accordion ? __('shop.home.stock.hint') : null"
+                />
 
-            <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
-                @foreach ($products as $product)
-                    <x-catalog.product-card :product="$product" :price="$prices[$product->id] ?? null" />
-                @endforeach
+                @if ($accordion)
+                    <x-home.accordion :shelf="$shelf" />
+                @else
+                    <ul class="gl-ships">
+                        @foreach ($shelf->items as $item)
+                            <x-home.ship :item="$item" />
+                        @endforeach
+                    </ul>
+                @endif
             </div>
         </section>
     @endforeach
 
-    @if ($brands !== [])
-        <section class="mt-10" aria-labelledby="home-brands">
-            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h2 id="home-brands" class="font-display text-xl font-bold">{{ __('shop.brands.title') }}</h2>
-                <a href="{{ route('brands') }}" class="tap-target text-base font-medium text-accent-ink transition-colors duration-150 ease-out hover:text-accent-dark">
-                    {{ $count('shop.brands.all_count', $brandsTotal) }}
-                </a>
-            </div>
+    @if ($collections->isNotEmpty())
+        <section class="gl-sec" id="picks" aria-labelledby="collections-heading">
+            <i class="gl-glowzone gl-gz--stock" aria-hidden="true"></i>
 
-            <ul class="mt-4 grid grid-cols-2 gap-x-6 rounded-card border border-line bg-surface px-4 py-2 md:grid-cols-4 md:px-6 md:py-4 lg:grid-cols-6">
-                @foreach ($brands as $brand)
-                    <li class="min-w-0">
-                        <a href="{{ route('brand', $brand['slug']) }}" class="flex min-h-control items-center justify-between gap-2 text-base transition-colors duration-150 ease-out hover:text-accent-ink md:min-h-9">
-                            <span class="min-w-0 truncate">{{ $brand['name'] }}</span>
-                            <span class="shrink-0 text-sm text-steel-500 tabular">{{ Typography::number($brand['products_count']) }}</span>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+            <div class="gl-wrap">
+                <x-home.heading
+                    id="collections-heading"
+                    :chip="__('shop.home.picks.chip')"
+                    :lead="__('shop.home.picks.heading_lead')"
+                    :accent="__('shop.home.picks.heading_accent')"
+                    :sub="__('shop.home.picks.sub')"
+                />
+
+                <ul class="gl-picks">
+                    @foreach ($collections as $collection)
+                        <li>
+                            <x-home.pick :collection="$collection" />
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </section>
     @endif
+
+    @if ($brands !== [])
+        <section class="gl-sec" id="brands" aria-labelledby="home-brands">
+            <i class="gl-glowzone gl-gz--brand-c" aria-hidden="true"></i>
+            <i class="gl-glowzone gl-gz--brand-h" aria-hidden="true"></i>
+
+            <div class="gl-wrap">
+                <x-home.heading
+                    id="home-brands"
+                    :chip="__('shop.home.brands.chip')"
+                    :lead="__('shop.home.brands.heading_lead')"
+                    :accent="__('shop.home.brands.heading_accent')"
+                    :sub="$brandsTotal > count($brands) ? trans_choice('shop.home.brands.sub_part', $brandsTotal, ['count' => Typography::number($brandsTotal)]) : __('shop.home.brands.sub_all')"
+                    :row="true"
+                >
+                    <a class="gl-btn gl-btn--glass" href="{{ route('brands') }}">{{ trans_choice('shop.brands.all_count', $brandsTotal, ['count' => Typography::number($brandsTotal)]) }}</a>
+                </x-home.heading>
+
+                <ul class="gl-brands">
+                    @foreach ($brands as $brand)
+                        <li>
+                            <a class="gl-card gl-card--quiet gl-brand" href="{{ route('brand', $brand['slug']) }}">{{ $brand['name'] }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </section>
+    @endif
+
+    <x-home.sku />
 </x-layouts.app>

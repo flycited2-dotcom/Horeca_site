@@ -1,7 +1,7 @@
 @props(['product', 'facts', 'stocks', 'pickup' => null, 'pages'])
 
 {{--
-    Сведения о товаре (ТЗ §8.3, макет — экраны 3 и 14): «Характеристики / Описание /
+    Сведения о товаре (ТЗ §8.3, облик «Свечение», макет — экраны 3 и 14): «Характеристики / Описание /
     Доставка и оплата / Гарантия». С 768 px — вкладки, на телефоне — аккордеоны, без
     скриптов — все разделы подряд со своими заголовками. Пустой раздел не выводится.
     Скрытое со скриптами помечено data-inactive: класс js на <html> прячет его до первой
@@ -22,8 +22,8 @@
     $first = array_key_first($panels);
 @endphp
 
-<div data-tabs {{ $attributes->class('rounded-card border border-line bg-surface') }}>
-    <div role="tablist" aria-label="{{ __('shop.product.tabs') }}" class="requires-js hidden gap-1 border-b border-line-soft px-4 md:flex">
+<div data-tabs {{ $attributes->class('gl-card gl-card--quiet') }}>
+    <div role="tablist" aria-label="{{ __('shop.product.tabs') }}" class="requires-js hidden gap-1 border-b border-white/10 px-5 md:flex">
         @foreach ($panels as $key => $title)
             <button
                 type="button"
@@ -43,14 +43,14 @@
             data-panel="{{ $key }}"
             @if ($key !== $first) data-inactive @endif
             aria-labelledby="heading-{{ $key }}"
-            class="border-b border-line-soft last:border-b-0 md:border-b-0"
+            class="border-b border-white/10 last:border-b-0 md:border-b-0"
         >
-            <h2 id="heading-{{ $key }}" data-panel-heading class="text-lg font-semibold">
+            <h2 id="heading-{{ $key }}" data-panel-heading class="text-lg font-bold text-white">
                 <button
                     type="button"
                     data-panel-toggle
                     aria-expanded="{{ $key === $first ? 'true' : 'false' }}"
-                    class="flex min-h-control w-full items-center justify-between gap-3 px-4 py-3 text-left focus-visible:-outline-offset-2"
+                    class="flex min-h-control w-full items-center justify-between gap-3 px-5 py-3 text-left focus-visible:-outline-offset-2"
                 >
                     {{ $title }}
                     <svg class="size-5 shrink-0 text-steel-500 transition-transform duration-150 ease-out [[aria-expanded=true]>&]:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -59,11 +59,11 @@
                 </button>
             </h2>
 
-            <div data-panel-body class="px-4 pb-5 md:pt-4">
+            <div data-panel-body class="px-5 pb-5 md:pt-4">
                 @if ($key === 'specs')
                     <dl @class(['flex flex-col', 'max-w-[420px]' => count($specs) <= 6])>
                         @foreach ($specs as $row)
-                            <div class="grid grid-cols-2 gap-4 border-t border-line-soft py-2 text-base first:border-t-0">
+                            <div class="grid grid-cols-2 gap-4 border-t border-white/10 py-2 text-base first:border-t-0">
                                 <dt class="text-steel-500">{{ $row['label'] }}</dt>
                                 <dd @class(['font-medium', 'font-mono text-sm' => $row['mono']])>{{ $row['value'] }}</dd>
                             </div>

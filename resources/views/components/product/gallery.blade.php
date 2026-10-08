@@ -1,7 +1,7 @@
 @props(['product'])
 
 {{--
-    Галерея карточки товара (ТЗ §8.3, макет — экран 3). Есть фото — главное фото 4:3 листается
+    Галерея карточки товара (ТЗ §8.3, облик «Свечение», макет — экран 3). Есть фото — главное фото 4:3 листается
     свайпом вправо и влево (прокрутка с привязкой, работает и без скриптов), рядом миниатюры.
     Нажатие открывает фото на весь экран: оно вписано в экран целиком (копия «full», не
     исходник в несколько тысяч пикселей), листается так же, закрывается крестиком, Esc и кнопкой
@@ -15,22 +15,28 @@
     $total = $media->count();
     $counter = fn (int $current): string => __('shop.product.photo_counter', ['current' => $current, 'total' => $total]);
     $format = __('shop.product.photo_counter', ['current' => '{current}', 'total' => '{total}']);
-    $arrow = 'hidden size-control items-center justify-center rounded-full border border-line bg-surface text-ink shadow-raised transition-colors duration-150 ease-out hover:border-accent-ink hover:text-accent-ink md:flex';
+    $arrow = 'gl-gallery__arrow hidden size-control items-center justify-center md:flex';
+    $zone = \App\Support\CategoryZone::of($icon, $product->category?->name);
 @endphp
 
 @if ($media->isEmpty())
-    <div {{ $attributes->class('relative flex aspect-[16/9] flex-col items-center justify-center gap-2.5 rounded-card border border-line bg-bg p-6 text-center md:aspect-[16/7]') }}>
-        <x-ui.equipment-icon :icon="$icon" class="size-14 text-steel-400 md:size-18" />
-        <p class="text-md font-medium">{{ __('shop.product.photo_pending') }}</p>
+    <div {{ $attributes->class([
+        'gl-card relative flex aspect-[16/9] flex-col items-center justify-center gap-2.5 p-6 text-center md:aspect-[16/7]',
+        'gl-cold' => $zone === \App\Support\CategoryZone::COLD,
+        'gl-hot' => $zone === \App\Support\CategoryZone::HOT,
+        'gl-neutral' => $zone === \App\Support\CategoryZone::NEUTRAL,
+    ]) }}>
+        <x-ui.equipment-icon :icon="$icon" class="size-14 text-steel-500 md:size-18" />
+        <p class="text-md font-bold text-white">{{ __('shop.product.photo_pending') }}</p>
 
         @if ($type)
-            <span class="absolute bottom-3 left-3 rounded-xs bg-line-soft px-1.75 py-1 text-xs leading-[1.3] font-medium">{{ $type }}</span>
+            <span class="gl-pimg__type">{{ $type }}</span>
         @endif
     </div>
 @else
     <div data-gallery {{ $attributes->class(['grid gap-3', 'md:grid-cols-[88px_minmax(0,1fr)]' => $total > 1]) }}>
         <div class="relative min-w-0 md:order-last">
-            <ul data-gallery-track class="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-card border border-line bg-stage [scrollbar-width:none]">
+            <ul data-gallery-track class="gl-gallery__track flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]">
                 @foreach ($media as $image)
                     <li class="aspect-[4/3] w-full shrink-0 snap-center snap-always">
                         <a
@@ -65,7 +71,7 @@
                             href="{{ $image->getUrl() }}"
                             data-gallery-thumb="{{ $loop->index }}"
                             @if ($loop->first) aria-current="true" @endif
-                            class="block size-18 overflow-hidden rounded-card border border-line bg-stage aria-[current=true]:border-2 aria-[current=true]:border-accent md:size-22"
+                            class="gl-thumb block size-18 md:size-22"
                         >
                             <img src="{{ $image->getUrl('thumb') }}" alt="{{ __('shop.product.photo', ['number' => $loop->iteration]) }}" loading="lazy" class="size-full object-contain">
                         </a>
@@ -78,7 +84,7 @@
         <dialog data-gallery-viewer aria-label="{{ $product->name }}" class="fixed inset-0 m-0 size-full max-h-none max-w-none border-0 bg-night p-0 text-white open:flex open:flex-col">
             <div class="flex shrink-0 items-center justify-between gap-3 px-3 py-2 md:px-6">
                 <p data-viewer-counter data-format="{{ $format }}" data-total="{{ $total }}" class="text-base tabular">{{ $counter(1) }}</p>
-                <button type="button" data-viewer-close class="flex size-control items-center justify-center rounded-control border border-white/40 transition-colors duration-150 ease-out hover:border-white" aria-label="{{ __('shop.product.photo_close') }}">
+                <button type="button" data-viewer-close class="flex size-control items-center justify-center rounded-full border border-white/40 transition-colors duration-150 ease-out hover:border-white" aria-label="{{ __('shop.product.photo_close') }}">
                     <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                         <path d="M6 6l12 12M18 6 6 18"/>
                     </svg>

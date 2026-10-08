@@ -1,13 +1,23 @@
 @props(['category'])
 
 {{--
-    Подраздел в ленте над листингом: название и число товаров моноширинным. На телефоне
-    чип компактнее (36 px), цель нажатия всё равно 44.
+    Подраздел в ленте над листингом (облик «Свечение»): круглый стеклянный чип с названием и числом
+    товаров моноширинным; свечение — цвет зоны подраздела. Высота 36 px, цель нажатия — 44.
 --}}
+@php
+    use App\Support\CategoryZone;
+
+    $zone = CategoryZone::of($category['icon'] ?? null, $category['name']);
+@endphp
+
 <a
     href="{{ route('category', $category['slug']) }}"
-    class="tap-target inline-flex h-9 items-center gap-2 rounded-full border border-line bg-surface px-3 text-sm whitespace-nowrap transition-colors duration-150 ease-out hover:border-accent-ink md:h-control md:px-4 md:text-base"
+    @class([
+        'gl-lchip tap-target',
+        'gl-cold' => $zone === CategoryZone::COLD,
+        'gl-hot' => $zone === CategoryZone::HOT,
+    ])
 >
     {{ $category['name'] }}
-    <span class="font-mono text-sm text-steel-500">{{ \App\Support\Typography::number($category['products_count']) }}</span>
+    <span class="gl-lchip__n">{{ \App\Support\Typography::number($category['products_count']) }}</span>
 </a>

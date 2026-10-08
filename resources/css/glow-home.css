@@ -1,2 +1,132 @@
+/*
+ * Главная в облике «Свечение» (ТЗ §8.1, §9): дополнения к glow.css, которых в макете нет, потому что макет собран на
+ * статичных данных. Здесь же — места, где кнопки дизайн-системы (x-ui.button) красятся утилитами Tailwind, а облик
+ * «Свечение» должен их перебить. Все классы с префиксом gl- и в слое components, как в glow.css.
+ */
 @layer components {
+/* ───────── Обёртка секций ───────── */
+/* Если каркас всё же положил главную в свой контейнер, вложенная обёртка не сужается второй раз. */
+:is(.gl-wrap,.container-page) :is(.gl-hero,.gl-sec)>.gl-wrap{width:100%}
+
+/* ───────── Свечения за секциями (в макете — inline-стили) ───────── */
+.gl-gz--cat-c{left:-14%;top:60px;width:760px;height:760px;background:radial-gradient(closest-side,rgba(108,200,255,.26),transparent)}
+.gl-gz--cat-h{right:-14%;top:240px;width:760px;height:760px;background:radial-gradient(closest-side,rgba(255,106,19,.24),transparent)}
+.gl-gz--stock{left:30%;top:120px;width:900px;height:700px;background:radial-gradient(closest-side,rgba(108,200,255,.2),rgba(255,106,19,.14) 60%,transparent)}
+.gl-gz--ship-c{left:-16%;top:10px;width:900px;height:900px;background:radial-gradient(closest-side,rgba(108,200,255,.26),rgba(108,200,255,.08) 56%,transparent)}
+.gl-gz--ship-h{right:-20%;top:300px;width:820px;height:820px;background:radial-gradient(closest-side,rgba(255,106,19,.2),rgba(255,106,19,.06) 56%,transparent)}
+.gl-gz--brand-c{left:-12%;top:120px;width:820px;height:640px;background:radial-gradient(closest-side,rgba(108,200,255,.2),transparent)}
+.gl-gz--brand-h{right:-12%;top:90px;width:820px;height:640px;background:radial-gradient(closest-side,rgba(255,106,19,.2),transparent)}
+.gl-gz--sku{left:50%;top:10px;width:1400px;height:560px;margin-left:-700px;background:radial-gradient(closest-side,rgba(108,200,255,.14),rgba(255,106,19,.12) 62%,transparent)}
+
+/* Слово-акцент в градиенте при включённых контрастных цветах системы остаётся читаемым. */
+@media (forced-colors:active){
+  .gl-grad{-webkit-text-fill-color:currentColor;background:none}
+}
+
+/* ───────── Светлая плашка под фото ───────── */
+/* Снимки поставщика сняты на белом фоне: плашка белая, фото вписано с её полями и ничем не обработано. */
+.gl-plate--photo{--gl-plate:#fff}
+.gl-plate--photo img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;padding:inherit;box-sizing:border-box;object-fit:contain}
+.gl-plate__ic{position:relative;z-index:1;width:42%;max-width:96px;height:auto;aspect-ratio:1;color:#5D686F}
+
+/* ───────── Первый экран ───────── */
+.gl-hero__copy{min-width:0}
+.gl-hero__grid--solo{grid-template-columns:minmax(0,1fr)}
+.gl-hero__grid--solo .gl-lead{max-width:36em}
+.gl-hv__plate{position:absolute;aspect-ratio:4/3;padding:2.4cqw;border-radius:clamp(14px,3cqw,26px)}
+.gl-hv--solo .gl-hv__plate{left:50%;right:auto;top:50%;bottom:auto;width:78cqw;transform:translate(-50%,-50%)}
+.gl-hv__plate .gl-plate__ic{width:30%;max-width:none}
+.gl-stats{list-style:none;padding:0}
+
+/* ───────── Каталог ───────── */
+/* Карточка раздела лежит в <li>, поэтому столбцы сетки занимает он, а не сама карточка. */
+.gl-cats>li{grid-column:span 2;display:flex;min-width:0}
+.gl-cats>li>.gl-cat{flex:1 1 auto;grid-column:auto}
+.gl-cats>li.gl-cats__li--lg{grid-column:span 5}
+/* В glow.css плашка последнего раздела ниже остальных (:last-child), а у нас каждая карточка — единственная в своём <li>: высоты возвращаем. */
+@media (min-width:601px) and (max-width:1179px){
+  .gl-cats>li.gl-cats__li--lg{grid-column:span 3}
+  .gl-cats>li.gl-cats__li--wide{grid-column:span 6}
+  .gl-cats .gl-cat--type .gl-cat__photo{height:150px}
+  .gl-cats .gl-cat--lg.gl-cat--type .gl-cat__photo{height:210px}
+  .gl-cats>li.gl-cats__li--wide .gl-cat--sm.gl-cat--type .gl-cat__photo{height:120px}
+}
+@media (max-width:600px){
+  .gl-cats>li,.gl-cats>li.gl-cats__li--lg,.gl-cats>li.gl-cats__li--wide{grid-column:auto}
+  .gl-cats .gl-cat--lg.gl-cat--type .gl-cat__photo{height:210px}
+}
+.gl-cat--photo .gl-cat__photo::before,.gl-cat--photo .gl-cat__photo::after{display:none}
+/* grid-area:plate из glow.css относится к панели гармошки; в плитке раздела он увёл бы плашку в неявную ячейку. */
+.gl-cat__photo .gl-plate{grid-area:auto;width:100%;height:100%;aspect-ratio:auto;padding:12px;border-radius:16px}
+.gl-cat--lg .gl-cat__photo .gl-plate{padding:18px;border-radius:20px}
+.gl-cat .gl-cat__photo .gl-plate--photo img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;filter:none}
+.gl-cat__meta--kids{margin-bottom:0}
+.gl-cat__kids{margin:6px 0 auto;color:var(--gl-faint);font-size:14px;line-height:1.45;font-weight:600}
+.gl-type span{max-width:88%;overflow-wrap:anywhere;text-align:center;line-height:1.08;font-size:clamp(15px,1.5vw,21px)}
+.gl-cat--lg .gl-type span{font-size:clamp(22px,2.4vw,32px)}
+@media (max-width:600px){
+  .gl-cats .gl-cat--sm .gl-type span{max-width:94%;font-size:12px}
+}
+
+/* Карточка раздела, подборки и бренда — ссылка: с клавиатуры она светится так же, как под мышью. */
+a.gl-card:focus-visible{--gl-ringo:1;box-shadow:0 0 0 1px rgb(var(--gl-glow) / .22),0 22px 64px -20px rgb(var(--gl-glow) / .6)}
+
+/* ───────── Цена, наличие, кнопки ───────── */
+.gl-pricebox{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
+.gl-was{color:var(--gl-faint);font:600 14px/1.2 var(--gl-f-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+.gl-price.gl-price--ask,.gl-acc__buy .gl-price.gl-price--ask{font:700 15px/1.25 var(--gl-f-text);letter-spacing:0;white-space:normal;color:var(--gl-muted)}
+.gl-stock--incoming{background:#FDF4E7;color:#8F4207}
+.gl-stock--incoming::before{width:7px;height:7px;border-radius:1px;background:#8F4207;transform:rotate(45deg)}
+.gl-stock--order{background:#fff;color:#A3350B;border:1px dashed #A3350B}
+.gl-stock--order::before{border-radius:0;background:#A3350B}
+/* «В корзину» и «Запросить цену» — общие x-cart.add и x-lead.request-price с кнопками x-ui.button; форма — flex, чтобы под кнопкой не оставалась строка. */
+.gl-buy{display:flex}
+
+/* ───────── Гармошка «В наличии» ───────── */
+.gl-sub__hint{display:block;margin-top:6px;color:var(--gl-faint);font-size:15px}
+.gl-acc__name a,.gl-ship__name a{color:inherit;text-decoration:none}
+.gl-acc__name a:hover,.gl-ship__name a:hover{text-decoration:underline;text-underline-offset:3px}
+/* Фокус внутри свёрнутой колонки не должен сдвигать её содержимое: clip, в отличие от hidden, не прокручивается. */
+.gl-acc__item{overflow:clip}
+@media (min-width:901px){
+  .gl-acc__item{cursor:pointer}
+  /* Панель свёрнутой колонки только прозрачна: ссылка и кнопка в ней остаются в порядке табуляции и у диктора. */
+  .gl-acc .gl-acc__panel{visibility:visible;cursor:auto;width:calc(100cqw - (var(--gl-n,6) - 1) * (var(--gl-col) + var(--gl-gap)))}
+  .gl-acc__vprice--ask{font-size:14px}
+}
+
+/* ───────── Карточки ленты ───────── */
+.gl-ship{position:relative}
+.gl-ship__foot{flex-wrap:wrap}
+/* Вся карточка открывает товар: ссылка названия растянута на неё, а кнопка корзины лежит выше. */
+.gl-ship__name a::after{content:"";position:absolute;inset:0;z-index:1;border-radius:24px}
+.gl-ship__foot .gl-buy,.gl-ship__foot .gl-ask{position:relative;z-index:3}
+.gl-ship:is(:hover,:focus-within){--gl-ringo:1;box-shadow:0 0 0 1px rgb(var(--gl-glow) / .22),0 22px 64px -20px rgb(var(--gl-glow) / .6)}
+
+/* ───────── Подборки ───────── */
+.gl-picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;list-style:none;padding:0}
+.gl-picks>li{display:flex;min-width:0}
+.gl-pick{display:flex;flex:1 1 auto;flex-direction:column;gap:12px;min-width:0;padding:28px 28px 22px;color:inherit;text-decoration:none}
+.gl-pick__ic{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#fff}
+.gl-pick__ic svg{width:26px;height:26px}
+.gl-pick__name{font:800 20px/1.25 var(--gl-f-text);letter-spacing:-.005em;color:#fff}
+.gl-pick__text{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:var(--gl-muted);font-size:15px;line-height:1.5}
+.gl-pick__foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,.11)}
+.gl-pick__count{color:var(--gl-muted);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+@media (max-width:900px){
+  .gl-picks{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .gl-picks{grid-template-columns:minmax(0,1fr);gap:12px}
+  .gl-pick{padding:22px 20px 18px}
+}
+
+/* ───────── Знаете артикул ───────── */
+.gl-sku input[type=search]{appearance:none;-webkit-appearance:none}
+.gl-sku input[type=search]::-webkit-search-decoration,.gl-sku input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
+
+/* ───────── Подсказка про наведение не нужна там, где гармошка стала списком ───────── */
+@media (max-width:900px){
+  .gl-sub__hint{display:none}
+}
 }

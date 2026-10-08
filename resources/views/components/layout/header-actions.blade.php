@@ -11,18 +11,18 @@
     Esc и нажатию мимо.
 --}}
 @php
-    $user = '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.9-3.9 4-6 7.5-6s6.6 2.1 7.5 6"/>';
+    $userIcon = '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c.9-3.9 4-6 7.5-6s6.6 2.1 7.5 6"/>';
 @endphp
 
 @if ($shell->customerName === null)
     <a href="{{ route('login') }}" class="gl-login" aria-label="{{ __('shop.layout.login_aria') }}">
-        <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true">{!! $user !!}</svg>
+        <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true">{!! $userIcon !!}</svg>
         <span>{{ __('shop.auth.login.submit') }}</span>
     </a>
 @else
     <details data-dismissable class="gl-acct">
         <summary class="gl-login [&::-webkit-details-marker]:hidden" aria-label="{{ __('shop.auth.menu', ['name' => $shell->customerName]) }}">
-            <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true">{!! $user !!}</svg>
+            <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true">{!! $userIcon !!}</svg>
             <span class="max-w-28 truncate" aria-hidden="true">{{ $shell->customerFirstName() }}</span>
         </summary>
 
@@ -54,7 +54,7 @@
     <span data-compare-count class="gl-count">{{ $shell->compareCount }}</span>
 </a>
 
-<a href="{{ route('cart') }}" data-cart-link class="gl-btn gl-btn--gl-hot gl-btn--gl-sm gl-cartbtn">
+<a href="{{ route('cart') }}" data-cart-link class="gl-btn gl-btn--hot gl-btn--sm gl-cartbtn">
     <svg class="gl-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3.5h2.8l2.3 11.2h10.4l2-8.2H6.2"/></svg>
     <span class="sr-only" data-cart-caption @if ($shell->cart->isEmpty()) hidden @endif>{{ __('shop.cart.title') }}:</span>
     <span data-cart-positions class="gl-cartbtn__pos">{{ $shell->cart->label() }}</span>
