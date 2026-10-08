@@ -2,6 +2,10 @@
 @import '@fontsource-variable/jetbrains-mono/wght.css';
 @import '@fontsource-variable/unbounded/wght.css';
 @import 'tailwindcss';
+@import './glow.css';
+@import './glow-shell.css';
+@import './glow-home.css';
+@import './glow-cards.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../**/*.blade.php';
