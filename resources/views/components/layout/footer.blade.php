@@ -13,7 +13,7 @@
         'lg:grid-cols-[1.4fr_1fr_1.2fr]' => $shell->footerPages === [],
     ])>
         <div class="flex flex-col gap-3.5">
-            <a href="{{ route('home') }}" class="self-start text-title font-bold">{{ $shell->siteName }}</a>
+            <a href="{{ route('home') }}" class="self-start font-display text-title font-bold tracking-[-0.01em]">{{ $shell->siteName }}</a>
 
             @if ($shell->phones !== [])
                 <div class="flex flex-col gap-1">

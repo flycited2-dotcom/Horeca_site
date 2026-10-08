@@ -61,6 +61,35 @@ it('counts the stock of a section with its subsections and names the biggest of 
         ->assertSee('Шкафы холодильные, Лари морозильные');
 });
 
+it('opens with the catalog in figures and colours the sections by temperature', function () {
+    $cold = Category::factory()->create(['name' => 'Холодильное оборудование', 'show_on_home' => true, 'products_count' => 2]);
+    $hot = Category::factory()->create(['name' => 'Тепловое оборудование', 'show_on_home' => true, 'products_count' => 1]);
+    Category::factory()->create(['name' => 'Нейтральное оборудование', 'show_on_home' => true, 'products_count' => 1]);
+    Product::factory()->count(2)->create(['category_id' => $cold->id]);
+    Product::factory()->create(['category_id' => $hot->id]);
+
+    $html = $this->get('/')->assertOk()
+        ->assertSeeInOrder(['Оборудование и инвентарь', 'для ресторанов, кафе и баров', 'Открыть каталог', 'Найдём за вас'])
+        ->assertSee('модели холодильного оборудования')
+        ->assertSee('модель теплового оборудования')
+        ->getContent();
+
+    expect(substr_count($html, 'data-zone="cold"'))->toBe(1)
+        ->and(substr_count($html, 'data-zone="hot"'))->toBe(1)
+        ->and($html)->toContain('id="lead-not-found"');
+});
+
+it('leaves out a figure the catalog has nothing for', function () {
+    $neutral = Category::factory()->create(['name' => 'Нейтральное оборудование', 'show_on_home' => true, 'products_count' => 1]);
+    Product::factory()->create(['category_id' => $neutral->id]);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('позиция в каталоге')
+        ->assertDontSee('холодильного оборудования')
+        ->assertDontSee('теплового оборудования');
+});
+
 it('does not say «0 в наличии» on a section with nothing in stock', function () {
     $scales = Category::factory()->create(['name' => 'Весовое оборудование', 'show_on_home' => true, 'products_count' => 2]);
     Product::factory()->count(2)->create(['category_id' => $scales->id]);

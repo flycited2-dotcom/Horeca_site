@@ -33,7 +33,7 @@
         <div
             x-ref="results"
             x-show="open"
-            class="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-control border border-line bg-surface shadow-raised"
+            class="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-control border border-line bg-surface text-ink shadow-raised"
         >
             @if ($result->isEmpty())
                 <p class="px-3.5 py-3 text-base text-steel-500">{{ __('shop.search.empty_heading', ['query' => $text]) }}</p>

@@ -3,6 +3,7 @@
     'type',
     'product' => null,
     'shared' => false,
+    'messageLabel' => null,
 ])
 
 {{--
@@ -38,5 +39,5 @@
 
     <p class="mt-2 text-base text-steel-500">{{ __('shop.leads.texts.'.$type->value) }}</p>
 
-    <x-lead.form :id="$id.'-form'" :type="$type" :product="$product" class="mt-4" />
+    <x-lead.form :id="$id.'-form'" :type="$type" :product="$product" :message-label="$messageLabel" class="mt-4" />
 </div>

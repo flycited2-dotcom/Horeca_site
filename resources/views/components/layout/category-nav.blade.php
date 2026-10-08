@@ -11,7 +11,7 @@
     $plate = 'tap-target inline-flex h-9 items-center rounded-control border px-3.5 text-sm leading-none font-medium whitespace-nowrap transition-colors duration-150 ease-out';
     $idle = 'border-line bg-surface hover:border-accent-ink hover:text-accent-ink';
     $current = 'border-accent bg-accent-soft text-accent-ink';
-    $catalog = 'gap-2 border-accent-ink bg-accent-ink font-semibold text-white hover:border-accent-dark hover:bg-accent-dark';
+    $catalog = 'gap-2 border-night bg-night font-semibold text-white hover:border-night-soft hover:bg-night-soft';
     $featured = $shell->featuredCategories();
     $others = $shell->otherCategories();
 @endphp

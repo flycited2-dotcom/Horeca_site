@@ -1,5 +1,6 @@
 @import '@fontsource-variable/manrope/wght.css';
 @import '@fontsource-variable/jetbrains-mono/wght.css';
+@import '@fontsource-variable/unbounded/wght.css';
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -31,6 +32,26 @@
     --color-line-soft: #e7ebee;    /* внутренние разделители */
     --color-surface: #ffffff;      /* карточки */
 
+    /*
+     * Облик «Холод и жар» (выбран заказчиком 08.10.2026): тёмная шапка, сигнальный оранжевый
+     * у главного действия и разделы, окрашенные по «температуре» оборудования.
+     */
+    --color-night: #0f1418;        /* служебная полоса, шапка и первый экран главной */
+    --color-night-line: #2a333a;   /* рамки и разделители на night */
+    --color-night-soft: #1b2329;   /* hover на night */
+    --color-night-text: #b9c3ca;   /* вторичный текст на night (10,3:1) */
+    --color-signal: #cc4a00;       /* заливка главной кнопки: «В корзину», «Найти» (белый текст 4,6:1) */
+    --color-signal-dark: #a83d00;  /* hover главной кнопки */
+    --color-signal-bright: #ff6a13; /* акцент на night — не под белый текст (2,9:1) */
+    --color-cold-bright: #6cc8ff;  /* «холодные» цифры на night (10:1) */
+    --color-hot-bright: #ff9a62;   /* «горячие» цифры на night (8,9:1) */
+    --color-cold-bg: #e3f2fb;      /* плитка холодильного раздела */
+    --color-cold-line: #b7dcf1;
+    --color-cold-ink: #08486d;     /* название на cold-bg (8,5:1) */
+    --color-hot-bg: #fdeee6;       /* плитка теплового раздела */
+    --color-hot-line: #f5c9b1;
+    --color-hot-ink: #8d2f09;      /* название на hot-bg (7,3:1) */
+
     /* Статусы наличия различаются не только цветом, но и формой маркера. */
     --color-stock-text: #166b49;   /* «В наличии» (5,4:1) */
     --color-stock-bg: #e6f2ec;
@@ -47,6 +68,7 @@
 
     --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+    --font-display: 'Unbounded Variable', 'Manrope Variable', ui-sans-serif, system-ui, sans-serif; /* логотип и первый экран главной */
 
     --text-xs: 0.75rem;          /* 12px */
     --text-xs--line-height: 1.45;

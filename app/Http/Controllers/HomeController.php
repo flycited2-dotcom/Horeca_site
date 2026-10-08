@@ -6,11 +6,12 @@ use App\Services\Catalog\CatalogQuery;
 use App\Services\Catalog\CategoryImages;
 use App\Services\Pricing\PriceResolver;
 use App\Services\Settings\Settings;
+use App\View\HomeHero;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 /**
- * Главная (ТЗ §8.1, макет — экран 4): плитки всех корневых разделов вместо баннеров,
+ * Главная (ТЗ §8.1, макет — экран 4): тёмный первый экран с цифрами каталога, плитки всех корневых разделов вместо баннеров,
  * подборки, ленты «В наличии», «Часто заказывают», «Новинки» и местного склада — пустая
  * лента не показывается, — и бренды списком названий.
  */
@@ -40,6 +41,7 @@ class HomeController extends Controller
 
         return view('home.index', [
             'home' => $home,
+            'hero' => HomeHero::from($home),
             'images' => $images->for(array_column($home['sections'], 'id')),
             'collections' => $catalog->homeCollections(),
             'strips' => $strips,

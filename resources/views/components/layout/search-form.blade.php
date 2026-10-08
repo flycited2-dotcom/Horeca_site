@@ -37,8 +37,8 @@
     <button
         type="submit"
         @class([
-            'inline-flex h-control shrink-0 items-center justify-center rounded-control bg-accent-ink text-base leading-none font-medium text-white',
-            'transition-colors duration-150 ease-out hover:bg-accent-dark',
+            'inline-flex h-control shrink-0 items-center justify-center rounded-control bg-signal text-base leading-none font-medium text-white',
+            'transition-colors duration-150 ease-out hover:bg-signal-dark',
             'w-control md:w-auto md:rounded-l-none md:px-5.5' => $header,
             'px-4' => ! $header,
         ])

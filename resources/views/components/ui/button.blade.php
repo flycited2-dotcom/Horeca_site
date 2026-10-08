@@ -6,16 +6,18 @@
 ])
 
 {{--
-    Кнопка дизайн-системы (ТЗ §9): четыре вида, высота 44 px на всех диапазонах,
-    сдвига при наведении нет — меняются только цвета.
+    Кнопка дизайн-системы (ТЗ §9): главная — сигнальным оранжевым (облик «Холод и жар»),
+    вторичная, нейтральная и «ночная» — контурная для тёмного первого экрана; высота 44 px
+    на всех диапазонах, сдвига при наведении нет — меняются только цвета.
 --}}
 @php
     $base = 'inline-flex h-control items-center justify-center gap-2 rounded-control px-4 text-base leading-none font-medium transition-colors duration-150 ease-out';
 
     $styles = [
-        'primary' => 'bg-accent-ink text-white hover:bg-accent-dark',
+        'primary' => 'bg-signal text-white hover:bg-signal-dark',
         'secondary' => 'border border-accent bg-surface text-accent-ink hover:bg-accent-soft',
         'neutral' => 'border border-line bg-surface text-ink hover:border-accent-ink',
+        'night' => 'border border-night-line text-white hover:border-signal-bright hover:bg-night-soft',
     ];
 
     $classes = $base.' '.($disabled

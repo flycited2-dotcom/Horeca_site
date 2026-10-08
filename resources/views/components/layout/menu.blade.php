@@ -7,7 +7,7 @@
     добавляет закрытие по Esc, по нажатию мимо и кнопкой «Назад».
 --}}
 <details data-dismissable data-history-overlay {{ $attributes->class('group') }}>
-    <summary class="flex size-control cursor-pointer list-none items-center justify-center rounded-control border border-line bg-surface transition-colors duration-150 ease-out hover:border-accent-ink [&::-webkit-details-marker]:hidden">
+    <summary class="flex size-control cursor-pointer list-none items-center justify-center rounded-control border border-night-line text-white transition-colors duration-150 ease-out hover:border-signal-bright hover:bg-night-soft [&::-webkit-details-marker]:hidden">
         <span class="sr-only">{{ __('shop.layout.menu') }}</span>
         <svg class="size-6 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <path d="M4 7h16M4 12h16M4 17h16"/>
@@ -17,7 +17,7 @@
         </svg>
     </summary>
 
-    <div class="absolute inset-x-0 top-full z-40 max-h-[calc(100dvh-8rem)] overflow-y-auto border-b border-line bg-surface shadow-raised">
+    <div class="absolute inset-x-0 top-full z-40 max-h-[calc(100dvh-8rem)] overflow-y-auto border-b border-line bg-surface text-ink shadow-raised">
         <nav aria-label="{{ __('shop.layout.sections') }}">
             <ul>
                 @foreach ($shell->categories as $category)
