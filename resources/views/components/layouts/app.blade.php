@@ -23,8 +23,13 @@
     @elseif ($meta?->robots)
         <meta name="robots" content="{{ $meta->robots }}">
     @endif
-    @if ($meta?->canonical)
-        <link rel="canonical" href="{{ $meta->canonical }}">
+    {{--
+        Страницы без конструктора мета — главная, каталог, бренды, «Оптовикам» — называют свой адрес без
+        параметров запроса: метки utm_source и порядок вывода не должны делать из них отдельные страницы.
+    --}}
+    @php($canonical = $meta?->canonical ?? (! $noindex && ! $meta && request()->routeIs('home', 'catalog', 'brands', 'wholesale') ? url()->current() : null))
+    @if ($canonical)
+        <link rel="canonical" href="{{ $canonical }}">
     @endif
     {{-- Значок вкладки и превью ссылки в мессенджерах и соцсетях; у карточки товара в превью — его фото. --}}
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
@@ -38,7 +43,7 @@
     @if ($meta?->description ?? $description)
         <meta property="og:description" content="{{ $meta?->description ?? $description }}">
     @endif
-    <meta property="og:url" content="{{ $meta?->canonical ?? url()->current() }}">
+    <meta property="og:url" content="{{ $canonical ?? url()->current() }}">
     <meta property="og:image" content="{{ $meta?->image ?? asset('og-image.png') }}">
     <meta name="twitter:card" content="summary_large_image">
     @vite(['resources/css/app.css', 'resources/js/storefront.js'])

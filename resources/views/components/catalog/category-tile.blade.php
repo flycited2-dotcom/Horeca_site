@@ -1,4 +1,4 @@
-@props(['name', 'url', 'image' => null, 'icon' => null, 'compact' => false])
+@props(['name', 'url', 'image' => null, 'icon' => null, 'compact' => false, 'eager' => false])
 
 {{--
     Плитка раздела (ТЗ §9, макет — экраны 2 и 4): картинка группы товаров сверху, название
@@ -13,6 +13,7 @@
     <x-catalog.category-picture
         :image="$image"
         :icon="$icon"
+        :eager="$eager"
         :icon-class="$compact ? 'size-8' : 'size-11'"
         :class="$compact ? 'border-b border-line-soft max-md:p-2' : 'border-b border-line-soft'"
     />

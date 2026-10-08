@@ -9,7 +9,7 @@
                 <section class="flex flex-col overflow-hidden rounded-card border border-line bg-surface">
                     {{-- Картинка дублирует ссылку заголовка, поэтому с клавиатуры и для чтеца её пропускаем. --}}
                     <a href="{{ route('category', $category) }}" tabindex="-1" aria-hidden="true">
-                        <x-catalog.category-picture :image="$images[$category->id] ?? null" :icon="$category->icon" ratio="aspect-[16/9]" class="border-b border-line-soft" />
+                        <x-catalog.category-picture :image="$images[$category->id] ?? null" :icon="$category->icon" ratio="aspect-[16/9]" :eager="$loop->index < 2" class="border-b border-line-soft" />
                     </a>
 
                     <div class="p-4">

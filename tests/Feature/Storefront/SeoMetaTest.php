@@ -119,3 +119,23 @@ it('has the files that the page head points to', function () {
 
     expect([$width, $height])->toBe([1200, 630]);
 });
+
+it('does not say «цена» twice in the description of a product with the price on request', function () {
+    $product = Product::factory()->create(['name' => 'Печь КЭП-10', 'category_id' => $this->category->id, 'retail_price' => null, 'meta_description' => null]);
+
+    $html = $this->get(route('product', $product))->assertOk()->getContent();
+
+    expect($html)->toContain('<meta name="description" content="Печь КЭП-10 — цена по запросу,')
+        ->and($html)->not->toContain('цена цена');
+});
+
+it('names the canonical address of the pages that are open to search engines without a builder', function () {
+    foreach (['home' => url('/'), 'catalog' => route('catalog'), 'brands' => route('brands'), 'wholesale' => route('wholesale')] as $route => $address) {
+        // The address without the query: marks like utm_source must not make a page of its own.
+        $this->get(route($route).'?utm_source=ya')->assertOk()->assertSee('<link rel="canonical" href="'.$address.'">', false);
+    }
+
+    foreach (['cart', 'login', 'search'] as $route) {
+        $this->get(route($route))->assertOk()->assertDontSee('rel="canonical"', false);
+    }
+});

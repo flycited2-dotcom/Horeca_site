@@ -38,9 +38,10 @@ final class MetaBuilder
         return new Meta(
             title: $this->filled($product->meta_title) ?? $this->render($this->template('seo.product_title_template', self::PRODUCT_TEMPLATE), $product->name, $price),
             description: $this->filled($product->meta_description) ?? $this->limit(implode(' ', array_filter([
-                __('shop.seo.product_description', [
+                // «цена по запросу» целиком в своей фразе: подставленная в «цена :price», она давала «цена цена по запросу».
+                __($price === null ? 'shop.seo.product_description_on_request' : 'shop.seo.product_description', [
                     'name' => $product->name,
-                    'price' => $price ?? mb_strtolower(__('shop.price.on_request')),
+                    'price' => $price,
                     'availability' => mb_strtolower($product->availability->getLabel()),
                 ]),
                 $product->brand?->name ? __('shop.seo.product_brand', ['brand' => $product->brand->name]) : null,

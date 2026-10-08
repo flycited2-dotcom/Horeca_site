@@ -157,3 +157,16 @@ it('uploads the picture of a section from the admin and shows it at once', funct
     expect($uploaded)->not->toBe('')
         ->and(app(CategoryImages::class)->for([$root->id])[$root->id])->toBe($uploaded);
 });
+
+it('loads the first tiles of the home page at once and leaves the rest for scrolling', function () {
+    foreach (range(1, 6) as $sort) {
+        $root = Category::factory()->create(['show_on_home' => true, 'products_count' => 1, 'sort' => $sort]);
+        categoryPhotoProduct(['category_id' => $root->id]);
+    }
+
+    $html = $this->get('/')->assertOk()->getContent();
+    preg_match_all('/<img src="[^"]*-card\.webp"[^>]*loading="(eager|lazy)"/', $html, $loading);
+
+    expect(array_slice($loading[1], 0, 4))->each->toBe('eager')
+        ->and(array_slice($loading[1], 4))->each->toBe('lazy');
+});

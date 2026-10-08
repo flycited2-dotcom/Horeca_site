@@ -34,7 +34,7 @@
                 <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                     @foreach ($home['sections'] as $section)
                         <li>
-                            <x-catalog.category-tile :name="$section['name']" :url="route('category', $section['slug'])" :image="$images[$section['id']] ?? null" :icon="$section['icon']">
+                            <x-catalog.category-tile :name="$section['name']" :url="route('category', $section['slug'])" :image="$images[$section['id']] ?? null" :icon="$section['icon']" :eager="$loop->index < 4">
                                 <span class="text-sm text-steel-500 tabular">
                                     <span class="md:hidden">{{ $count('shop.home.positions', $section['products_count']) }}</span>
                                     <span class="max-md:hidden">{{ __('shop.home.tile_counts', ['products' => $count('shop.home.positions', $section['products_count']), 'in_stock' => Typography::number($section['in_stock'])]) }}</span>

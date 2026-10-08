@@ -34,7 +34,7 @@ Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 
 // Согласие на cookie: без него Яндекс Метрика не загружается (ТЗ §15.10).
-Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie-consent');
+Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->middleware('throttle:30,1')->name('cookie-consent');
 
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog');
 Route::get('/catalog/{category:slug}', [CatalogController::class, 'show'])->name('category');
@@ -45,11 +45,16 @@ Route::get('/search', SearchController::class)->name('search');
 Route::get('/collections/{collection:slug}', CollectionController::class)->name('collection');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
-Route::post('/cart/{product}', [CartController::class, 'store'])->whereNumber('product')->name('cart.add');
-Route::patch('/cart/{product}', [CartController::class, 'update'])->whereNumber('product')->name('cart.update');
-Route::delete('/cart/{product}', [CartController::class, 'destroy'])->whereNumber('product')->name('cart.remove');
-Route::post('/cart/{product}/restore', [CartController::class, 'restore'])->whereNumber('product')->name('cart.restore');
+
+// Изменения корзины, сравнения и избранного — не чаще 120 в минуту с одного адреса: человеку хватает с запасом,
+// а бот не наплодит корзин и записей (ТЗ §15).
+Route::middleware('throttle:120,1')->group(function (): void {
+    Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+    Route::post('/cart/{product}', [CartController::class, 'store'])->whereNumber('product')->name('cart.add');
+    Route::patch('/cart/{product}', [CartController::class, 'update'])->whereNumber('product')->name('cart.update');
+    Route::delete('/cart/{product}', [CartController::class, 'destroy'])->whereNumber('product')->name('cart.remove');
+    Route::post('/cart/{product}/restore', [CartController::class, 'restore'])->whereNumber('product')->name('cart.restore');
+});
 
 Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
@@ -96,14 +101,18 @@ Route::get('/wholesale', [WholesaleController::class, 'show'])->name('wholesale'
 Route::post('/wholesale', [WholesaleController::class, 'store'])->middleware('throttle:5,60')->name('wholesale.store');
 
 Route::get('/compare', [CompareController::class, 'index'])->name('compare');
-Route::delete('/compare', [CompareController::class, 'clear'])->name('compare.clear');
-Route::post('/compare/{product}', [CompareController::class, 'store'])->whereNumber('product')->name('compare.add');
-Route::delete('/compare/{product}', [CompareController::class, 'destroy'])->whereNumber('product')->name('compare.remove');
+Route::middleware('throttle:120,1')->group(function (): void {
+    Route::delete('/compare', [CompareController::class, 'clear'])->name('compare.clear');
+    Route::post('/compare/{product}', [CompareController::class, 'store'])->whereNumber('product')->name('compare.add');
+    Route::delete('/compare/{product}', [CompareController::class, 'destroy'])->whereNumber('product')->name('compare.remove');
+});
 
 // Избранное (ТЗ §8, §11): гостю — до конца сессии, клиенту — в кабинете.
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites');
-Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->whereNumber('product')->name('favorites.add');
-Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->whereNumber('product')->name('favorites.remove');
+Route::middleware('throttle:120,1')->group(function (): void {
+    Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->whereNumber('product')->name('favorites.add');
+    Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->whereNumber('product')->name('favorites.remove');
+});
 
 // Сверка компонентов с макетами; вне локальной разработки отвечает 404.
 Route::get('/styleguide', StyleguideController::class)->name('styleguide');
