@@ -167,10 +167,11 @@ final class ManageSettings extends Page
 
     /**
      * A filled messenger field must give a link the storefront can show (App\Support\Messengers).
+     * Filament evaluates a closure passed to rule(), so the validation closure is what it returns.
      */
     private static function messengerRule(string $messenger): Closure
     {
-        return function (string $attribute, mixed $value, Closure $fail) use ($messenger): void {
+        return fn (): Closure => function (string $attribute, mixed $value, Closure $fail) use ($messenger): void {
             if (is_string($value) && trim($value) !== '' && Messengers::link($messenger, $value) === null) {
                 $fail(__("admin.settings.invalid.{$messenger}"));
             }
