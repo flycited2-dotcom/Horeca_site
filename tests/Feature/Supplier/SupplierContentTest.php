@@ -95,6 +95,15 @@ it('does not download the same photos twice', function () {
     Http::assertSentCount(1);
 });
 
+it('keeps the photos of a product when the source lists none', function () {
+    $sync = app(SyncSupplierPhotos::class);
+
+    $sync->handle($this->supplier, new SupplierProductPhotos($this->product->external_id, [PHOTO_A]));
+
+    expect($sync->handle($this->supplier, new SupplierProductPhotos($this->product->external_id, [])))->toBe(ContentSyncResult::Unchanged)
+        ->and($this->product->refresh()->getMedia(Product::IMAGES))->toHaveCount(1);
+});
+
 it('leaves the manual photos first and untouched', function () {
     $this->product->addMedia(UploadedFile::fake()->image('ruchnoe.jpg'))->withCustomProperties(['source' => 'manual'])->toMediaCollection(Product::IMAGES);
 

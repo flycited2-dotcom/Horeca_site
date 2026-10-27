@@ -21,7 +21,8 @@ class CheckRosholodApiCommand extends Command
      */
     protected $signature = 'supplier:api-check
         {--prices : Обойти все цены (около 150 запросов)}
-        {--stocks : Обойти все остатки (несколько сотен запросов)}';
+        {--stocks : Обойти все остатки (несколько сотен запросов)}
+        {--compare= : Сравнить образец из N карточек с нашими данными: что изменит переход на API}';
 
     /**
      * @var string
@@ -47,7 +48,7 @@ class CheckRosholodApiCommand extends Command
         $this->info('Проверяю API Росхолода: только чтение, это займёт около минуты.');
 
         try {
-            $lines = $check->run($supplier, (bool) $this->option('prices'), (bool) $this->option('stocks'));
+            $lines = $check->run($supplier, (bool) $this->option('prices'), (bool) $this->option('stocks'), max(0, (int) $this->option('compare')));
         } catch (FeedReadException $exception) {
             $this->error($exception->getMessage());
 

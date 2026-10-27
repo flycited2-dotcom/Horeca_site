@@ -17,6 +17,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * with source_url — the same photos are not downloaded twice, and the supplier API will later
  * replace them. Manual photos of the manager are never touched (§6.6) and stay first. New
  * photos are downloaded before the old ones go: a failed download leaves the product as it was.
+ * A list without photos changes nothing.
  */
 final class SyncSupplierPhotos
 {
@@ -36,6 +37,13 @@ final class SyncSupplierPhotos
 
         if ($product === null) {
             return ContentSyncResult::NoProduct;
+        }
+
+        // A source without a single photo says nothing: the photos the product has stay.
+        // The supplier's data may be incomplete (the API had photos for fewer products than
+        // the site had), and a product without a photo sells worse than one with an old photo.
+        if ($photos->urls === []) {
+            return ContentSyncResult::Unchanged;
         }
 
         $current = $product->getMedia(Product::IMAGES)

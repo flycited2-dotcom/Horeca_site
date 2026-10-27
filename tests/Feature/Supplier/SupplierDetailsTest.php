@@ -169,3 +169,24 @@ it('lets the catalog XML fill the description of a new product only', function (
         ->and($capabilities->seeds('description'))->toBeTrue()
         ->and(array_intersect($capabilities->ownedProductFields, SyncSupplierDetails::OWNED_FIELDS))->toBe([]);
 });
+
+it('keeps the characteristics of a product when a card comes without any', function () {
+    $sync = app(SyncSupplierDetails::class);
+    $card = fn (array $attributes): SupplierProductDetails => new SupplierProductDetails(
+        externalId: DETAILS_GUID,
+        description: 'Описание',
+        attributes: array_map(fn (string $key, string $value): SupplierAttribute => new SupplierAttribute($key, $value), array_keys($attributes), $attributes),
+    );
+
+    $sync->handle($this->supplier, $card(['Хладагент' => 'R290', 'Напряжение' => '220В']));
+
+    // An empty card says nothing: the supplier's data may be incomplete, nothing is taken away.
+    $sync->handle($this->supplier, $card([]));
+
+    expect(detailsOf($this->product->refresh()))->toBe(['Напряжение' => '220В', 'Хладагент' => 'R290']);
+
+    // A card with other characteristics still drops the one it no longer has.
+    $sync->handle($this->supplier, $card(['Хладагент' => 'R290']));
+
+    expect(detailsOf($this->product->refresh()))->toBe(['Хладагент' => 'R290']);
+});

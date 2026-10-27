@@ -68,7 +68,11 @@ final class SyncSupplierDetails
             $product->save();
         }
 
-        return $this->syncAttributes($product, $details) || $changed ? ContentSyncResult::Updated : ContentSyncResult::Unchanged;
+        // A card without a single characteristic says nothing: the ones the product has stay.
+        // A characteristic the supplier dropped from a card that still has others is removed.
+        $attributesChanged = $details->attributes !== [] && $this->syncAttributes($product, $details);
+
+        return $attributesChanged || $changed ? ContentSyncResult::Updated : ContentSyncResult::Unchanged;
     }
 
     /**

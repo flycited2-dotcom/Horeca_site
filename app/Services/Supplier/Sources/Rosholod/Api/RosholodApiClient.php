@@ -24,6 +24,13 @@ final class RosholodApiClient
     private const int ATTEMPTS = 4;
 
     /**
+     * Waits in seconds before each new try after a lost connection. The shared server's DNS
+     * sometimes fails for half a minute (02.10 and 27.10.2026): a short wait would end the
+     * whole walk over the catalog, which is hundreds of requests.
+     */
+    private const array CONNECTION_WAITS = [3, 10, 30, 60];
+
+    /**
      * The longest wait after a 429, in seconds: a longer one means something is wrong.
      */
     private const int MAX_RETRY_AFTER = 60;
@@ -51,14 +58,19 @@ final class RosholodApiClient
 
         $query = array_filter($query, fn (mixed $value): bool => $value !== null && $value !== '');
 
-        for ($attempt = 1; ; $attempt++) {
+        $lost = 0;
+        $busy = 0;
+
+        while (true) {
             $this->pause();
 
             try {
                 $response = $this->request()->get($path, $query);
             } catch (ConnectionException $exception) {
-                if ($attempt < self::ATTEMPTS) {
-                    Sleep::for(2 ** $attempt)->seconds();
+                $lost++;
+
+                if ($lost <= count(self::CONNECTION_WAITS)) {
+                    Sleep::for(self::CONNECTION_WAITS[$lost - 1])->seconds();
 
                     continue;
                 }
@@ -76,8 +88,8 @@ final class RosholodApiClient
                 return $json;
             }
 
-            if ($attempt < self::ATTEMPTS && in_array($response->status(), [429, 503], true)) {
-                $this->wait($response, $attempt);
+            if (++$busy < self::ATTEMPTS && in_array($response->status(), [429, 503], true)) {
+                $this->wait($response, $busy);
 
                 continue;
             }

@@ -8,6 +8,8 @@ use App\Models\Supplier;
 use App\Models\SupplierRef;
 use App\Models\Warehouse;
 use App\Services\Supplier\Exceptions\FeedReadException;
+use App\Services\Supplier\Sources\Rosholod\RosholodDetailsMapper;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Пробный прогон Dealer API Росхолода (ТЗ §6): только чтение, ничего в каталоге не меняется.
@@ -34,42 +36,46 @@ final class RosholodApiCheck
      *
      * @throws FeedReadException when the token is not accepted at all
      */
-    public function run(Supplier $supplier, bool $withPrices = false, bool $withStocks = false): array
+    public function run(Supplier $supplier, bool $withPrices = false, bool $withStocks = false, int $compare = 0): array
     {
-        $lines = [];
+        $lines = [
+            '== Доступ ==',
+            ...$this->access(),
+            ...$this->section('Товары (/products)', fn (): array => $this->products($supplier)),
+            ...$this->section('Виды номенклатуры (/product-types)', fn (): array => $this->productTypes($supplier)),
+            ...$this->section('Склады (/warehouses)', fn (): array => $this->warehouses($supplier)),
+            ...$this->section('Полная карточка: образец (/products/export, одна страница)', fn (): array => $this->sample()),
+        ];
 
-        $lines[] = '== Доступ ==';
-        $lines = [...$lines, ...$this->access()];
-
-        $lines[] = '';
-        $lines[] = '== Товары (/products) ==';
-        $lines = [...$lines, ...$this->products($supplier)];
-
-        $lines[] = '';
-        $lines[] = '== Виды номенклатуры (/product-types) ==';
-        $lines = [...$lines, ...$this->productTypes($supplier)];
-
-        $lines[] = '';
-        $lines[] = '== Склады (/warehouses) ==';
-        $lines = [...$lines, ...$this->warehouses($supplier)];
-
-        $lines[] = '';
-        $lines[] = '== Полная карточка: образец (/products/export, одна страница) ==';
-        $lines = [...$lines, ...$this->sample()];
+        if ($compare > 0) {
+            $lines = [...$lines, ...$this->section("Сравнение с нашими данными: образец из {$compare} карточек", fn (): array => $this->compare($supplier, $compare))];
+        }
 
         if ($withPrices) {
-            $lines[] = '';
-            $lines[] = '== Цены (/prices, полный обход) ==';
-            $lines = [...$lines, ...$this->prices()];
+            $lines = [...$lines, ...$this->section('Цены (/prices, полный обход)', fn (): array => $this->prices())];
         }
 
         if ($withStocks) {
-            $lines[] = '';
-            $lines[] = '== Остатки (/stocks, полный обход) ==';
-            $lines = [...$lines, ...$this->stocks()];
+            $lines = [...$lines, ...$this->section('Остатки (/stocks, полный обход)', fn (): array => $this->stocks())];
         }
 
         return $lines;
+    }
+
+    /**
+     * A section of the report. A failure in one of them (the walk over the catalog is hundreds of
+     * requests) is a line of the report, not the end of it: what is read stays.
+     *
+     * @param  callable(): list<string>  $build
+     * @return list<string>
+     */
+    private function section(string $title, callable $build): array
+    {
+        try {
+            return ['', '== '.$title.' ==', ...$build()];
+        } catch (FeedReadException $exception) {
+            return ['', '== '.$title.' ==', 'не удалось прочитать: '.$exception->getMessage()];
+        }
     }
 
     /**
@@ -258,6 +264,93 @@ final class RosholodApiCheck
             'ключи характеристик: '.($keys === [] ? '—' : implode('; ', array_map(fn (string $key, int $count): string => "{$key} ({$count})", array_keys($keys), $keys))),
             'production_time: '.implode(', ', array_slice(array_keys($times), 0, 10)),
             'order_option: '.implode(', ', array_slice(array_keys($options), 0, 10)),
+        ];
+    }
+
+    /**
+     * What a switch to the API would change in the products we have: the sample is the first
+     * cards of the export. Nothing is written. «Хуже» means we have the data and the API has not:
+     * the sync keeps photos and characteristics in that case, but a gap is worth knowing.
+     *
+     * @return list<string>
+     */
+    private function compare(Supplier $supplier, int $size): array
+    {
+        $cards = [];
+
+        foreach ($this->api->items('/api/v1/dealer/products/export', [], 20) as $card) {
+            $cards[] = $card;
+
+            if (count($cards) >= $size) {
+                break;
+            }
+        }
+
+        $ids = array_filter(array_map(fn (array $card): ?string => is_string($card['source_id'] ?? null) ? $card['source_id'] : null, $cards));
+        $products = Product::query()->where('supplier_id', $supplier->id)->whereIn('external_id', $ids)->get()->keyBy('external_id');
+
+        $photos = DB::table('media')
+            ->where('model_type', (new Product)->getMorphClass())
+            ->whereIn('model_id', $products->pluck('id'))
+            ->where('collection_name', Product::IMAGES)
+            ->selectRaw('model_id, COUNT(*) AS aggregate')
+            ->groupBy('model_id')
+            ->pluck('aggregate', 'model_id');
+
+        $characteristics = DB::table('attribute_product')
+            ->whereIn('product_id', $products->pluck('id'))
+            ->where('source', 'supplier')
+            ->selectRaw('product_id, COUNT(*) AS aggregate')
+            ->groupBy('product_id')
+            ->pluck('aggregate', 'product_id');
+
+        $count = ['found' => 0, 'missing' => 0, 'photos_worse' => 0, 'photos_better' => 0, 'photos_same' => 0, 'chars_fewer' => 0, 'chars_more' => 0, 'chars_empty' => 0, 'desc_lost' => 0, 'desc_gained' => 0, 'desc_changed' => 0];
+
+        foreach ($cards as $card) {
+            $product = is_string($card['source_id'] ?? null) ? $products->get($card['source_id']) : null;
+
+            if ($product === null) {
+                $count['missing']++;
+
+                continue;
+            }
+
+            $count['found']++;
+
+            $apiPhotos = count(array_filter(is_array($card['images'] ?? null) ? $card['images'] : [], fn (mixed $image): bool => is_array($image) && is_string($image['url'] ?? null)));
+            $ourPhotos = (int) ($photos[$product->id] ?? 0);
+            $count[match (true) {
+                $apiPhotos < $ourPhotos => 'photos_worse',
+                $apiPhotos > $ourPhotos => 'photos_better',
+                default => 'photos_same',
+            }]++;
+
+            $details = RosholodDetailsMapper::details((string) $card['source_id'], $card['description'] ?? null, $card['attributes'] ?? null, null);
+            $apiChars = count($details->attributes);
+            $ourChars = (int) ($characteristics[$product->id] ?? 0);
+
+            if ($apiChars === 0 && $ourChars > 0) {
+                $count['chars_empty']++;
+            } elseif ($apiChars < $ourChars) {
+                $count['chars_fewer']++;
+            } elseif ($apiChars > $ourChars) {
+                $count['chars_more']++;
+            }
+
+            if ($details->description === null && filled($product->description)) {
+                $count['desc_lost']++;
+            } elseif ($details->description !== null && blank($product->description)) {
+                $count['desc_gained']++;
+            } elseif ($details->description !== null && $details->description !== $product->description) {
+                $count['desc_changed']++;
+            }
+        }
+
+        return [
+            'карточек в образце: '.count($cards).', нашлось у нас: '.$count['found'].', нет у нас: '.$count['missing'],
+            'фото: у API больше '.$count['photos_better'].', поровну '.$count['photos_same'].', у API меньше '.$count['photos_worse'].' (имеющиеся не удаляются)',
+            'характеристики (без габаритов): у API больше '.$count['chars_more'].', у API меньше '.$count['chars_fewer'].', у API ни одной при наших '.$count['chars_empty'].' (имеющиеся не снимаются)',
+            'описание: у API появится '.$count['desc_gained'].', у API нет при нашем '.$count['desc_lost'].', отличается '.$count['desc_changed'],
         ];
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Jobs\SyncSupplierContentPage;
+use App\Models\Attribute;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\SupplierRef;
@@ -10,7 +11,9 @@ use App\Services\Supplier\Exceptions\FeedReadException;
 use App\Services\Supplier\Sources\Rosholod\Api\RosholodApiClient;
 use App\Services\Supplier\Sources\Rosholod\Api\RosholodApiContentSource;
 use App\Services\Supplier\Sources\Rosholod\RosholodSiteSource;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -309,4 +312,78 @@ it('does not start the check without a token', function () {
     $this->artisan('supplier:api-check')->expectsOutputToContain('ROSHOLOD_API_TOKEN')->assertFailed();
 
     Http::assertNothingSent();
+});
+
+it('waits and tries again when the connection is lost, then gives up for good', function () {
+    $calls = 0;
+    Http::fake(['api.rosholod.org/*' => function () use (&$calls) {
+        $calls++;
+
+        if ($calls <= 2) {
+            throw new ConnectionException('cURL error 6: Could not resolve host: api.rosholod.org');
+        }
+
+        return Http::response(apiPage([]));
+    }]);
+
+    app(RosholodApiClient::class)->get('/api/v1/dealer/brands');
+
+    expect($calls)->toBe(3);
+    Sleep::assertSlept(fn ($duration): bool => $duration->totalSeconds === 3.0, 1);
+    Sleep::assertSlept(fn ($duration): bool => $duration->totalSeconds === 10.0, 1);
+
+    $calls = -100;
+
+    expect(fn () => app(RosholodApiClient::class)->get('/api/v1/dealer/brands'))
+        ->toThrow(FeedReadException::class, 'Could not resolve host');
+});
+
+it('keeps the sections of the report that were read when one of them fails', function () {
+    $supplier = Supplier::factory()->create(['slug' => 'rosholod']);
+    $stocks = 0;
+
+    Http::fake([
+        'api.rosholod.org/api/v1/dealer/stocks*' => function () use (&$stocks) {
+            // The first request is the check of the right, the others are the walk that fails.
+            return ++$stocks === 1 ? Http::response(apiPage([])) : Http::response('', 401);
+        },
+        'api.rosholod.org/api/v1/dealer/products/export*' => Http::response(apiPage([apiCard()])),
+        'api.rosholod.org/api/v1/dealer/products*' => Http::response(apiPage([])),
+        'api.rosholod.org/api/v1/dealer/*' => Http::response(apiPage([])),
+    ]);
+
+    $this->artisan('supplier:api-check', ['--stocks' => true])
+        ->expectsOutputToContain('== Остатки (/stocks, полный обход) ==')
+        ->expectsOutputToContain('не удалось прочитать')
+        ->expectsOutputToContain('== Склады (/warehouses) ==')
+        ->assertSuccessful();
+
+    expect($supplier->exists)->toBeTrue();
+});
+
+it('compares a sample of cards with our data and writes nothing', function () {
+    $supplier = Supplier::factory()->create(['slug' => 'rosholod']);
+    $product = Product::factory()->create(['supplier_id' => $supplier->id, 'external_id' => PRODUCT_ID, 'description' => 'Старое описание']);
+    $attribute = Attribute::factory()->create();
+    DB::table('attribute_product')->insert([
+        ['product_id' => $product->id, 'attribute_id' => $attribute->id, 'value_string' => 'a', 'raw_value' => 'a', 'source' => 'supplier'],
+    ]);
+
+    $cards = apiPage([
+        apiCard(['images' => [], 'attributes' => [], 'description' => null]),
+        apiCard(['id' => 'f0000000-0000-4000-8000-000000000009', 'source_id' => 'not-ours']),
+    ]);
+
+    Http::fake([
+        'api.rosholod.org/api/v1/dealer/products*' => Http::response($cards),
+        'api.rosholod.org/api/v1/dealer/*' => Http::response(apiPage([])),
+    ]);
+
+    $this->artisan('supplier:api-check', ['--compare' => 10])
+        ->expectsOutputToContain('карточек в образце: 2, нашлось у нас: 1, нет у нас: 1')
+        ->expectsOutputToContain('у API ни одной при наших 1')
+        ->expectsOutputToContain('у API нет при нашем 1')
+        ->assertSuccessful();
+
+    expect($product->refresh()->description)->toBe('Старое описание');
 });
