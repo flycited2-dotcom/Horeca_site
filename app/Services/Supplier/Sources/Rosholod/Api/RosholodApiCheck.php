@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use App\Models\SupplierRef;
 use App\Models\Warehouse;
 use App\Services\Supplier\Exceptions\FeedReadException;
+use App\Services\Supplier\Import\AttributeValueParser;
 use App\Services\Supplier\Sources\Rosholod\RosholodDetailsMapper;
 use Illuminate\Support\Facades\DB;
 
@@ -298,11 +299,13 @@ final class RosholodApiCheck
             ->pluck('aggregate', 'model_id');
 
         $characteristics = DB::table('attribute_product')
-            ->whereIn('product_id', $products->pluck('id'))
-            ->where('source', 'supplier')
-            ->selectRaw('product_id, COUNT(*) AS aggregate')
-            ->groupBy('product_id')
-            ->pluck('aggregate', 'product_id');
+            ->join('attributes', 'attributes.id', '=', 'attribute_product.attribute_id')
+            ->whereIn('attribute_product.product_id', $products->pluck('id'))
+            ->where('attribute_product.source', 'supplier')
+            ->get(['attribute_product.product_id', 'attributes.slug', 'attributes.name'])
+            ->groupBy('product_id');
+        $parser = new AttributeValueParser;
+        $lost = [];
 
         $count = ['found' => 0, 'missing' => 0, 'photos_worse' => 0, 'photos_better' => 0, 'photos_same' => 0, 'chars_fewer' => 0, 'chars_more' => 0, 'chars_empty' => 0, 'desc_lost' => 0, 'desc_gained' => 0, 'desc_changed' => 0];
 
@@ -325,9 +328,19 @@ final class RosholodApiCheck
                 default => 'photos_same',
             }]++;
 
-            $details = RosholodDetailsMapper::details((string) $card['source_id'], $card['description'] ?? null, $card['attributes'] ?? null, null);
-            $apiChars = count($details->attributes);
-            $ourChars = (int) ($characteristics[$product->id] ?? 0);
+            $country = is_array($card['country'] ?? null) ? ($card['country']['name'] ?? null) : null;
+            $details = RosholodDetailsMapper::details((string) $card['source_id'], $card['description'] ?? null, $card['attributes'] ?? null, is_string($country) ? $country : null);
+            $apiSlugs = array_map(fn ($attribute): string => $parser->parse($attribute)['slug'], $details->attributes);
+            $ours = $characteristics->get($product->id, collect());
+            $apiChars = count($apiSlugs);
+            $ourChars = $ours->count();
+
+            // An empty card changes nothing (SyncSupplierDetails): only a card with others drops a key.
+            foreach ($apiChars > 0 ? $ours : [] as $row) {
+                if (! in_array($row->slug, $apiSlugs, true)) {
+                    $lost[$row->name] = ($lost[$row->name] ?? 0) + 1;
+                }
+            }
 
             if ($apiChars === 0 && $ourChars > 0) {
                 $count['chars_empty']++;
@@ -346,10 +359,14 @@ final class RosholodApiCheck
             }
         }
 
+        arsort($lost);
+        $lost = array_slice($lost, 0, 25, true);
+
         return [
             'карточек в образце: '.count($cards).', нашлось у нас: '.$count['found'].', нет у нас: '.$count['missing'],
             'фото: у API больше '.$count['photos_better'].', поровну '.$count['photos_same'].', у API меньше '.$count['photos_worse'].' (имеющиеся не удаляются)',
             'характеристики (без габаритов): у API больше '.$count['chars_more'].', у API меньше '.$count['chars_fewer'].', у API ни одной при наших '.$count['chars_empty'].' (имеющиеся не снимаются)',
+            'снимутся при переходе (у API их нет, а карточка не пустая): '.($lost === [] ? 'ничего' : implode('; ', array_map(fn (string $name, int $count): string => "{$name} ({$count})", array_keys($lost), $lost))),
             'описание: у API появится '.$count['desc_gained'].', у API нет при нашем '.$count['desc_lost'].', отличается '.$count['desc_changed'],
         ];
     }

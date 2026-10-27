@@ -370,7 +370,7 @@ it('compares a sample of cards with our data and writes nothing', function () {
     ]);
 
     $cards = apiPage([
-        apiCard(['images' => [], 'attributes' => [], 'description' => null]),
+        apiCard(['images' => [], 'attributes' => [], 'description' => null, 'country' => null]),
         apiCard(['id' => 'f0000000-0000-4000-8000-000000000009', 'source_id' => 'not-ours']),
     ]);
 
@@ -383,6 +383,7 @@ it('compares a sample of cards with our data and writes nothing', function () {
         ->expectsOutputToContain('карточек в образце: 2, нашлось у нас: 1, нет у нас: 1')
         ->expectsOutputToContain('у API ни одной при наших 1')
         ->expectsOutputToContain('у API нет при нашем 1')
+        ->expectsOutputToContain('снимутся при переходе (у API их нет, а карточка не пустая): ничего')
         ->assertSuccessful();
 
     expect($product->refresh()->description)->toBe('Старое описание');
