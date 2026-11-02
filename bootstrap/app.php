@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -33,6 +34,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Всё, что дошло до отчёта об ошибке (404, проверка формы и права сюда не попадают),
         // — поломка сайта: критическая запись уходит в Telegram (ТЗ §15.9).
         $exceptions->level(Throwable::class, LogLevel::CRITICAL);
+        // Закрытое свойство Livewire меняет только подделанный запрос: покупатель так не может,
+        // Livewire сам отвечает 419, а группа не будится на чужих роботов.
+        $exceptions->dontReport(CannotUpdateLockedPropertyException::class);
         // Any 404 first asks the redirects table: the old address of a product matches the
         // product route and never reaches the fallback route (TZ §6.6, §8).
         $exceptions->render(fn (NotFoundHttpException $exception, Request $request) => app(FollowRedirect::class)->handle($request));

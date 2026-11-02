@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Psr\Log\LogLevel;
 
 beforeEach(function () {
@@ -118,6 +119,25 @@ it('does not wake the group for a missing page', function () {
     config(['logging.default' => 'alarm']);
 
     $this->get('/no-such-page-anywhere')->assertNotFound();
+
+    Http::assertNothingSent();
+});
+
+it('does not wake the group for a forged change of a locked Livewire property', function () {
+    telegramConfigured();
+    config(['logging.default' => 'alarm', 'app.debug' => false]);
+    Route::get('/forged', fn () => throw new CannotUpdateLockedPropertyException('variant'));
+
+    $this->get('/forged')->assertStatus(419);
+
+    Http::assertNothingSent();
+});
+
+it('answers a probe of the storage folder with the 404 page and keeps quiet', function () {
+    telegramConfigured();
+    config(['logging.default' => 'alarm']);
+
+    $this->get('/storage/logs/laravel.log')->assertNotFound()->assertSee('Такой страницы нет');
 
     Http::assertNothingSent();
 });

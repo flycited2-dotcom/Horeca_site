@@ -61,7 +61,9 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Закрытые файлы (счета) отдаёт только магазин после проверки прав. Встроенный
+            // адрес /storage/{path} не нужен: он живёт без сессии и ломал страницу 404.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],
