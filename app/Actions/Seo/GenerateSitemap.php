@@ -7,6 +7,9 @@ use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductCollection;
 use App\Services\Catalog\CatalogQuery;
+use App\Services\Seo\ArticleLibrary;
+use App\Support\SeoUrl;
+use DateTimeImmutable;
 use DateTimeInterface;
 use XMLWriter;
 
@@ -30,7 +33,7 @@ final class GenerateSitemap
      */
     public function handle(): int
     {
-        $temporary = self::path().'.tmp';
+        $temporary = tempnam(dirname(self::path()), 'sitemap-');
         $xml = new XMLWriter;
         $xml->openUri($temporary);
         $xml->setIndent(false);
@@ -41,7 +44,7 @@ final class GenerateSitemap
         $count = 0;
         $add = function (string $url, ?DateTimeInterface $modified = null) use ($xml, &$count): void {
             $xml->startElement('url');
-            $xml->writeElement('loc', $url);
+            $xml->writeElement('loc', SeoUrl::canonical($url));
 
             if ($modified !== null) {
                 $xml->writeElement('lastmod', $modified->format('Y-m-d'));
@@ -75,10 +78,20 @@ final class GenerateSitemap
             ->reject(fn (Page $page): bool => $page->url() === route('wholesale'))
             ->each(fn (Page $page) => $add($page->url(), $page->updated_at));
 
+        $articles = app(ArticleLibrary::class)->all();
+        if ($articles->isNotEmpty()) {
+            $add(ArticleLibrary::url());
+            foreach ($articles as $article) {
+                $add(ArticleLibrary::url($article['slug']), new DateTimeImmutable($article['modified']));
+            }
+        }
+
         $xml->endElement();
         $xml->endDocument();
         $xml->flush();
+        unset($xml);
 
+        chmod($temporary, 0644);
         rename($temporary, self::path());
 
         return $count;

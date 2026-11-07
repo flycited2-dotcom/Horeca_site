@@ -190,6 +190,25 @@ git archive --format=tar.gz -o /tmp/gastrosnab.tar.gz HEAD && scp /tmp/gastrosna
 /opt/gastrosnab/src/docker/dc exec app php artisan supplier:import rosholod.catalog_xml
 ```
 
+### Публикация статей
+
+Для загрузки нужен доступ к Docker Compose магазина на сервере. Подключитесь по SSH своей учётной записью с этим доступом и выполните команды из каталога с утверждёнными файлами `.md`.
+
+```bash
+dc=/opt/gastrosnab/src/docker/dc
+articles=/var/www/html/storage/app/articles/gastrosnab.ru
+"$dc" exec -T app mkdir -p "$articles"
+"$dc" exec -T app sh -c 'cat > "$1"' sh "$articles/kak-vybrat-parokonvektomat.md" < ./kak-vybrat-parokonvektomat.md
+"$dc" exec -T app php artisan articles:import --dry-run
+"$dc" exec -T app php artisan articles:import
+```
+
+Имя файла должно совпадать с `slug`. Загрузчик принимает формат «Стандарта статьи» для `gastrosnab.ru`. Строки пишутся в двойных кавычках, списки `queries` и `links` в одну строку как `["первое значение", "второе значение"]`. Файл `_index.md` пропускается. Для правки замените исходный файл и повторите импорт. В выгрузке остаются ранее опубликованные статьи, даже если их исходников нет в папке. Команда обновляет раздел `/articles/` и карту `/sitemap.xml`. Тестовый и основной домены используют один каталог и один опубликованный набор. Для проверки перед публикацией используйте `--dry-run`.
+
+Текст и FAQ разделов каталога можно править через «Категории → SEO → SEO-текст». FAQ начинается с `## Частые вопросы`, каждый вопрос с `###`. Для структурированных часов работы используйте поле «Режим работы» в настройках в формате `Пн–Пт 9:00–18:00`.
+
+Фид для Яндекс Товаров доступен по адресу `https://gastrosnab.ru/yandex.yml` после выкладки. Он собирается из текущего каталога и включает товары с публичной ценой, описанием и фотографией. Этот URL указывается в кабинете Яндекс Товаров.
+
 ### Первичная установка
 
 1. **`/opt/gastrosnab/.env`** по образцу `.env.example`:

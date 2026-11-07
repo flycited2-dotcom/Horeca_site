@@ -60,6 +60,7 @@
                 @endif
             @else
                 <x-catalog.product-grid :products="$slice->products" :prices="$prices" :view="$view" />
+                <script type="application/ld+json">{!! \App\Support\StructuredData::json(\App\Support\StructuredData::itemList($slice->products)) !!}</script>
 
                 <x-catalog.pagination :slice="$slice" :filters="$filters" :url-for="$urlFor" class="pt-1" />
             @endif

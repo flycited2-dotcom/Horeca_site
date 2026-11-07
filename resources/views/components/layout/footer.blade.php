@@ -15,6 +15,10 @@
         <div class="flex flex-col gap-3.5">
             <a href="{{ route('home') }}" class="self-start text-title font-bold">{{ $shell->siteName }}</a>
 
+            @if (app(\App\Services\Seo\ArticleLibrary::class)->all()->isNotEmpty())
+                <a class="self-start text-sm font-medium hover:underline" href="{{ \App\Services\Seo\ArticleLibrary::url() }}">{{ __('articles.heading') }}</a>
+            @endif
+
             @if ($shell->phones !== [])
                 <div class="flex flex-col gap-1">
                     @foreach ($shell->phones as $phone)

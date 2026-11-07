@@ -67,7 +67,7 @@
                             @if ($loop->first) aria-current="true" @endif
                             class="block size-18 overflow-hidden rounded-card border border-line bg-surface aria-[current=true]:border-2 aria-[current=true]:border-accent md:size-22"
                         >
-                            <img src="{{ $image->getUrl('thumb') }}" alt="{{ __('shop.product.photo', ['number' => $loop->iteration]) }}" loading="lazy" class="size-full object-contain">
+                            <img src="{{ $image->getUrl('thumb') }}" alt="{{ $product->name }}, {{ __('shop.product.photo', ['number' => $loop->iteration]) }}" loading="lazy" class="size-full object-contain">
                         </a>
                     </li>
                 @endforeach

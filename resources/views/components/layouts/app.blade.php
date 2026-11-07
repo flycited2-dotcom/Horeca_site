@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'noindex' => false, 'meta' => null, 'analytics' => []])
+@props(['title' => null, 'description' => null, 'noindex' => false, 'meta' => null, 'analytics' => [], 'ogType' => 'website'])
 
 {{--
     Каркас витрины (макет, экраны 5, 10 и 14): служебная полоса, шапка, ряд корневых
@@ -27,7 +27,10 @@
         Страницы без конструктора мета — главная, каталог, бренды, «Оптовикам» — называют свой адрес без
         параметров запроса: метки utm_source и порядок вывода не должны делать из них отдельные страницы.
     --}}
-    @php($canonical = $meta?->canonical ?? (! $noindex && ! $meta && request()->routeIs('home', 'catalog', 'brands', 'wholesale') ? url()->current() : null))
+    @php
+        $canonical = $meta?->canonical ?? (! $noindex && ! $meta && request()->routeIs('home', 'catalog', 'brands', 'wholesale') ? url()->current() : null);
+        $canonical = $canonical ? \App\Support\SeoUrl::canonical($canonical) : null;
+    @endphp
     @if ($canonical)
         <link rel="canonical" href="{{ $canonical }}">
     @endif
@@ -36,7 +39,7 @@
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     @php($shareTitle = $meta?->title ?? ($title ? $title.' | '.$shell->siteName : $shell->siteName))
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $ogType }}">
     <meta property="og:site_name" content="{{ $shell->siteName }}">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:title" content="{{ $shareTitle }}">
@@ -44,7 +47,7 @@
         <meta property="og:description" content="{{ $meta?->description ?? $description }}">
     @endif
     <meta property="og:url" content="{{ $canonical ?? url()->current() }}">
-    <meta property="og:image" content="{{ $meta?->image ?? asset('og-image.png') }}">
+    <meta property="og:image" content="{{ $meta?->image ?? \App\Support\SeoUrl::canonical(asset('og-image.png')) }}">
     <meta name="twitter:card" content="summary_large_image">
     @vite(['resources/css/app.css', 'resources/js/storefront.js'])
     {{--
@@ -59,7 +62,7 @@
         @endif
     @endif
     @if (request()->routeIs('home'))
-        <script type="application/ld+json">{!! \App\Support\StructuredData::json(\App\Support\StructuredData::organization($shell)) !!}</script>
+        <script type="application/ld+json">{!! \App\Support\StructuredData::json(\App\Support\StructuredData::store($shell)) !!}</script>
     @endif
 </head>
 <body class="flex min-h-screen flex-col">

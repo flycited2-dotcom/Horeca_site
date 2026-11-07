@@ -95,4 +95,5 @@
             <x-product.sticky-bar :product="$product" :price="$price" />
         </x-slot:bottom-bar>
     @endif
+    <x-articles.related :articles="app(\App\Services\Seo\ArticleLibrary::class)->forCategory($product->category)" />
 </x-layouts.app>

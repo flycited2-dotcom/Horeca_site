@@ -15,6 +15,41 @@ beforeEach(function () {
     $this->category = Category::factory()->create(['name' => 'Пароконвектоматы', 'slug' => 'parokonvektomaty', 'is_active' => true, 'products_count' => 21]);
 });
 
+it('uses the configured storefront origin and the store contacts in SEO metadata', function () {
+    config(['seo.origin' => 'https://gastrosnab.ru']);
+    setting('contacts.phones', ['+7 978 000-11-22']);
+    setting('contacts.address', 'Симферополь, ул. Складская, 1');
+    setting('contacts.schedule', 'Пн–Пт 9:00–18:00');
+
+    $this->get('https://test.gastrosnab.ru/?utm_source=check')->assertOk()
+        ->assertSee('<link rel="canonical" href="https://gastrosnab.ru">', false)
+        ->assertSee('"@type":"Store"', false)
+        ->assertSee('"telephone":"+79780001122"', false)
+        ->assertSee('"openingHours":"Mo-Fr 09:00-18:00"', false)
+        ->assertSee('"areaServed":["Крым","Россия"]', false);
+
+    $this->category->update(['seo_text' => "# О категории\n\n## Частые вопросы\n\n### Как выбрать?\n\nСверьте размеры."]);
+    $product = Product::factory()->create(['category_id' => $this->category->id]);
+    $response = $this->get('https://test.gastrosnab.ru/catalog/'.$this->category->slug)->assertOk()
+        ->assertSee('"@type":"FAQPage"', false)
+        ->assertSee('"@type":"ItemList"', false)
+        ->assertSee('https://gastrosnab.ru/product/'.$product->slug);
+
+    expect(substr_count($response->getContent(), '<h1'))->toBe(1);
+});
+
+it('redirects the www and http mirrors directly to the HTTPS storefront', function () {
+    config(['seo.origin' => 'https://gastrosnab.ru']);
+    $path = '/catalog?utm_source=check&view=table';
+
+    foreach (['http://gastrosnab.ru', 'http://www.gastrosnab.ru', 'https://www.gastrosnab.ru'] as $mirror) {
+        $this->get($mirror.$path)->assertStatus(301)->assertRedirect('https://gastrosnab.ru'.$path);
+    }
+
+    $this->get('https://gastrosnab.ru'.$path)->assertOk();
+    $this->get('https://test.gastrosnab.ru'.$path)->assertOk();
+});
+
 function titleOf(string $html): string
 {
     preg_match('/<title>(.*?)<\/title>/su', $html, $match);

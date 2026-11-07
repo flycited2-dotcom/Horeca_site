@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Seo\GenerateSitemap;
+use App\Actions\Seo\YandexFeed;
+use App\Support\SeoUrl;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * robots.txt и sitemap.xml (ТЗ §14). Индексировать разрешено только боевой сайт: тестовый
@@ -33,7 +36,7 @@ final class SeoController extends Controller
         return $this->text(implode("\n\n", [
             "User-agent: *\n{$disallow}",
             "User-agent: Yandex\n{$disallow}\nClean-param: ".self::CLEAN_PARAM,
-            'Sitemap: '.route('sitemap'),
+            'Sitemap: '.SeoUrl::canonical(route('sitemap')),
         ])."\n");
     }
 
@@ -47,6 +50,11 @@ final class SeoController extends Controller
         }
 
         return response()->file(GenerateSitemap::path(), ['Content-Type' => 'application/xml; charset=UTF-8']);
+    }
+
+    public function yandex(YandexFeed $feed): StreamedResponse
+    {
+        return response()->stream($feed->stream(...), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
     }
 
     private function text(string $body): Response

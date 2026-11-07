@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountCompanyController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AccountOrderController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -32,6 +33,10 @@ Route::get('/', HomeController::class)->name('home');
 // Для поисковиков (ТЗ §14).
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/yandex.yml', [SeoController::class, 'yandex'])->name('yandex.feed');
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/{slug}', [ArticleController::class, 'show'])
+    ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')->name('articles.show');
 
 // Согласие на cookie: без него Яндекс Метрика не загружается (ТЗ §15.10).
 Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->middleware('throttle:30,1')->name('cookie-consent');

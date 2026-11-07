@@ -5,6 +5,9 @@ namespace App\Support;
 use App\Models\Product;
 use App\Services\Pricing\Price;
 use App\View\StorefrontShell;
+use Dom\Element;
+use Dom\HTMLDocument;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 /**
@@ -34,7 +37,7 @@ final class StructuredData
         if ($price !== null) {
             $data['offers'] = [
                 '@type' => 'Offer',
-                'url' => route('product', $product),
+                'url' => SeoUrl::canonical(route('product', $product)),
                 'price' => $price->amount->toDecimal(),
                 'priceCurrency' => 'RUB',
                 'availability' => $product->availability->schemaOrg(),
@@ -45,22 +48,78 @@ final class StructuredData
     }
 
     /**
-     * The shop as an Organization (TZ §14) on the home page: only the contacts the customer
-     * has filled in the settings.
-     *
      * @return array<string, mixed>
      */
-    public static function organization(StorefrontShell $shell): array
+    public static function store(StorefrontShell $shell): array
     {
         return array_filter([
             '@context' => 'https://schema.org',
-            '@type' => 'Organization',
+            '@type' => 'Store',
+            '@id' => SeoUrl::canonical(route('home')).'#store',
             'name' => $shell->siteName,
-            'url' => url('/'),
-            'telephone' => $shell->phone()['label'] ?? null,
+            'url' => SeoUrl::canonical(route('home')),
+            'telephone' => $shell->phone() ? substr($shell->phone()['href'], 4) : null,
             'email' => $shell->email,
-            'address' => $shell->address,
+            'address' => $shell->address ? ['@type' => 'PostalAddress', 'streetAddress' => $shell->address] : null,
+            'openingHours' => self::openingHours($shell->schedule),
+            'areaServed' => ['Крым', 'Россия'],
         ], fn (mixed $value): bool => $value !== null && $value !== '');
+    }
+
+    private static function openingHours(?string $schedule): ?string
+    {
+        $days = ['пн' => 'Mo', 'вт' => 'Tu', 'ср' => 'We', 'чт' => 'Th', 'пт' => 'Fr', 'сб' => 'Sa', 'вс' => 'Su'];
+        $dayPattern = implode('|', array_keys($days));
+
+        if (! preg_match("/^($dayPattern)(?:\s*[-–—]\s*($dayPattern))?\s+(\d{1,2}:[0-5]\d)\s*[-–—]\s*(\d{1,2}:[0-5]\d)$/u", mb_strtolower(trim((string) $schedule)), $parts)) {
+            return null;
+        }
+
+        $range = $days[$parts[1]].($parts[2] === '' ? '' : '-'.$days[$parts[2]]);
+
+        return $range.' '.str_pad($parts[3], 5, '0', STR_PAD_LEFT).'-'.str_pad($parts[4], 5, '0', STR_PAD_LEFT);
+    }
+
+    public static function itemList(iterable $products): array
+    {
+        $items = [];
+
+        foreach ($products as $product) {
+            $items[] = [
+                '@type' => 'ListItem',
+                'position' => count($items) + 1,
+                'name' => $product->name,
+                'url' => SeoUrl::canonical(route('product', $product)),
+            ];
+        }
+
+        return ['@context' => 'https://schema.org', '@type' => 'ItemList', 'itemListElement' => $items];
+    }
+
+    public static function faqSection(HtmlString $html): ?array
+    {
+        $document = HTMLDocument::createFromString('<!doctype html><body>'.$html, LIBXML_NOERROR, 'UTF-8');
+        $inFaq = false;
+        $current = null;
+        $questions = [];
+
+        foreach ($document->body->childNodes as $node) {
+            if (! $node instanceof Element) {
+                continue;
+            }
+
+            if ($node->localName === 'h2') {
+                $inFaq = mb_strtolower(trim($node->textContent)) === 'частые вопросы';
+                $current = null;
+            } elseif ($inFaq && $node->localName === 'h3') {
+                $current = count($questions);
+                $questions[] = ['question' => trim($node->textContent), 'answer' => ''];
+            } elseif ($current !== null) {
+                $questions[$current]['answer'] .= ' '.$node->textContent;
+            }
+        }
+
+        return self::faqData($questions);
     }
 
     /**
@@ -91,12 +150,21 @@ final class StructuredData
             }
         }
 
+        return self::faqData(array_map(function (array $item): array {
+            $item['answer'] = strip_tags(Str::markdown($item['answer'], ['html_input' => 'strip']));
+
+            return $item;
+        }, $questions));
+    }
+
+    private static function faqData(array $questions): ?array
+    {
         $entities = [];
 
         foreach ($questions as $item) {
-            $answer = trim((string) preg_replace('/\s+/u', ' ', strip_tags(Str::markdown($item['answer'], ['html_input' => 'strip']))));
+            $answer = trim((string) preg_replace('/\s+/u', ' ', $item['answer']));
 
-            if ($answer !== '') {
+            if ($item['question'] !== '' && $answer !== '') {
                 $entities[] = [
                     '@type' => 'Question',
                     'name' => $item['question'],

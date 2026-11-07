@@ -3,6 +3,7 @@
 use App\Actions\Storefront\FollowRedirect;
 use App\Http\Controllers\CookieConsentController;
 use App\Http\Middleware\AddSecurityHeaders;
+use App\Http\Middleware\RedirectStorefrontOrigin;
 use App\Http\Middleware\RememberUtm;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // headers, and only these private networks may send them.
         $middleware->trustProxies(at: ['127.0.0.1', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']);
         $middleware->web(append: [RememberUtm::class]);
-        $middleware->append(AddSecurityHeaders::class);
+        $middleware->append([AddSecurityHeaders::class, RedirectStorefrontOrigin::class]);
         // A signed-in customer who opens the login or registration page goes to the account (TZ §11).
         $middleware->redirectUsersTo(fn (): string => route('account'));
         // The storefront script reads the cookie consent too: it is stored without encryption.
