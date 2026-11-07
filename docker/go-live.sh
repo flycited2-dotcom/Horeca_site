@@ -55,6 +55,9 @@ systemctl reload nginx
 step "4. Сертификат HTTPS (certbot, со сквозным переходом на https)"
 certbot --nginx --non-interactive --agree-tos --redirect --keep-until-expiring \
     $(printf -- '-d %s ' "${hosts[@]}")
+# Certbot направляет HTTP на HTTPS того же имени. Для зеркал нужен сразу главный домен.
+sed -i 's|return 301 https://\$host\$request_uri;|return 301 https://'"$main"'$request_uri;|' \
+    "/etc/nginx/sites-available/$main"
 nginx -t
 systemctl reload nginx
 
@@ -86,8 +89,11 @@ for url in "https://$main/" "https://$main/robots.txt" "https://$main/sitemap.xm
     echo "   $url -> $code"
     [ "$code" = "200" ] || { echo "Ожидался 200." >&2; exit 1; }
 done
-for url in "http://www.$main/catalog?x=1" "https://xn--80aadf5cfnhch.xn--p1ai/"; do
-    echo "   $url -> $(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' --max-time 30 "$url")"
+redirect_path='/catalog?x=1'
+for origin in "http://$main" "http://www.$main" "https://www.$main" "https://xn--80aadf5cfnhch.xn--p1ai"; do
+    redirect=$(curl -sS -o /dev/null -w '%{http_code} %{redirect_url}' --max-time 30 "$origin$redirect_path")
+    echo "   $origin$redirect_path -> $redirect"
+    [ "$redirect" = "301 https://$main$redirect_path" ] || { echo "Ожидался прямой 301." >&2; exit 1; }
 done
 robots=$(curl -s --max-time 30 "https://$main/robots.txt")
 if printf '%s\n' "$robots" | grep -qx 'Disallow: /' || ! printf '%s\n' "$robots" | grep -qi '^Sitemap:'; then
